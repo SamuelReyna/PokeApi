@@ -12,8 +12,6 @@ import java.util.List;
  */
 public class Pokemon {
     
-    
-    
     private String  name;
     
     private int order; //Pokemons del mismo orden.

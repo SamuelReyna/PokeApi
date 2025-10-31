@@ -9,26 +9,26 @@ package risosu.it.PokeApiClient.ML;
  * @author Alien 15
  */
 public class Cries {
-    private byte[] latest;
-    private byte [] legacy;
+    private String latest; //El sonido mas reciente del pokemon
+    private String legacy;//El sonido clasico del pokemon
     
-    
+   
 
-    public byte[] getLatest() {
+    public String getLatest() {
         return latest;
     }
 
-    public void setLatest(byte[] latest) {
+    public void setLatest(String latest) {
         this.latest = latest;
     }
 
-    public byte[] getLegacy() {
+    public String getLegacy() {
         return legacy;
     }
 
-    public void setLegacy(byte[] legacy) {
+    public void setLegacy(String legacy) {
         this.legacy = legacy;
     }
-    
+      
     
 }
