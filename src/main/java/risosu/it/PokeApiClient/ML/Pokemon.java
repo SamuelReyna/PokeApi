@@ -4,9 +4,9 @@ import java.util.List;
 
 public class Pokemon {
 
-    private Long id;
+    private int id;
 
-    public Pokemon(Long id, String name, int order, String height, String weight, boolean is_default, List<Sprite> sprites, List<Cries> cries) {
+    public Pokemon(int id, String name, int order, Integer height, Integer weight, boolean is_default, List<Sprite> sprites, List<Cries> cries) {
         this.id = id;
         this.name = name;
         this.order = order;
@@ -18,14 +18,13 @@ public class Pokemon {
     }
 
     public Pokemon() {
-
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -33,9 +32,9 @@ public class Pokemon {
 
     private int order; //Pokemons del mismo orden.
 
-    private String height; //Altura del pokemon expresada en decimetros 1dc = 10cm 
+    private Integer height; //Altura del pokemon expresada en decimetros 1dc = 10cm 
 
-    private String weight; //Peso de pokemon expresado en hectogramos 1hectogramo = 100 gramos
+    private Integer weight; //Peso de pokemon expresado en hectogramos 1hectogramo = 100 gramos
 
     private boolean is_default; //Si el pokemon se encuentra en su forma base (No evolucionado )
 
@@ -59,19 +58,19 @@ public class Pokemon {
         this.order = order;
     }
 
-    public String getHeight() {
+    public Integer getHeight() {
         return height;
     }
 
-    public void setHeight(String height) {
+    public void setHeight(Integer height) {
         this.height = height;
     }
 
-    public String getWeight() {
+    public Integer getWeight() {
         return weight;
     }
 
-    public void setWeight(String weight) {
+    public void setWeight(Integer weight) {
         this.weight = weight;
     }
 

@@ -1,8 +1,11 @@
 package risosu.it.PokeApiClient.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import risosu.it.PokeApiClient.ML.Cries;
 import risosu.it.PokeApiClient.ML.Pokemon;
 import risosu.it.PokeApiClient.ML.PokemonListResponse;
 import risosu.it.PokeApiClient.ML.Result;
@@ -20,7 +24,8 @@ public class GetAllPokemonsService {
 
     private final WebClient webClient;
     private final Semaphore rateLimiter = new Semaphore(10);
-    private final ExecutorService executor = Executors.newFixedThreadPool(20);
+    private final ExecutorService executor = Executors.newFixedThreadPool(4);
+    private final ObjectMapper mapper = new ObjectMapper();
 
     public GetAllPokemonsService(WebClient webClient) {
         Executors.newScheduledThreadPool(1)
@@ -61,20 +66,23 @@ public class GetAllPokemonsService {
             });
 
             pokemones.add(fut);
-            
-            List<Pokemon> buffer = new ArrayList<>();
-            for (CompletableFuture<Pokemon> f : pokemones) {
-                Pokemon p = f.get();
-                if (p != null) {
-                    buffer.add(p);
-                }
-                if (buffer.size() >= 50) {
-                    buffer.clear();
-                }
-            }
-            if (!buffer.isEmpty()) {
-            }
-            System.out.println("✅ Persistencia completada");
+
+//            List<Pokemon> buffer = new ArrayList<>();
+//            for (CompletableFuture<Pokemon> f : pokemones) {
+//                Pokemon p = f.get();
+//                if (p != null) {
+//                    buffer.add(p);
+//                }
+//                if (buffer.size() >= 50) {
+//                    buffer.clear();
+//                }
+//            }
+            List<Pokemon> pokemons = pokemones.stream()
+                    .map(CompletableFuture::join)
+                    .filter(Objects::nonNull)
+                    .toList();
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File("pokemons.json"), pokemons);
+            System.out.println("✅ Archivo 'pokemons.json' creado con " + pokemons.size() + " pokemones");
         }
 
     }
@@ -93,11 +101,12 @@ public class GetAllPokemonsService {
         }
 
         Pokemon pokemon = new Pokemon();
+        Cries cries = new Cries();
 
-        pokemon.setId((Long) (Number) resp.get("id"));
+        pokemon.setId((Integer) resp.get("id"));
         pokemon.setName((String) resp.get("name"));
-        pokemon.setHeight((String) resp.get("height"));
-        pokemon.setWeight((String) resp.get("weight"));
+        pokemon.setHeight((Integer) resp.get("height"));
+        pokemon.setWeight((Integer) resp.get("weight"));
 
         return pokemon;
 
