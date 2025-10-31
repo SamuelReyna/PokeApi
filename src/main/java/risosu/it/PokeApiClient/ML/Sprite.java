@@ -1,13 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package risosu.it.PokeApiClient.ML;
 
-/**
- *
- * @author Alien 15
- */
+
 public class Sprite {
     
     private String back_default;

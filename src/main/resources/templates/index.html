@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Pokemones</title>
+  <style>
+    :root {
+      --bg-main: #F2F2FF;
+      --bg-secondary: #D9D9D9;
+      --bg-light: #ECE6F0;
+      --bg-card: #DFE6F1;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      width: 100%;
+      background: var(--bg-secondary);
+      border-radius: 0 0 14px 14px;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      box-sizing: border-box;
+    }
+
+    .logo {
+      background: var(--bg-main);
+      border-radius: 10px;
+      padding: 0.8rem 1.5rem;
+      font-weight: bold;
+    }
+
+    .search {
+      background: var(--bg-light);
+      border-radius: 28px;
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex: 1;
+      max-width: 360px;
+      margin-top: 0.5rem;
+    }
+
+    .search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      font-size: 1rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 90%;
+      margin-top: 2rem;
+      background: var(--bg-main);
+      border-radius: 25px;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+
+    .pokemon-card {
+      background: var(--bg-card);
+      border-radius: 25px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .pokemon-card img {
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 20px;
+      background: white;
+    }
+
+    .pokemon-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pokemon-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      width: 100%;
+    }
+
+    .btn {
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      padding: 0.6rem;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      background: #c0c0c0;
+    }
+
+    footer {
+      margin-top: 2rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    footer .btn {
+      width: 60px;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .search {
+        width: 100%;
+      }
+
+      .container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">Pokédex</div>
+    <div class="search">
+      🔍
+      <input type="text" placeholder="Buscar Pokémon...">
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="pokemon-card">
+      <img src="https://placehold.co/193x206" alt="Pokemon">
+      <div class="pokemon-info">
+        <h3>Pikachu</h3>
+        <p>Tipo: Eléctrico</p>
+      </div>
+      <div class="pokemon-buttons">
+        <div class="btn">Info</div>
+        <div class="btn">Stats</div>
+        <div class="btn">Habilidades</div>
+        <div class="btn">Evolución</div>
+      </div>
+    </div>
+
+    <div class="pokemon-card">
+      <img src="https://placehold.co/193x206" alt="Pokemon">
+      <div class="pokemon-info">
+        <h3>Charmander</h3>
+        <p>Tipo: Fuego</p>
+      </div>
+      <div class="pokemon-buttons">
+        <div class="btn">Info</div>
+        <div class="btn">Stats</div>
+        <div class="btn">Habilidades</div>
+        <div class="btn">Evolución</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="btn">◀</div>
+    <div class="btn">1</div>
+    <div class="btn">▶</div>
+  </footer>
+
+</body>
+</html>
