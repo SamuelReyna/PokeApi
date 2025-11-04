@@ -18,13 +18,16 @@ import risosu.it.PokeApiClient.ML.Cries;
 import risosu.it.PokeApiClient.ML.Pokemon;
 import risosu.it.PokeApiClient.ML.PokemonListResponse;
 import risosu.it.PokeApiClient.ML.Result;
+import risosu.it.PokeApiClient.ML.Sprite;
+import risosu.it.PokeApiClient.ML.Stats;
+import risosu.it.PokeApiClient.ML.Type;
 
 @Service
 public class GetAllPokemonsService {
 
     private final WebClient webClient;
     private final Semaphore rateLimiter = new Semaphore(10);
-    private final ExecutorService executor = Executors.newFixedThreadPool(4);
+    private final ExecutorService executor = Executors.newFixedThreadPool(8);
     private final ObjectMapper mapper = new ObjectMapper();
 
     public GetAllPokemonsService(WebClient webClient) {
@@ -102,11 +105,71 @@ public class GetAllPokemonsService {
 
         Pokemon pokemon = new Pokemon();
         Cries cries = new Cries();
+        Sprite sprites = new Sprite();
+
+        Map<String, Object> criesMap = (Map<String, Object>) resp.get("cries");
+        if (criesMap != null) {
+            cries.setLatest((String) criesMap.get("latest"));
+            cries.setLegacy((String) criesMap.get("legacy"));
+        }
+        Map<String, Object> spriteMap = (Map<String, Object>) resp.get("sprites");
+        if (spriteMap != null) {
+            sprites.setBack_default((String) spriteMap.get("back_default"));
+            sprites.setBack_female((String) spriteMap.get("back_female"));
+            sprites.setBack_shiny((String) spriteMap.get("back_shiny"));
+            sprites.setBack_shiny_female((String) spriteMap.get("back_shiny_female"));
+            sprites.setFront_default((String) spriteMap.get("front_default"));
+            sprites.setFront_female((String) spriteMap.get("front_female"));
+            sprites.setFront_shiny((String) spriteMap.get("front_shiny"));
+            sprites.setFront_shiny_female((String) spriteMap.get("front_shiny_female"));
+        }
+
+        List<Map<String, Object>> statsList = (List<Map<String, Object>>) resp.get("stats");
+        List<Stats> listaStats = new ArrayList<>();
+        if (statsList != null) {
+            for (Map<String, Object> s : statsList) {
+                Stats stat = new Stats();
+
+                stat.setBase_stat((Integer) s.get("base_stat"));
+                stat.setEffort((Integer) s.get("effort"));
+
+                // el campo "stat" dentro de cada elemento es otro objeto (Map)
+                Map<String, Object> statInfo = (Map<String, Object>) s.get("stat");
+                if (statInfo != null) {
+                    stat.setName((String) statInfo.get("name"));
+                    stat.setUrl((String) statInfo.get("url"));
+                }
+
+                listaStats.add(stat);
+            }
+        }
+        List<Map<String, Object>> typesList = (List<Map<String, Object>>) resp.get("types");
+        List<Type> listTypes = new ArrayList<>();
+
+        if (typesList != null) {
+            for (Map<String, Object> t : typesList) {
+                Type type = new Type();
+                type.setSlot((Integer) t.get("slot"));
+                Map<String, Object> typeInfo = (Map<String, Object>) t.get("type");
+                if (typeInfo != null) {
+                    type.setName((String) typeInfo.get("name"));
+                    type.setUrl((String) typeInfo.get("url"));
+                }
+                listTypes.add(type);
+            }
+        }
 
         pokemon.setId((Integer) resp.get("id"));
         pokemon.setName((String) resp.get("name"));
         pokemon.setHeight((Integer) resp.get("height"));
         pokemon.setWeight((Integer) resp.get("weight"));
+        pokemon.setOrder((Integer) resp.get("order"));
+        pokemon.setIs_default((boolean) resp.get("is_default"));
+
+        pokemon.setCries(List.of(cries));
+        pokemon.setSprites(List.of(sprites));
+        pokemon.setStats(listaStats);
+        pokemon.setTypes(listTypes);
 
         return pokemon;
 

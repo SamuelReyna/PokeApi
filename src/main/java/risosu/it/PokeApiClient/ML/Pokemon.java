@@ -38,9 +38,29 @@ public class Pokemon {
 
     private boolean is_default; //Si el pokemon se encuentra en su forma base (No evolucionado )
 
-    private List<Sprite> sprites; //Imagenes del pokemon 
+    public List<Sprite> sprites; //Imagenes del pokemon 
 
-    private List<Cries> cries; //Efectos de sonido
+    public List<Cries> cries; //Efectos de sonido
+
+    public List<Stats> stats;
+    
+    public List<Type> types;
+
+    public List<Type> getTypes() {
+        return types;
+    }
+
+    public void setTypes(List<Type> types) {
+        this.types = types;
+    }
+
+    public List<Stats> getStats() {
+        return stats;
+    }
+
+    public void setStats(List<Stats> stats) {
+        this.stats = stats;
+    }
 
     public String getName() {
         return name;

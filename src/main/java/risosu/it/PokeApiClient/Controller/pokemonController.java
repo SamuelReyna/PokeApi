@@ -14,8 +14,14 @@ public class pokemonController {
     }
 
     @GetMapping("/pokemon")
-    public String GetPokemones() throws Exception {
-        getAllPokemonsService.persistirPokemones();
+    public String GetPokemones() {
+        new Thread(() -> {
+            try {
+                getAllPokemonsService.persistirPokemones();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
         return "loading";
     }
 }

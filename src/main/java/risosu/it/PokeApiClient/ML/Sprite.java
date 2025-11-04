@@ -1,17 +1,51 @@
-
 package risosu.it.PokeApiClient.ML;
 
-
 public class Sprite {
-    
+
     private String back_default;
+    private String back_female;
+    private String back_shiny_female;
+    private String front_female;
+    private String front_shiny_female;
     private String front_default;
     private String back_shiny;
     private String front_shiny;
-    
-    
-    public Sprite(){};
-    
+
+    public String getBack_female() {
+        return back_female;
+    }
+
+    public void setBack_female(String back_female) {
+        this.back_female = back_female;
+    }
+
+    public String getBack_shiny_female() {
+        return back_shiny_female;
+    }
+
+    public void setBack_shiny_female(String back_shiny_female) {
+        this.back_shiny_female = back_shiny_female;
+    }
+
+    public String getFront_female() {
+        return front_female;
+    }
+
+    public void setFront_female(String front_female) {
+        this.front_female = front_female;
+    }
+
+    public String getFront_shiny_female() {
+        return front_shiny_female;
+    }
+
+    public void setFront_shiny_female(String front_shiny_female) {
+        this.front_shiny_female = front_shiny_female;
+    }
+
+    public Sprite() {
+    }
+
     public String getBack_default() {
         return back_default;
     }
@@ -43,7 +77,16 @@ public class Sprite {
     public void setFront_shiny(String front_shiny) {
         this.front_shiny = front_shiny;
     }
-    
-    
-    
+
+    public Sprite(String back_default, String back_female, String back_shiny_female, String front_female, String front_shiny_female, String front_default, String back_shiny, String front_shiny) {
+        this.back_default = back_default;
+        this.back_female = back_female;
+        this.back_shiny_female = back_shiny_female;
+        this.front_female = front_female;
+        this.front_shiny_female = front_shiny_female;
+        this.front_default = front_default;
+        this.back_shiny = back_shiny;
+        this.front_shiny = front_shiny;
+    }
+
 }
