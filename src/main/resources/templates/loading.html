@@ -75,5 +75,23 @@
     <div class="pokeball"></div>
     <h2>Obteniendo lista de pokemones...</h2>
   </body>
+  
+  <script>
+    function verificarEstado() {
+      fetch('/pokeControl/status')
+        .then(res => res.json())
+        .then(data => {
+          if (data.ready) {
+            window.location.href = "/pokeControl/listar"; // redirige a la vista final
+          } else {
+            document.getElementById('estado').innerText = "Procesando...";
+            setTimeout(verificarEstado, 2000); // vuelve a intentar en 2 segundos
+          }
+        });
+    }
+
+    verificarEstado();
+  </script>
+
 </html>
     
