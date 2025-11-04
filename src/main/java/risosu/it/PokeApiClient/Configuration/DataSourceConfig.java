@@ -7,14 +7,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
-public class DBConfig {
+public class DataSourceConfig {
 
     @Bean
     public DataSource dataSource() {
 
-        String jdbcurl = "";
-        String username = "";
-        String password = "";
+        String jdbcurl = "jdbc:oracle:thin:@192.167.1.176:1521:orcl";
+        String username = "PokemonClient";
+        String password = "password1";
 
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
