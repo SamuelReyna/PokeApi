@@ -2,6 +2,7 @@ package risosu.it.PokeApiClient.Service;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import risosu.it.PokeApiClient.DAO.IEntrenadorRepository;
@@ -91,6 +92,16 @@ public class EntrenadorService {
         } else {
             return Optional.empty();
         }
+    }
+
+    public UserDetails loadEntrenadorByUsername(String username) {
+        Optional<Entrenador> entrenador = iEntrenadorRepository.findByUsername(username);
+        if (entrenador.isPresent()) {
+            return (UserDetails) entrenador.get();
+        } else {
+            return null;
+        }
+
     }
 
 }

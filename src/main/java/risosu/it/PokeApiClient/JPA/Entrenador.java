@@ -8,10 +8,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.Collection;
+import java.util.List;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Table(name="entrenadores")
-public class Entrenador {
+@Table(name = "entrenadores")
+public class Entrenador implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,13 +34,15 @@ public class Entrenador {
     private String correo;
     @Column(name = "password")
     private String password;
+    @Column(name = "username")
+    private String username;
     @OneToOne
     @JoinColumn(name = "idrol")
     public Rol rol;
     @Column(name = "estado")
     private int estado;
 
-    public Entrenador(int idEntrenador, String nombre, String apellidoPaterno, String apellidoMaterno, String sexo, String correo, String password, Rol rol, int estado) {
+    public Entrenador(int idEntrenador, String nombre, String apellidoPaterno, String apellidoMaterno, String sexo, String correo, String username, String password, Rol rol, int estado) {
         this.idEntrenador = idEntrenador;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
@@ -44,6 +51,7 @@ public class Entrenador {
         this.correo = correo;
         this.password = password;
         this.rol = rol;
+        this.username = username;
         this.estado = estado;
     }
 
@@ -98,6 +106,7 @@ public class Entrenador {
         this.correo = correo;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
@@ -120,6 +129,36 @@ public class Entrenador {
 
     public void setEstado(int estado) {
         this.estado = estado;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + rol.getNombre()));
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.estado == 1;
     }
 
 }
