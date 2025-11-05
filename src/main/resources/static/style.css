@@ -144,6 +144,12 @@ margin: 10px;
 #c79945, 0 0 80px #c79945;  /* efecto de resplandor wiccs!*/
 
 }
+
+.pokeImage-detail{
+  max-width: none;
+  max-height: none;
+  width: 100%;
+}
 /*-----------------------------------------------------------------------------*/
 /*Tabla*/
 
@@ -191,10 +197,11 @@ border-radius: 30px;
 
 
 .pokemon-picture{
-    width: 100%;
-    height: 100%;
+    width: 80%;
+    height: 80%;
     border-radius: 100%;
-    background-color: #d1d1dc;
+    background-color: rgba(177, 188, 216, 0.205);
+    backdrop-filter: blur(5px);
 }
  
 .container-data{
@@ -207,7 +214,6 @@ border-radius: 30px;
     width: 250px;
     border-radius: 15px;
     
-   
 }
 
 /*---------------------------------------------------------------------------*/
@@ -397,4 +403,72 @@ input:checked + .slider {
     background: #FAAC58;
     color:#222;
 }
+
+/*Estilos de checkbox*/
+.checkbox-container input[type="checkbox"] {
+    display: none; /* Oculta el input real */
+
+
+}
+
+
+.checkmark {
+    /* Estilo del checkbox personalizado (la caja) */
+   display: inline-block;
+  width: 25px;
+  height: 25px;
+  background-color: #13053324;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  cursor: pointer;
+  /*giro*/
+    transform: rotate(0deg);
+  
+    /* Transición suave para el efecto de brillo */
+    transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+/* Cuando el input esté :checked, aplica el estilo al elemento .checkmark adyacente */
+.checkbox-container input[type="checkbox"]:checked + .checkmark {
+    background-color: #3bff93; /* Color de fondo cuando está marcado */
+    border-color: #11ef66;
+    /* El efecto de brillo: box-shadow (desplazamiento x, desplazamiento y, radio de desenfoque, radio de expansión, color) */
+    box-shadow: 0 0 10px #00ff5e, 0 0 20px #9effc5, 0 0 30px #11ff00; /* Múltiples sombras para un brillo intenso */
+}
+
+/* Opcional: Estilo para la marca de verificación dentro de la caja */
+.checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid rgb(141, 255, 149);
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
+
+/* Muestra la marca de verificación cuando está checked */
+.checkbox-container input[type="checkbox"]:checked + .checkmark::after {
+    display: block;
+}
+
+.btn-change{
+    background: linear-gradient(180deg, #9542d544, #0b17ba44);
+    backdrop-filter: blur(10px);
+    /* border: 1px solid #d9d8e5; */
+    box-shadow: rgba(1, 8, 30, 0.826) 0px 1px 10px;
+    cursor: pointer;
+    font-size: 1.2em;
+    color: #333;
+    width: 10%;
+    height: 10%;
+    border-radius: 5%;
+}
+
+
+
+
 
