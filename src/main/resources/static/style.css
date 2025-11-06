@@ -101,7 +101,6 @@ margin: 10px;
 }
 
 .poke-front img{ /* asegurar tamaño de la imagen */
-    max-width: 80%;
     height: auto;
     display: block;
     margin-bottom: 8px;
@@ -117,6 +116,8 @@ margin: 10px;
     justify-content: center;
     z-index: 1;
 }
+
+
 .poke-buttons {
     /* background: rgba(213, 221, 235, 0.885); */
     /* backdrop-filter: blur(10px);
@@ -468,7 +469,10 @@ input:checked + .slider {
     border-radius: 5%;
 }
 
-
-
-
+.img-detail{
+    width: 260px;
+    height: auto;
+  display: block;
+  margin-bottom: 8px;
+}
 

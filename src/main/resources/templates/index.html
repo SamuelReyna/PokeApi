@@ -58,8 +58,16 @@
                                     data-height=${pokemon.height},
                                     data-weight=${pokemon.weight},
                                     data-img=${pokemon.sprites[0].front_default},
+                                    data-img-back=${pokemon.sprites[0].back_default},
                                     data-type=${pokemon.types[0].name},
-                                    data-crie=${pokemon.cries[0].latest}"
+                                    data-crie=${pokemon.cries[0].latest},
+                                    data-hp=${pokemon.stats[0].base_stat},
+                                    data-atk=${pokemon.stats[1].base_stat},
+                                    data-def=${pokemon.stats[2].base_stat},
+                                    data-spa=${pokemon.stats[3].base_stat}"
+                                    
+                                    
+                                    
                                     onclick="cargarPokemon(this)">
 
                                     <td>
@@ -108,15 +116,13 @@
                             
                             
                             
-                            <div class="col-10 poke-vista text-center">
+                            <div class="col-10 poke-vista  text-center">
                                 <div class="poke-front">
-                                    <img class="" src="/pokeBall.png" alt="">
+                                    <img class="img-detail" src="/pokeBall.png" alt="">
+                                     <h3></h3>
                                 </div>
                                 <div class="poke-back">
-                                    <h4>Detalles</h4>
-                                    <p>Tipo:</p>
-                                    <p>Altura:</p>
-                                    <p>Peso:</p>
+                                  <canvas id="radarChart" width="400" height="400"></canvas>
                                 </div>
                             </div>
                             
@@ -136,34 +142,141 @@
             </div>
 
         </div>
-
+        
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+        
         <script>
   function cargarPokemon(row) {
     const name = row.getAttribute("data-name");
     const height = row.getAttribute("data-height");
     const weight = row.getAttribute("data-weight");
     const img = row.getAttribute("data-img");
+    const imgBack = row.getAttribute("data-img-back");
     const type = row.getAttribute("data-type");
     const cry = row.getAttribute("data-crie");
+    
+    const stats = {
+    hp: parseInt(row.getAttribute("data-hp")),
+    attack: parseInt(row.getAttribute("data-atk")),
+    def: parseInt(row.getAttribute("data-def")),
+    spa: parseInt(row.getAttribute("data-spa"))
+ 
+};
+
 
 
     // Guarda el cry en el botón
   const playButton = document.querySelector(".poke-buttons .btn:first-child");
   playButton.setAttribute("data-crie", cry);
-
-
-
+  
     // Actualiza la imagen
     document.querySelector(".poke-front img").src = img;
 
-    // Actualiza el nombre
-    document.querySelector(".poke-front h3").textContent = name;
+  
+//   // Actualiza el gráfico
+//  const chartData = {
+//    labels: ['HP', 'Ataque', 'Defensa', 'Ataque Especial', 'Defensa Especial', 'Velocidad'],
+//    datasets: [{
+//      label: `Estadísticas`,
+//      data: [stats.hp],
+//      backgroundColor: 'rgba(250, 105, 65, 0.786)',
+//      borderColor: '#afe2ff',
+//      borderWidth: 1,
+//      pointBackgroundColor: 'rgba(255, 99, 132, .5)'
+//    }]
+//  };
+//
+//  const chartOptions = {
+//    scales: {
+//      r: {
+//        min: 0,
+//        max: 120,
+//        ticks: { display: false },
+//        grid: { color: 'rgba(200, 200, 200, 0.2)' },
+//        pointLabels: {
+//          font: { size: 14, color: 'white' }
+//        }
+//      }
+//    },
+//    plugins: {
+//      legend: {
+//        display: true,
+//        labels: { color: 'white' }
+//      }
+//    }
+//  };
+//
+//if (radarChart) {
+//    radarChart.data = chartData;
+//    radarChart.options = chartOptions;
+//    radarChart.update();
+//  } else {
+//    const ctx = document.getElementById('radarChart').getContext('2d');
+//    radarChart = new Chart(ctx, {
+//      type: 'radar',
+//      data: chartData,
+//      options: chartOptions
+//    });
+//  }
+ 
 
-    // Actualiza los detalles
-    document.querySelector(".poke-back p:nth-of-type(1)").textContent = "Tipo: " + type;
-    document.querySelector(".poke-back p:nth-of-type(2)").textContent = "Altura: " + height + " dm";
-    document.querySelector(".poke-back p:nth-of-type(3)").textContent = "Peso: " + weight + " hg";
+        const data = {
+            labels: ['HP', 'ATK', 'DEF', 'SpA', '', ''],
+            datasets: [{
+                label: '',
+                data: [
+                    stats.hp,
+                    stats.attack,
+                    stats.def,
+                    stats.spa
+                   
+                ],
+                backgroundColor: 'rgba(250, 105, 65, 0.786)',
+                borderColor: '#afe2ff', 
+                borderWidth: 1,
+                pointBackgroundColor: 'rgba(255, 99, 132, .5)'
+            }]
+        };
+
+        const config = {
+            type: 'radar',
+            data: data,
+            options: {
+                scales: {
+                    r: {
+                        min: 0,
+                        max: 120,
+                        ticks: {
+                            stepSize: 20
+                        },
+                        grid: {
+                            color: 'rgba(200, 200, 200, 0.2)'
+                        },
+                        pointLabels: {
+                            font: {
+                                size: 14,
+                                color: 'white'
+                            }
+                        },
+                        ticks: {
+                        display: false 
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: 'white'
+                        }
+                    }
+                }
+            }
+        };
+
+        new Chart(document.getElementById('radarChart'), config);
+
   }
 </script>
 
@@ -178,6 +291,75 @@
   }
 }
 </script>
+
+
+<!--<script>
+        const stats = {
+            hp: 78,
+            attack: 84,
+            defense: 78,
+            spAttack: 109,
+            spDefense: 85,
+            speed: 100
+        };
+
+        const data = {
+            labels: ['A', 'B', 'C', 'D', 'E', 'F'],
+            datasets: [{
+                label: '',
+                data: [
+                    stats.hp,
+                    stats.attack,
+                    stats.defense,
+                    stats.spAttack,
+                    stats.spDefense,
+                    stats.speed
+                ],
+                backgroundColor: 'rgba(250, 105, 65, 0.786)',
+                borderColor: '#afe2ff', 
+                borderWidth: 1,
+                pointBackgroundColor: 'rgba(255, 99, 132, .5)'
+            }]
+        };
+
+        const config = {
+            type: 'radar',
+            data: data,
+            options: {
+                scales: {
+                    r: {
+                        min: 0,
+                        max: 120,
+                        ticks: {
+                            stepSize: 20
+                        },
+                        grid: {
+                            color: 'rgba(200, 200, 200, 0.2)'
+                        },
+                        pointLabels: {
+                            font: {
+                                size: 14,
+                                color: 'white'
+                            }
+                        },
+                        ticks: {
+                        display: false 
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: 'white'
+                        }
+                    }
+                }
+            }
+        };
+
+        new Chart(document.getElementById('radarChart'), config);
+    </script>-->
     </body>
 
 </html>
