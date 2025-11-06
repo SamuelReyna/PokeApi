@@ -13,7 +13,7 @@ public class Rol {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="rol")
+    @Column(name="idrol")
     private int idrol;
     @Column(name = "nombre")
     private String nombre;

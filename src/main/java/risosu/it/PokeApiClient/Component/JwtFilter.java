@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,29 +31,40 @@ public class JwtFilter extends GenericFilter {
     }
 
     @Override
-    public void doFilter(ServletRequest sr, ServletResponse sr1, FilterChain fc) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) sr;
-        HttpServletRequest response = (HttpServletRequest) sr1;
-
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest request
+                = (HttpServletRequest) req;
+        HttpServletResponse response
+                = (HttpServletResponse) res;
         String header = request.getHeader("Authorization");
+
         String path = request.getRequestURI();
+
+        // ❌ Ignorar las rutas públicas
+        if (path.startsWith("/api/")) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
             try {
                 Jws<Claims> claims = jwtUtil.validateToken(token);
+
                 UserDetails userDetails
                         = entrenadorService.loadEntrenadorByUsername(claims.getBody().getSubject());
 
                 UsernamePasswordAuthenticationToken auth
-                        = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        = new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
             } catch (UsernameNotFoundException e) {
             }
         }
-        fc.doFilter(sr, sr1);
+
+        chain.doFilter(req, res);
 
     }
 

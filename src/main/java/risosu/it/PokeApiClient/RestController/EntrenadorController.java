@@ -37,7 +37,7 @@ public class EntrenadorController {
         return ResponseEntity.ok(entrenadorService.Add(entrenador));
     }
 
-    @PatchMapping("/{idEntrenador")
+    @PatchMapping("/{idEntrenador}")
     public ResponseEntity Patch(@PathVariable("idEntrenador") Long idEntrenador, @RequestBody Entrenador entrenador) {
         return ResponseEntity.ok(entrenadorService.patchEntrenador(idEntrenador, entrenador));
     }

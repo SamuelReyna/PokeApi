@@ -7,4 +7,5 @@ import risosu.it.PokeApiClient.JPA.Entrenador;
 public interface IEntrenadorRepository extends JpaRepository<Entrenador, Long> {
 
     Optional<Entrenador> findByUsername(String username);
+
 }

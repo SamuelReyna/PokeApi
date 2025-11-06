@@ -8,6 +8,5 @@ public class PokeApiClientApplication {
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(PokeApiClientApplication.class, args);
-
     }
 }
