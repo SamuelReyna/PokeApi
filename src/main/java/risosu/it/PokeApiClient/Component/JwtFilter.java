@@ -41,7 +41,7 @@ public class JwtFilter extends GenericFilter {
         String path = request.getRequestURI();
 
         // ❌ Ignorar las rutas públicas
-        if (path.startsWith("/api/")) {
+        if (path.startsWith("/auth/")) {
             chain.doFilter(request, response);
             return;
         }

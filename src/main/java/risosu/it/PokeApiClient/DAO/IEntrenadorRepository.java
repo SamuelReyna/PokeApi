@@ -8,4 +8,6 @@ public interface IEntrenadorRepository extends JpaRepository<Entrenador, Long> {
 
     Optional<Entrenador> findByUsername(String username);
 
+    Optional<Entrenador> findByCorreo(String correo);
+
 }

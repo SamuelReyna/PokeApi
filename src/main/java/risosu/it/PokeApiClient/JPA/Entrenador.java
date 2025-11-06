@@ -36,6 +36,8 @@ public class Entrenador implements UserDetails {
     private String password;
     @Column(name = "username")
     private String username;
+    @Column(name = "verify")
+    private int verify;
     @OneToOne
     @JoinColumn(name = "idrol")
     public Rol rol;
@@ -56,6 +58,14 @@ public class Entrenador implements UserDetails {
     }
 
     public Entrenador() {
+    }
+
+    public int getVerify() {
+        return verify;
+    }
+
+    public void setVerify(int verify) {
+        this.verify = verify;
     }
 
     public int getIdEntrenador() {
