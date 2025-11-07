@@ -88,77 +88,107 @@ public class AuthController {
 
             String token = passwordResetTokenService.GenerateToken(entrenador.getIdEntrenador());
 
-            String linkRestablecer = "http://localhost:8081/changePassword?token=" + token;
+            String linkRestablecer = "http://localhost:8080/usuario/changePassword?token=" + token;
 
             String html = """
-                              <!DOCTYPE html>
-                              <html lang="es">
-                              <head>
-                                  <meta charset="UTF-8">
-                                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                  <title>Restablecer Contrase\u00f1a</title>
-                                  <style>
-                                      body {
-                                          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                                          background-color: #f4f4f4;
-                                          margin: 0;
-                                          padding: 0;
-                                      }
-                                      .container {
-                                          max-width: 600px;
-                                          margin: 40px auto;
-                                          background-color: #ffffff;
-                                          border-radius: 10px;
-                                          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                                          overflow: hidden;
-                                      }
-                                      .header {
-                                          background-color: #007bff;
-                                          color: #ffffff;
-                                          padding: 20px;
-                                          text-align: center;
-                                      }
-                                      .content {
-                                          padding: 30px;
-                                          color: #333333;
-                                          line-height: 1.6;
-                                      }
-                                      .button {
-                                          display: inline-block;
-                                          padding: 12px 24px;
-                                          margin: 20px 0;
-                                          background-color: #007bff;
-                                          color: #ffffff;
-                                          text-decoration: none;
-                                          border-radius: 6px;
-                                          font-weight: bold;
-                                          transition: background-color 0.3s ease;
-                                      }
-                                      .button:hover {
-                                          background-color: #0056b3;
-                                      }
-                                      .footer {
-                                          text-align: center;
-                                          font-size: 12px;
-                                          color: #999999;
-                                          padding: 20px;
-                                          border-top: 1px solid #eeeeee;
-                                      }
-                                  </style>
-                              </head>
-                              <body>
-                                  <div class="container">
-                                      <div class="header">
-                                          <h1>\u00a1Hola """ + entrenador.getUsername() + "!</h1>\n"
-                    + "        </div>\n"
-                    + "        <div class=\"content\">\n"
+                          <!DOCTYPE html>
+                          <html lang="es">
+                          <head>
+                              <meta charset="UTF-8">
+                              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                              <title>Restablecer Contrase\u00f1a - Centro Pok\u00e9mon</title>
+                              <style>
+                                  body {
+                                      font-family: 'Press Start 2P', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                                      background-color: #ffcb05;
+                                      background-image: linear-gradient(135deg, #ffcb05 40%, #3b4cca 40%);
+                                      margin: 0;
+                                      padding: 0;
+                                  }
+                                  .container {
+                                      max-width: 600px;
+                                      margin: 50px auto;
+                                      background-color: #ffffff;
+                                      border: 5px solid #3b4cca;
+                                      border-radius: 16px;
+                                      overflow: hidden;
+                                      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+                                  }
+                                  .header {
+                                      background-color: #3b4cca;
+                                      color: #ffcb05;
+                                      text-align: center;
+                                      padding: 20px;
+                                  }
+                                  .header h1 {
+                                      margin: 0;
+                                      font-size: 22px;
+                                  }
+                                  .content {
+                                      padding: 30px;
+                                      text-align: center;
+                                      color: #333;
+                                  }
+                                  .pokeball {
+                                      width: 80px;
+                                      height: 80px;
+                                      margin: 0 auto 20px auto;
+                                      background: radial-gradient(circle at 50% 45%, #fff 40%, #000 41%, #000 44%, #ff0000 45%);
+                                      border-radius: 50%;
+                                      border: 4px solid #000;
+                                      position: relative;
+                                  }
+                                  .pokeball::after {
+                                      content: '';
+                                      position: absolute;
+                                      top: 35%;
+                                      left: 35%;
+                                      width: 30%;
+                                      height: 30%;
+                                      background: white;
+                                      border: 4px solid black;
+                                      border-radius: 50%;
+                                  }
+                                  .button {
+                                      display: inline-block;
+                                      padding: 14px 30px;
+                                      background-color: #ff0000;
+                                      color: #fff;
+                                      text-decoration: none;
+                                      border-radius: 8px;
+                                      font-weight: bold;
+                                      box-shadow: 0 4px #a60000;
+                                      transition: all 0.3s ease;
+                                  }
+                                  .button:hover {
+                                      background-color: #cc0000;
+                                      transform: scale(1.05);
+                                  }
+                                  .footer {
+                                      background-color: #f7f7f7;
+                                      padding: 15px;
+                                      text-align: center;
+                                      font-size: 12px;
+                                      color: #777;
+                                      border-top: 1px solid #eee;
+                                  }
+                              </style>
+                          </head>
+                          <body>
+                              <div class="container">
+                                  <div class="header">
+                                      <h1>Centro Pok\u00e9mon</h1>
+                                  </div>
+                                  <div class="content">
+                                      <div class="pokeball"></div>
+                                      <h2>\u00a1Hola """ + entrenador.getUsername() + "!</h2>\n"
                     + "            <p>Recibimos una solicitud para restablecer tu contraseña.</p>\n"
-                    + "            <p>Haz clic en el botón de abajo para crear una nueva contraseña segura:</p>\n"
-                    + "            <a href=\"" + linkRestablecer + "\" class=\"button\">Restablecer Contraseña</a>\n"
-                    + "            <p>Si no realizaste esta solicitud, puedes ignorar este mensaje. Tu cuenta seguirá siendo segura.</p>\n"
+                    + "            <p>Haz clic en el siguiente botón para crear una nueva contraseña segura:</p>\n"
+                    + "            <a href=\"" + linkRestablecer + "\" class=\"button\">🔐 Restablecer Contraseña</a>\n"
+                    + "            <p>Si no realizaste esta solicitud, puedes ignorar este mensaje.</p>\n"
                     + "        </div>\n"
                     + "        <div class=\"footer\">\n"
-                    + "            &copy; 2025 TuAplicación. Todos los derechos reservados.\n"
+                    + "            © 2025 Centro Pokémon | Todos los derechos reservados.\n"
                     + "        </div>\n"
                     + "    </div>\n"
                     + "</body>\n"
@@ -185,79 +215,109 @@ public class AuthController {
                             Entrenador resultUpdate = entrenadorService.Update(entrenador.get());
 
                             String html = """
-                                              <!DOCTYPE html>
-                                              <html lang="es">
-                                              <head>
-                                                  <meta charset="UTF-8">
-                                                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                                  <title>Contrase\u00f1a Actualizada</title>
-                                                  <style>
-                                                      body {
-                                                          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                                                          background-color: #f4f4f4;
-                                                          margin: 0;
-                                                          padding: 0;
-                                                      }
-                                                      .container {
-                                                          max-width: 600px;
-                                                          margin: 40px auto;
-                                                          background-color: #ffffff;
-                                                          border-radius: 10px;
-                                                          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                                                          overflow: hidden;
-                                                      }
-                                                      .header {
-                                                          background-color: #28a745;
-                                                          color: #ffffff;
-                                                          padding: 20px;
-                                                          text-align: center;
-                                                      }
-                                                      .content {
-                                                          padding: 30px;
-                                                          color: #333333;
-                                                          line-height: 1.6;
-                                                      }
-                                                      .button {
-                                                          display: inline-block;
-                                                          padding: 12px 24px;
-                                                          margin: 20px 0;
-                                                          background-color: #28a745;
-                                                          color: #ffffff;
-                                                          text-decoration: none;
-                                                          border-radius: 6px;
-                                                          font-weight: bold;
-                                                          transition: background-color 0.3s ease;
-                                                      }
-                                                      .button:hover {
-                                                          background-color: #218838;
-                                                      }
-                                                      .footer {
-                                                          text-align: center;
-                                                          font-size: 12px;
-                                                          color: #999999;
-                                                          padding: 20px;
-                                                          border-top: 1px solid #eeeeee;
-                                                      }
-                                                  </style>
-                                              </head>
-                                              <body>
-                                                  <div class="container">
-                                                      <div class="header">
-                                                          <h1>Contrase\u00f1a Actualizada</h1>
-                                                      </div>
-                                                      <div class="content">
-                                                          <p>\u00a1Hola   """ // Verde éxito
-                                    + resultUpdate.getUsername() + "!</p>\n"
+                                          <!DOCTYPE html>
+                                          <html lang="es">
+                                          <head>
+                                              <meta charset="UTF-8">
+                                              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                              <title>Contrase\u00f1a Actualizada - Centro Pok\u00e9mon</title>
+                                              <style>
+                                                  body {
+                                                      font-family: 'Press Start 2P', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                                                      background-color: #b7f57f;
+                                                      background-image: linear-gradient(135deg, #b7f57f 40%, #3b4cca 40%);
+                                                      margin: 0;
+                                                      padding: 0;
+                                                  }
+                                                  .container {
+                                                      max-width: 600px;
+                                                      margin: 50px auto;
+                                                      background-color: #ffffff;
+                                                      border: 5px solid #3b4cca;
+                                                      border-radius: 16px;
+                                                      overflow: hidden;
+                                                      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+                                                  }
+                                                  .header {
+                                                      background-color: #4CAF50;
+                                                      color: #ffffff;
+                                                      text-align: center;
+                                                      padding: 20px;
+                                                  }
+                                                  .header h1 {
+                                                      margin: 0;
+                                                      font-size: 22px;
+                                                  }
+                                                  .content {
+                                                      padding: 30px;
+                                                      text-align: center;
+                                                      color: #333;
+                                                  }
+                                                  .pokeball {
+                                                      width: 80px;
+                                                      height: 80px;
+                                                      margin: 0 auto 20px auto;
+                                                      background: radial-gradient(circle at 50% 45%, #fff 40%, #000 41%, #000 44%, #4CAF50 45%);
+                                                      border-radius: 50%;
+                                                      border: 4px solid #000;
+                                                      position: relative;
+                                                  }
+                                                  .pokeball::after {
+                                                      content: '';
+                                                      position: absolute;
+                                                      top: 35%;
+                                                      left: 35%;
+                                                      width: 30%;
+                                                      height: 30%;
+                                                      background: white;
+                                                      border: 4px solid black;
+                                                      border-radius: 50%;
+                                                  }
+                                                  .button {
+                                                      display: inline-block;
+                                                      padding: 14px 30px;
+                                                      background-color: #4CAF50;
+                                                      color: #fff;
+                                                      text-decoration: none;
+                                                      border-radius: 8px;
+                                                      font-weight: bold;
+                                                      box-shadow: 0 4px #2e7d32;
+                                                      transition: all 0.3s ease;
+                                                  }
+                                                  .button:hover {
+                                                      background-color: #43a047;
+                                                      transform: scale(1.05);
+                                                  }
+                                                  .footer {
+                                                      background-color: #f7f7f7;
+                                                      padding: 15px;
+                                                      text-align: center;
+                                                      font-size: 12px;
+                                                      color: #777;
+                                                      border-top: 1px solid #eee;
+                                                  }
+                                              </style>
+                                          </head>
+                                          <body>
+                                              <div class="container">
+                                                  <div class="header">
+                                                      <h1>Contrase\u00f1a Actualizada \u2705</h1>
+                                                  </div>
+                                                  <div class="content">
+                                                      <div class="pokeball"></div>
+                                                      <h2>\u00a1Hola """ + resultUpdate.getUsername() + "!</h2>\n"
                                     + "            <p>Queremos informarte que tu contraseña ha sido cambiada exitosamente.</p>\n"
                                     + "            <p>Si tú realizaste este cambio, no necesitas hacer nada más.</p>\n"
                                     + "            <p>Si <strong>no fuiste tú</strong>, te recomendamos restablecer tu contraseña de inmediato o contactar con el soporte técnico.</p>\n"
+                                    + "            <a href=\"mailto:soporte@pokemoncenter.com\" class=\"button\">Contactar Soporte</a>\n"
                                     + "        </div>\n"
                                     + "        <div class=\"footer\">\n"
-                                    + "            &copy; 2025 TuAplicación. Todos los derechos reservados.\n"
+                                    + "            © 2025 Centro Pokémon | ¡Atrápalos a todos!\n"
                                     + "        </div>\n"
                                     + "    </div>\n"
                                     + "</body>\n"
                                     + "</html>";
+
                             emailService.sendEmail(resultUpdate.getCorreo(), "Actualización de contraseña", html);
 
                         }
@@ -270,7 +330,7 @@ public class AuthController {
             return (ResponseEntity) ResponseEntity.badRequest();
 
         }
-            return ResponseEntity.status(200).body("exito");
+        return ResponseEntity.status(200).body("exito");
     }
 
     @PostMapping("/sendVerifyEmail")
@@ -288,7 +348,133 @@ public class AuthController {
                           <head>
                               <meta charset="UTF-8">
                               <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                              <title>Verificaci\u00f3n de Cuenta</title>
+                              <title>Verificaci\u00f3n de Cuenta - Centro Pok\u00e9mon</title>
+                              <style>
+                                  body {
+                                      font-family: 'Press Start 2P', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                                      background-color: #c7f0d8;
+                                      background-image: linear-gradient(135deg, #c7f0d8 40%, #3b4cca 40%);
+                                      margin: 0;
+                                      padding: 0;
+                                  }
+                                  .container {
+                                      max-width: 600px;
+                                      margin: 50px auto;
+                                      background-color: #ffffff;
+                                      border: 5px solid #3b4cca;
+                                      border-radius: 16px;
+                                      overflow: hidden;
+                                      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+                                  }
+                                  .header {
+                                      background-color: #28a745;
+                                      color: #ffffff;
+                                      text-align: center;
+                                      padding: 20px;
+                                  }
+                                  .header h1 {
+                                      margin: 0;
+                                      font-size: 22px;
+                                  }
+                                  .content {
+                                      padding: 30px;
+                                      text-align: center;
+                                      color: #333;
+                                  }
+                                  .pokeball {
+                                      width: 80px;
+                                      height: 80px;
+                                      margin: 0 auto 20px auto;
+                                      background: radial-gradient(circle at 50% 45%, #fff 40%, #000 41%, #000 44%, #ff1c1c 45%);
+                                      border-radius: 50%;
+                                      border: 4px solid #000;
+                                      position: relative;
+                                  }
+                                  .pokeball::after {
+                                      content: '';
+                                      position: absolute;
+                                      top: 35%;
+                                      left: 35%;
+                                      width: 30%;
+                                      height: 30%;
+                                      background: white;
+                                      border: 4px solid black;
+                                      border-radius: 50%;
+                                  }
+                                  .button {
+                                      display: inline-block;
+                                      padding: 14px 30px;
+                                      background-color: #28a745;
+                                      color: #fff;
+                                      text-decoration: none;
+                                      border-radius: 8px;
+                                      font-weight: bold;
+                                      box-shadow: 0 4px #1e7e34;
+                                      transition: all 0.3s ease;
+                                  }
+                                  .button:hover {
+                                      background-color: #1e7e34;
+                                      transform: scale(1.05);
+                                  }
+                                  .footer {
+                                      background-color: #f7f7f7;
+                                      padding: 15px;
+                                      text-align: center;
+                                      font-size: 12px;
+                                      color: #777;
+                                      border-top: 1px solid #eee;
+                                  }
+                              </style>
+                          </head>
+                          <body>
+                              <div class="container">
+                                  <div class="header">
+                                      <h1>\u00a1Bienvenido """ + entrenador.getUsername() + "!</h1>\n"
+                    + "        </div>\n"
+                    + "        <div class=\"content\">\n"
+                    + "            <div class=\"pokeball\"></div>\n"
+                    + "            <p>Gracias por unirte al <strong>Centro Pokémon</strong>.</p>\n"
+                    + "            <p>Antes de comenzar tu aventura, necesitamos verificar tu dirección de correo electrónico.</p>\n"
+                    + "            <p>Haz clic en el botón de abajo para activar tu cuenta y convertirte en un verdadero entrenador:</p>\n"
+                    + "            <a href=\"" + linkVerificar + "\" class=\"button\">Verificar mi cuenta</a>\n"
+                    + "            <p>Si no creaste esta cuenta, simplemente ignora este mensaje.</p>\n"
+                    + "        </div>\n"
+                    + "        <div class=\"footer\">\n"
+                    + "            © 2025 Centro Pokémon | ¡Atrápalos a todos!\n"
+                    + "        </div>\n"
+                    + "    </div>\n"
+                    + "</body>\n"
+                    + "</html>";
+
+            emailService.sendEmail(
+                    entrenador.getCorreo(),
+                    "Verificación de cuenta - TuAplicación",
+                    html
+            );
+
+            return ResponseEntity.ok("Correo de verificación enviado correctamente a " + entrenador.getCorreo());
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("No se encontró un usuario con el correo proporcionado.");
+    }
+
+    @GetMapping("/verifyAccount")
+    public ResponseEntity Verify(@RequestParam("token") String token) {
+
+        if (verifyTokenService.validarToken(token)) {
+            Optional<Entrenador> entrenador = entrenadorService.GetById(Long.valueOf(verifyTokenService.getUserIdbyToken(token)));
+            if (entrenador.isPresent()) {
+                Entrenador entreadorExist = entrenador.get();
+                entrenadorService.Verify(Long.valueOf(entreadorExist.getIdEntrenador()));
+                String html
+                        = """
+                          <!DOCTYPE html>
+                          <html lang="es">
+                          <head>
+                              <meta charset="UTF-8">
+                              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                              <title>Cuenta Validada</title>
                               <style>
                                   body {
                                       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -327,7 +513,7 @@ public class AuthController {
                                       transition: background-color 0.3s ease;
                                   }
                                   .button:hover {
-                                      background-color: #1e7e34;
+                                      background-color: #218838;
                                   }
                                   .footer {
                                       text-align: center;
@@ -341,108 +527,11 @@ public class AuthController {
                           <body>
                               <div class="container">
                                   <div class="header">
-                                      <h1>\u00a1Bienvenido """ + entrenador.getUsername() + "!</h1>\n"
-                    + "        </div>\n"
-                    + "        <div class=\"content\">\n"
-                    + "            <p>Gracias por registrarte en nuestra aplicación.</p>\n"
-                    + "            <p>Antes de comenzar, necesitamos verificar tu dirección de correo electrónico.</p>\n"
-                    + "            <p>Haz clic en el siguiente botón para activar tu cuenta:</p>\n"
-                    + "            <a href=\"" + linkVerificar + "\" class=\"button\">Verificar mi cuenta</a>\n"
-                    + "            <p>Si no creaste esta cuenta, puedes ignorar este mensaje.</p>\n"
-                    + "        </div>\n"
-                    + "        <div class=\"footer\">\n"
-                    + "            &copy; 2025 TuAplicación. Todos los derechos reservados.\n"
-                    + "        </div>\n"
-                    + "    </div>\n"
-                    + "</body>\n"
-                    + "</html>";
-
-            emailService.sendEmail(
-                    entrenador.getCorreo(),
-                    "Verificación de cuenta - TuAplicación",
-                    html
-            );
-
-            return ResponseEntity.ok("Correo de verificación enviado correctamente a " + entrenador.getCorreo());
-        }
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body("No se encontró un usuario con el correo proporcionado.");
-    }
-
-    @GetMapping("/verifyAccount")
-    public ResponseEntity Verify(@RequestParam("token") String token) {
-
-        if (verifyTokenService.validarToken(token)) {
-            Optional<Entrenador> entrenador = entrenadorService.GetById(Long.valueOf(verifyTokenService.getUserIdbyToken(token)));
-            if (entrenador.isPresent()) {
-                Entrenador entreadorExist = entrenador.get();
-                entrenadorService.Verify(Long.valueOf(entreadorExist.getIdEntrenador()));
-                String html = """
-                                              <!DOCTYPE html>
-                                              <html lang="es">
-                                              <head>
-                                                  <meta charset="UTF-8">
-                                                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                                  <title>Cuenta Validada</title>
-                                                  <style>
-                                                      body {
-                                                          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                                                          background-color: #f4f4f4;
-                                                          margin: 0;
-                                                          padding: 0;
-                                                      }
-                                                      .container {
-                                                          max-width: 600px;
-                                                          margin: 40px auto;
-                                                          background-color: #ffffff;
-                                                          border-radius: 10px;
-                                                          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                                                          overflow: hidden;
-                                                      }
-                                                      .header {
-                                                          background-color: #28a745;
-                                                          color: #ffffff;
-                                                          padding: 20px;
-                                                          text-align: center;
-                                                      }
-                                                      .content {
-                                                          padding: 30px;
-                                                          color: #333333;
-                                                          line-height: 1.6;
-                                                      }
-                                                      .button {
-                                                          display: inline-block;
-                                                          padding: 12px 24px;
-                                                          margin: 20px 0;
-                                                          background-color: #28a745;
-                                                          color: #ffffff;
-                                                          text-decoration: none;
-                                                          border-radius: 6px;
-                                                          font-weight: bold;
-                                                          transition: background-color 0.3s ease;
-                                                      }
-                                                      .button:hover {
-                                                          background-color: #218838;
-                                                      }
-                                                      .footer {
-                                                          text-align: center;
-                                                          font-size: 12px;
-                                                          color: #999999;
-                                                          padding: 20px;
-                                                          border-top: 1px solid #eeeeee;
-                                                      }
-                                                  </style>
-                                              </head>
-                                              <body>
-                                                  <div class="container">
-                                                      <div class="header">
-                                                          <h1>Contrase\u00f1a Actualizada</h1>
-                                                      </div>
-                                                      <div class="content">
-                                                          <p>\u00a1Hola   """ // Verde éxito
-                        + entreadorExist.getUsername() + "!</p>\n"
-                        + "            <p>Tu cuenta ha sido validada.</p>\n"
+                                      <h1>Contrase\u00f1a Actualizada</h1>
+                                  </div>
+                                  <div class="content">
+                                      <p>\u00a1Hola """ + entreadorExist.getUsername() + "!</p>\n"
+                        + "            <p>Tu cuenta ha sido validada correctamente.</p>\n"
                         + "            <p>Si tú realizaste este cambio, no necesitas hacer nada más.</p>\n"
                         + "        </div>\n"
                         + "        <div class=\"footer\">\n"
@@ -451,6 +540,7 @@ public class AuthController {
                         + "    </div>\n"
                         + "</body>\n"
                         + "</html>";
+
                 emailService.sendEmail(entreadorExist.getCorreo(), "Cuenta validada", html);
             }
         }
