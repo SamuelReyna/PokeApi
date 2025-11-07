@@ -125,15 +125,15 @@
             <div class="screen">
                 <h2>Pokémon Login</h2>
 
-                <form th:action="@{/usuario/login}" method="post">
+                <form th:action="@{/usuario/login}" th:object="${Entrenador}" method="post">
                     <div class="mb-3 text-start">
                         <label class="form-label"><i class="bi bi-person-fill"></i> USER</label>
-                        <input type="text" class="form-control" name="username" placeholder="Ash" required>
+                        <input type="text" class="form-control" th:field="*{username}" name="username" placeholder="Ash" required>
                     </div>
 
                     <div class="mb-3 text-start">
                         <label class="form-label"><i class="bi bi-lock-fill"></i> PASSWORD</label>
-                        <input type="password" class="form-control" name="password" placeholder="••••••••" required>
+                        <input type="password" class="form-control" th:field="*{password}" name="password" placeholder="••••••••" required>
                     </div>
 
                     <button type="submit" class="btn btn-start w-100 mt-2">

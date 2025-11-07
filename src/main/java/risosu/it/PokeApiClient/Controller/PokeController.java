@@ -5,6 +5,7 @@
 package risosu.it.PokeApiClient.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,11 +26,11 @@ import risosu.it.PokeApiClient.DTO.PokemonDTO;
 import risosu.it.PokeApiClient.ML.Pokemon;
 import risosu.it.PokeApiClient.ML.Result;
 
-
 @Controller
 @RequestMapping("/pokeControl")
 public class PokeController {
-     //Este controlador es accedido desde vista "loading" para validar si existe ya el archivo JSON y redirigir:
+    //Este controlador es accedido desde vista "loading" para validar si existe ya el archivo JSON y redirigir:
+
     @GetMapping("/status")
     @ResponseBody
     public Map<String, Object> verificarEstado() {
@@ -39,19 +40,23 @@ public class PokeController {
         return estado;
     }
 
-        
-        //Este controlador se encarga de mostrar la lista de pokemons:
-        
-        @GetMapping("/listar")
-        public String mostrarVistaFinal(Model model) {
+    //Este controlador se encarga de mostrar la lista de pokemons:
+    @GetMapping("/listar")
+    public String mostrarVistaFinal(Model model, HttpSession session) {
         // Leer el archivo JSON
         ObjectMapper mapper = new ObjectMapper();
         try {
             List<Pokemon> pokemones = Arrays.asList(
-                mapper.readValue(new File("pokemons.json"), Pokemon[].class)
+                    mapper.readValue(new File("pokemons.json"), Pokemon[].class)
             );
             model.addAttribute("pokemones", pokemones);
-            
+            model.addAttribute("token", session.getAttribute("token"));
+
+            if (session.getAttribute("token") != null) {
+                model.addAttribute("username", session.getAttribute("username"));
+                model.addAttribute("role", session.getAttribute("role"));
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
             model.addAttribute("error", "No se pudo leer el archivo");
@@ -60,4 +65,3 @@ public class PokeController {
         return "index"; // Thymeleaf buscará vistaFinal.html
     }
 }
-
