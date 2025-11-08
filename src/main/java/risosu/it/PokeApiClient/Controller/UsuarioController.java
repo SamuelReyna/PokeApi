@@ -30,8 +30,37 @@ public class UsuarioController {
     private final String url = "http://localhost:8081/auth/";
 
     @GetMapping("/register")
-    public String Register() {
+    public String Register(@ModelAttribute("entrenador") Entrenador entrenador) {
         return "register";
+    }
+
+    @PostMapping("/register")
+    public String RegisterPost(@ModelAttribute("entrenador") Entrenador entrenador, RedirectAttributes redirectAttributes) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Entrenador> requestEntity = new HttpEntity<>(entrenador, headers);
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<Map<String, Object>> responseEntity
+                = restTemplate.exchange(url + "register",
+                        HttpMethod.POST,
+                        requestEntity,
+                        new ParameterizedTypeReference<Map<String, Object>>() {
+                }
+                );
+        if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
+            return "redirect:/usuario/checkEmail";
+
+        } else {
+            redirectAttributes.addFlashAttribute("message", "Error al crear cuenta");
+            return "redirect:/usuario/login";
+        }
+
+    }
+
+    @GetMapping("/checkEmail")
+    public String CheckEmail() {
+        return "SendingFile";
     }
 
     @GetMapping("/login")
@@ -81,6 +110,25 @@ public class UsuarioController {
     @GetMapping("/verify")
     public String Verify() {
         return "sendEmail";
+    }
+
+    @GetMapping("/verifyAccount")
+    public String VerifyAccount(@RequestParam(name = "token", required = true) String token) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        ResponseEntity<String> responseEntity
+                = restTemplate.exchange(url + "verifyAccount?token=" + token,
+                        HttpMethod.GET,
+                        HttpEntity.EMPTY,
+                        String.class
+                );
+        if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
+            return "verifyAccount";
+        } else {
+            return "errorVerificar";
+        }
     }
 
     @GetMapping("/changePassword")

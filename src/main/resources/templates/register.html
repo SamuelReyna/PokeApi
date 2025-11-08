@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Registro de Entrenador — Game Boy Style</title>
+        <title>Registro de Entrenador </title>
 
         <!-- Bootstrap -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -124,50 +124,44 @@
             <div class="screen">
                 <h2>Registro de Entrenador</h2>
 
-                <form th:action="@{/usuario/register}" method="post">
+                <form th:action="@{/usuario/register}" th:object="${entrenador}" method="post">
                     <div class="mb-2 text-start">
                         <label class="form-label"><i class="bi bi-person-fill"></i> Nombre</label>
-                        <input type="text" class="form-control" name="nombre" placeholder="Ash" required />
+                        <input type="text" class="form-control" th:field="*{nombre}" name="nombre" placeholder="Ash" required />
                     </div>
 
                     <div class="mb-2 text-start">
                         <label class="form-label"><i class="bi bi-person-vcard"></i> Apellido Paterno</label>
-                        <input type="text" class="form-control" name="apellidoPaterno" placeholder="Ketchum" required />
+                        <input type="text" class="form-control" th:field="*{apellidoPaterno}" name="apellidoPaterno" placeholder="Ketchum" required />
                     </div>
 
                     <div class="mb-2 text-start">
                         <label class="form-label"><i class="bi bi-person-vcard"></i> Apellido Materno</label>
-                        <input type="text" class="form-control" name="apellidoMaterno" placeholder="Oak" required />
+                        <input type="text" class="form-control" th:field="*{apellidoMaterno}" name="apellidoMaterno" placeholder="Oak" required />
                     </div>
 
                     <div class="mb-2 text-start">
                         <label class="form-label"><i class="bi bi-gender-ambiguous"></i> Sexo</label>
-                        <select class="form-control" name="sexo" required>
+                        <select class="form-control" th:field="*{sexo}" name="sexo" required>
                             <option value="">Selecciona...</option>
                             <option value="M">Masculino</option>
                             <option value="F">Femenino</option>
-                            <option value="Otro">Otro</option>
                         </select>
                     </div>
 
                     <div class="mb-2 text-start">
                         <label class="form-label"><i class="bi bi-envelope-fill"></i> Correo</label>
-                        <input type="email" class="form-control" name="correo" placeholder="ash@pokemon.com" required />
+                        <input type="email" th:field="*{correo}" class="form-control" name="correo" placeholder="ash@pokemon.com" required />
                     </div>
 
                     <div class="mb-2 text-start">
                         <label class="form-label"><i class="bi bi-person-badge-fill"></i> Username</label>
-                        <input type="text" class="form-control" name="username" placeholder="ash_ketchum" required />
+                        <input type="text" class="form-control" th:field="*{username}" name="username" placeholder="ash_ketchum" required />
                     </div>
 
                     <div class="mb-2 text-start">
                         <label class="form-label"><i class="bi bi-lock-fill"></i> Password</label>
-                        <input type="password" class="form-control" name="password" placeholder="••••••••" required />
-                    </div>
-
-                    <div class="mb-2 text-start">
-                        <label class="form-label"><i class="bi bi-check-circle-fill"></i> Verify</label>
-                        <input type="number" class="form-control" name="verify" placeholder="0 o 1" min="0" max="1" required />
+                        <input type="password" th:field="*{password}" class="form-control" name="password" placeholder="••••••••" required />
                     </div>
 
                     <button type="submit" class="btn btn-start w-100 mt-2">
