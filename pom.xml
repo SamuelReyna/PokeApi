@@ -11,7 +11,7 @@
     <groupId>risosu.it</groupId>
     <artifactId>PokeApiClient</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>PokeApiClient</name>
+    <name>PokeApiBackend</name>
     <description>Consumo de pokeApi</description>
     <url/>
     <licenses>

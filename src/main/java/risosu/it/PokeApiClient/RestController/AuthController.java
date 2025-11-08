@@ -24,6 +24,7 @@ import risosu.it.PokeApiClient.Service.PasswordResetTokenService;
 import risosu.it.PokeApiClient.Service.VerifyTokenService;
 import risosu.it.PokeApiClient.Service.EmailService;
 import risosu.it.PokeApiClient.DTO.Password;
+import risosu.it.PokeApiClient.JPA.Rol;
 
 @RestController
 @RequestMapping("auth")
@@ -460,7 +461,7 @@ public class AuthController {
     }
 
     @GetMapping("/verifyAccount")
-    public ResponseEntity Verify(@RequestParam("token") String token) {
+    public ResponseEntity Verify(@RequestParam(name = "token", required = true) String token) {
 
         if (verifyTokenService.validarToken(token)) {
             Optional<Entrenador> entrenador = entrenadorService.GetById(Long.valueOf(verifyTokenService.getUserIdbyToken(token)));
@@ -546,6 +547,133 @@ public class AuthController {
         }
 
         return ResponseEntity.status(200).body("enviado correctamente");
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity Register(@RequestBody Entrenador entrenador) {
+        entrenador.setVerify(0);
+        entrenador.setEstado(0);
+        entrenador.setPassword(passwordEncoder.encode(entrenador.getPassword()));
+        entrenador.rol = new Rol();
+        entrenador.rol.setIdrol(1);
+        Entrenador newEntrenador = entrenadorService.Add(entrenador);
+
+        String token = verifyTokenService.GenerateToken(entrenador.getIdEntrenador());
+
+        // 🔗 Enlace de verificación
+        String linkVerificar = "http://localhost:8080/usuario/verifyAccount?token=" + token;
+
+        String html = """
+                          <!DOCTYPE html>
+                          <html lang="es">
+                          <head>
+                              <meta charset="UTF-8">
+                              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                              <title>Verificaci\u00f3n de Cuenta - Centro Pok\u00e9mon</title>
+                              <style>
+                                  body {
+                                      font-family: 'Press Start 2P', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                                      background-color: #c7f0d8;
+                                      background-image: linear-gradient(135deg, #c7f0d8 40%, #3b4cca 40%);
+                                      margin: 0;
+                                      padding: 0;
+                                  }
+                                  .container {
+                                      max-width: 600px;
+                                      margin: 50px auto;
+                                      background-color: #ffffff;
+                                      border: 5px solid #3b4cca;
+                                      border-radius: 16px;
+                                      overflow: hidden;
+                                      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+                                  }
+                                  .header {
+                                      background-color: #28a745;
+                                      color: #ffffff;
+                                      text-align: center;
+                                      padding: 20px;
+                                  }
+                                  .header h1 {
+                                      margin: 0;
+                                      font-size: 22px;
+                                  }
+                                  .content {
+                                      padding: 30px;
+                                      text-align: center;
+                                      color: #333;
+                                  }
+                                  .pokeball {
+                                      width: 80px;
+                                      height: 80px;
+                                      margin: 0 auto 20px auto;
+                                      background: radial-gradient(circle at 50% 45%, #fff 40%, #000 41%, #000 44%, #ff1c1c 45%);
+                                      border-radius: 50%;
+                                      border: 4px solid #000;
+                                      position: relative;
+                                  }
+                                  .pokeball::after {
+                                      content: '';
+                                      position: absolute;
+                                      top: 35%;
+                                      left: 35%;
+                                      width: 30%;
+                                      height: 30%;
+                                      background: white;
+                                      border: 4px solid black;
+                                      border-radius: 50%;
+                                  }
+                                  .button {
+                                      display: inline-block;
+                                      padding: 14px 30px;
+                                      background-color: #28a745;
+                                      color: #fff;
+                                      text-decoration: none;
+                                      border-radius: 8px;
+                                      font-weight: bold;
+                                      box-shadow: 0 4px #1e7e34;
+                                      transition: all 0.3s ease;
+                                  }
+                                  .button:hover {
+                                      background-color: #1e7e34;
+                                      transform: scale(1.05);
+                                  }
+                                  .footer {
+                                      background-color: #f7f7f7;
+                                      padding: 15px;
+                                      text-align: center;
+                                      font-size: 12px;
+                                      color: #777;
+                                      border-top: 1px solid #eee;
+                                  }
+                              </style>
+                          </head>
+                          <body>
+                              <div class="container">
+                                  <div class="header">
+                                      <h1>\u00a1Bienvenido """ + entrenador.getUsername() + "!</h1>\n"
+                + "        </div>\n"
+                + "        <div class=\"content\">\n"
+                + "            <div class=\"pokeball\"></div>\n"
+                + "            <p>Gracias por unirte al <strong>Centro Pokémon</strong>.</p>\n"
+                + "            <p>Antes de comenzar tu aventura, necesitamos verificar tu dirección de correo electrónico.</p>\n"
+                + "            <p>Haz clic en el botón de abajo para activar tu cuenta y convertirte en un verdadero entrenador:</p>\n"
+                + "            <a href=\"" + linkVerificar + "\" class=\"button\">Verificar mi cuenta</a>\n"
+                + "            <p>Si no creaste esta cuenta, simplemente ignora este mensaje.</p>\n"
+                + "        </div>\n"
+                + "        <div class=\"footer\">\n"
+                + "            © 2025 Centro Pokémon | ¡Atrápalos a todos!\n"
+                + "        </div>\n"
+                + "    </div>\n"
+                + "</body>\n"
+                + "</html>";
+
+        emailService.sendEmail(entrenador.getCorreo(), "Activación de cuenta", html);
+
+        if (newEntrenador.getIdEntrenador() > 0) {
+            return ResponseEntity.ok(entrenador);
+        } else {
+            return (ResponseEntity) ResponseEntity.badRequest();
+        }
     }
 
 }
