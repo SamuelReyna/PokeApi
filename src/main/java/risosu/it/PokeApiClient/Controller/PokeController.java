@@ -13,13 +13,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import risosu.it.PokeApiClient.DTO.PokeDetailDTO;
 import risosu.it.PokeApiClient.DTO.PokemonDTO;
@@ -29,8 +32,8 @@ import risosu.it.PokeApiClient.ML.Result;
 @Controller
 @RequestMapping("/pokeControl")
 public class PokeController {
-    //Este controlador es accedido desde vista "loading" para validar si existe ya el archivo JSON y redirigir:
-
+     
+//Este controlador es accedido desde vista "loading" para validar si existe ya el archivo JSON y redirigir:
     @GetMapping("/status")
     @ResponseBody
     public Map<String, Object> verificarEstado() {
@@ -45,10 +48,12 @@ public class PokeController {
     public String mostrarVistaFinal(Model model, HttpSession session) {
         // Leer el archivo JSON
         ObjectMapper mapper = new ObjectMapper();
+        
         try {
             List<Pokemon> pokemones = Arrays.asList(
                     mapper.readValue(new File("pokemons.json"), Pokemon[].class)
             );
+            
             model.addAttribute("pokemones", pokemones);
             model.addAttribute("token", session.getAttribute("token"));
 
@@ -62,6 +67,33 @@ public class PokeController {
             model.addAttribute("error", "No se pudo leer el archivo");
         }
 
-        return "index"; // Thymeleaf buscará vistaFinal.html
+        return "index"; 
+    }
+        
+        
+        @GetMapping("/searchByName")
+        @ResponseBody
+    public List<Pokemon> SearchByName(@RequestParam String pokeBusqueda) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<Pokemon> resultados = new ArrayList<>();
+
+        try {
+            List<Pokemon> pokemones = Arrays.asList(
+                    mapper.readValue(new File("pokemons.json"), Pokemon[].class));
+
+            resultados = pokemones.stream()
+                    .filter(pokemon -> pokemon.getName()
+                    .toLowerCase(Locale.ITALY)
+                    .contains(pokeBusqueda.toLowerCase()))
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            System.out.println(e.getLocalizedMessage());
+        }
+        return resultados;
+
     }
 }

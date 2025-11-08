@@ -29,6 +29,13 @@ margin: 10px;
     border-radius: 25px;
     padding: 10px;
 }
+.pokeBuscador, input{
+    background-color: #8fffb8;
+    backdrop-filter: blur(1px);
+    border-radius: 5px;
+    height: 35px;
+    width: 180px;
+}
 
 /*Opciones---------------------------------------------------------------------------*/
 

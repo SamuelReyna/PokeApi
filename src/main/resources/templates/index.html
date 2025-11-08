@@ -81,7 +81,11 @@
                             </a>
                         </div>
                     </div>
-                </div>
+                    
+                    <div class="pokeBuscador">  
+                     <input type="text" id="pokeBuscador" placeholder="PokeBusqueda!" oninput="buscarPokemon(this.value)">
+                    </div>
+                    
             </nav>
 
 
@@ -93,16 +97,16 @@
                 <div class="col-8">
                     <div class="table-container mytable mt-3">
                         <table class="table-hover text-white align-middle">
-                            <thead class="text-center">
+                            <thead class="">
                                 <tr>
                                     <th class="col-1"></th>
-                                    <th class="col-1">Datos</th>
-                                    <th class="col-1">Contacto</th>
-                                    <th class="col-1">Dirección</th>
+                                    <th class="col-1">Name</th>
+                                    <th class="col-1">Medidas</th>
+                                    <th class="col-1">FormaBase</th>
                                 </tr>
                             </thead>
 
-                            <tbody>
+                            <tbody id="tabla-pokemones">
                                 <tr th:each="pokemon : ${pokemones}" class="poke-fila p-2 mb-2 align-items-center"
                                     th:attr="data-id=${pokemon.id},
                                     data-name=${pokemon.name},
@@ -115,7 +119,9 @@
                                     data-hp=${pokemon.stats[0].base_stat},
                                     data-atk=${pokemon.stats[1].base_stat},
                                     data-def=${pokemon.stats[2].base_stat},
-                                    data-spa=${pokemon.stats[3].base_stat}"
+                                    data-spa=${pokemon.stats[3].base_stat},
+                                    data-spd=${pokemon.stats[4].base_stat},
+                                    data-speed=${pokemon.stats[5].base_stat}"
 
 
 
@@ -198,7 +204,14 @@
         <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
 
         <script>
+                                    let radarChart = null; // fuera de la función para que se destruya el grafico cada vez que se genere uno nuevo!
+
                                     function cargarPokemon(row) {
+                                        
+                                        if (radarChart) {
+                                            radarChart.destroy(); // 
+                                        }
+
                                         const name = row.getAttribute("data-name");
                                         const height = row.getAttribute("data-height");
                                         const weight = row.getAttribute("data-weight");
@@ -211,7 +224,9 @@
                                             hp: parseInt(row.getAttribute("data-hp")),
                                             attack: parseInt(row.getAttribute("data-atk")),
                                             def: parseInt(row.getAttribute("data-def")),
-                                            spa: parseInt(row.getAttribute("data-spa"))
+                                            spa: parseInt(row.getAttribute("data-spa")),
+                                            spd: parseInt(row.getAttribute("data-spd")),
+                                            speed: parseInt(row.getAttribute("data-speed"))
 
                                         };
 
@@ -225,62 +240,20 @@
                                         document.querySelector(".poke-front img").src = img;
 
 
-//   // Actualiza el gráfico
-//  const chartData = {
-//    labels: ['HP', 'Ataque', 'Defensa', 'Ataque Especial', 'Defensa Especial', 'Velocidad'],
-//    datasets: [{
-//      label: `Estadísticas`,
-//      data: [stats.hp],
-//      backgroundColor: 'rgba(250, 105, 65, 0.786)',
-//      borderColor: '#afe2ff',
-//      borderWidth: 1,
-//      pointBackgroundColor: 'rgba(255, 99, 132, .5)'
-//    }]
-//  };
-//
-//  const chartOptions = {
-//    scales: {
-//      r: {
-//        min: 0,
-//        max: 120,
-//        ticks: { display: false },
-//        grid: { color: 'rgba(200, 200, 200, 0.2)' },
-//        pointLabels: {
-//          font: { size: 14, color: 'white' }
-//        }
-//      }
-//    },
-//    plugins: {
-//      legend: {
-//        display: true,
-//        labels: { color: 'white' }
-//      }
-//    }
-//  };
-//
-//if (radarChart) {
-//    radarChart.data = chartData;
-//    radarChart.options = chartOptions;
-//    radarChart.update();
-//  } else {
-//    const ctx = document.getElementById('radarChart').getContext('2d');
-//    radarChart = new Chart(ctx, {
-//      type: 'radar',
-//      data: chartData,
-//      options: chartOptions
-//    });
-//  }
+
 
 
                                         const data = {
-                                            labels: ['HP', 'ATK', 'DEF', 'SpA', '', ''],
+                                            labels: ['HP', 'ATK', 'DEF', 'SpA', 'SpD', 'speed'],
                                             datasets: [{
                                                     label: '',
                                                     data: [
                                                         stats.hp,
                                                         stats.attack,
                                                         stats.def,
-                                                        stats.spa
+                                                        stats.spa,
+                                                        stats.spd,
+                                                        stats.speed
 
                                                     ],
                                                     backgroundColor: 'rgba(250, 105, 65, 0.786)',
@@ -302,7 +275,7 @@
                                                             stepSize: 20
                                                         },
                                                         grid: {
-                                                            color: 'rgba(200, 200, 200, 0.2)'
+                                                            color: 'rgba(200, 200, 200, 1)'
                                                         },
                                                         pointLabels: {
                                                             font: {
@@ -317,7 +290,7 @@
                                                 },
                                                 plugins: {
                                                     legend: {
-                                                        display: true,
+                                                        display: false,
                                                         labels: {
                                                             color: 'white'
                                                         }
@@ -326,7 +299,7 @@
                                             }
                                         };
 
-                                        new Chart(document.getElementById('radarChart'), config);
+                                      radarChart = new Chart(document.getElementById('radarChart'), config);
 
                                     }
         </script>
@@ -411,6 +384,82 @@
         
                 new Chart(document.getElementById('radarChart'), config);
             </script>-->
+        
+        <script>
+            function buscarPokemon(nombre){
+                if(nombre === ""){
+                    document.getElementById("pokeResult").innerHTML = "";
+                    return;
+                }
+                
+            fetch()
+            }
+        </script>
+        
+        <script>
+            function buscarPokemon(nombre) {
+  fetch(`/pokeControl/searchByName?pokeBusqueda=${encodeURIComponent(nombre)}`)
+    .then(res => res.json())
+    .then(data => actualizarTabla(data))
+    .catch(err => console.error("Error al buscar Pokémon:", err));
+}
+
+function actualizarTabla(pokemones) {
+  const cuerpo = document.getElementById("tabla-pokemones");
+  cuerpo.innerHTML = ""; // Limpia la tabla
+
+  if (pokemones.length === 0) {
+    cuerpo.innerHTML = `<tr><td colspan="4" class="text-center text-white">No se encontraron Pokémon.</td></tr>`;
+    return;
+  }
+
+  pokemones.forEach(pokemon => {
+    const fila = document.createElement("tr");
+    fila.className = "poke-fila p-2 mb-2 align-items-center";
+    fila.setAttribute("onclick", "cargarPokemon(this)");
+
+    // Atributos data-* para cargar en el radar chart
+    fila.dataset.id = pokemon.id;
+    fila.dataset.name = pokemon.name;
+    fila.dataset.height = pokemon.height;
+    fila.dataset.weight = pokemon.weight;
+    fila.dataset.img = pokemon.sprites[0].front_default;
+    fila.dataset.imgBack = pokemon.sprites[0].back_default;
+    fila.dataset.type = pokemon.types[0].name;
+    fila.dataset.crie = pokemon.cries[0].latest;
+    fila.dataset.hp = pokemon.stats[0].base_stat;
+    fila.dataset.atk = pokemon.stats[1].base_stat;
+    fila.dataset.def = pokemon.stats[2].base_stat;
+    fila.dataset.spa = pokemon.stats[3].base_stat;
+    fila.dataset.spd = pokemon.stats[4].base_stat;
+    fila.dataset.speed = pokemon.stats[5].base_stat;
+
+    fila.innerHTML = `
+      <td>
+        <img src="${pokemon.sprites[0].front_default}" class="pokemon-picture" alt="Imagen del Pokémon" />
+      </td>
+      <td>
+        <div>
+          <span>${pokemon.order}</span> <span class="m-0">${pokemon.name}</span>
+        </div>
+      </td>
+      <td>
+        <div><i class="bi bi-arrows-vertical"></i> <span>${pokemon.height}</span></div>
+        <div><i class="bi bi-arrows"></i> <span>${pokemon.weight}</span></div>
+      </td>
+      <td>
+        <div class="checkbox-container">
+          <input type="checkbox" ${pokemon.is_default ? "checked" : ""} />
+          <label class="checkmark"></label>
+        </div>
+        <div><span>Evo</span></div>
+      </td>
+    `;
+
+    cuerpo.appendChild(fila);
+  });
+}
+        </script>
     </body>
 
 </html>
