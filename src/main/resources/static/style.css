@@ -158,6 +158,115 @@ margin: 10px;
   max-height: none;
   width: 100%;
 }
+
+/*-----------------------------------------------------------------------------*/
+/*Pokedex*/
+
+.pokeBuscador-pokedex, input{
+    background-color: #edeeff;
+    backdrop-filter: blur(1px);
+    border-radius: 5px;
+    height: 27px;
+    width: 120px;
+    margin-left: 15px;
+    color: #1f0d5c;
+}
+
+.card-opciones-pokedex{
+     background-color: rgb(218, 20, 14);
+     border-radius: 25px;
+     padding: 3px;
+     display: flex;
+   
+    height: 400px;
+    box-shadow: #222;
+    perspective: 1000px; /* necesario en el contenedor para que gire */
+    
+}
+
+.poke-vista-pokedex{
+       
+        width: 260px;            
+        height: 210px;
+        padding: 10px;
+        position: relative;
+        transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;
+        transition: transform 0.8s ease;
+        transform-origin: center center;
+}
+
+.poke-front-pokedex{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 280px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 30px rgb(111, 231, 255);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: linear-gradient(180deg, #a3ffd7);
+    display: flex;
+   
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    max-height: 600px;   /* altura máxima */
+    overflow-y: auto;    /* si excede el tamaño, se activa el scroll */
+    align-items: start;
+}
+
+
+.pokeAdornos{
+    background-color: #56a5ff;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    border-style: solid;
+    border-color: #ffffff;
+    margin: 5px;
+    box-shadow: 1px 10px 30px #8eaaff, 0 0 20px #ff3eab, 0 0 10px #52ffa9; 
+
+}
+.pokeAdornos-1{
+    background-color: #ff454b;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    border-style: solid;
+    border-color: #ffa0a0;
+    border-width: 1px;
+    margin: 5px;
+    box-shadow: 1px 10px 30px #ff8e8e, 0 0 20px #ff3eab, 0 0 10px #ff5252; 
+
+}
+.pokeAdornos-2{
+    background-color: #ffe714;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    border-style: solid;
+    border-color: #fff5a0;
+    border-width: 1px;
+    margin: 5px;
+    box-shadow: 1px 10px 30px #fffb8e, 0 0 20px #ff8b3e, 0 0 10px #f3ff52; 
+
+}
+.pokeAdornos-3{
+    background-color: #86ff14;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    border-style: solid;
+    border-color: #e9ffd6;
+    border-width: 1px;
+    margin: 5px;
+    box-shadow: 1px 10px 30px #9fff8e, 0 0 20px #75ff3e, 0 0 10px #52ff72; 
+
+}
+
 /*-----------------------------------------------------------------------------*/
 /*Tabla*/
 

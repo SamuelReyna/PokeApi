@@ -1,0 +1,409 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Inicio</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <nav class="navbar navbar-expand-lg navbar-light navStyle mb-4 navTamaño">
+            <div class="container navcontenido">
+                <!-- Enlace de Inicio -->
+                <a class="navbar-brand text-white d-flex align-items-center" th:href="@{/pokemon}">
+                    <i class="bi bi-house-door-fill me-2"></i> Inicio
+                </a>
+
+                <!-- Botón para colapsar en móviles -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                    aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Contenido colapsable -->
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav ms-auto">
+                        <a th:href="@{/usuario/register}"
+                            class="nav-item nav-link text-white d-flex align-items-center me-3">
+                            <i class="bi bi-person-plus-fill me-1"></i> Registrar
+                        </a>
+                        <a th:href="@{/usuario/login}" class="nav-item nav-link text-white d-flex align-items-center">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar sesión
+                        </a>
+                    </div>
+                </div>
+
+                
+        </nav>
+
+
+        <div class="text-center mt-3 text-white">
+            <p class="fs-2">Lista de pokemons</p>
+        </div>
+
+        <div class="row">
+            <div class="col-3">
+                <div class="card card-opciones-pokedex ">
+
+                    <div class="row">
+                        <div class="col-12 d-flex ">
+                            <div class="pokeAdornos"></div>
+                            <div class="pokeAdornos-1"></div>
+                            <div class="pokeAdornos-2"></div>
+                            <div class="pokeAdornos-3"></div>
+                            <div class="pokeBuscador">
+
+                    <input type="text" id="pokeBuscador-pokedex" placeholder=""
+                        oninput="buscarPokemon(this.value)">
+
+                </div>
+                        </div>
+                    </div>
+
+                    <div class="row pokedex mt-1">
+
+                        <div class="col-10 mx-auto ">
+
+                            <div class="row pokedex mt-3">
+                                <div class="col-10 poke-vista-pokedex">
+                                    <div class="poke-front-pokedex mt-3">
+                                        <table class="text-white">
+                                            <thead class="">
+                                                <tr>
+                                                    <th class="col-1"></th>
+                                                    <th class="col-2">Name</th>
+                                                    <th class="col-1">Tipo</th>
+                                                    
+                                                </tr>
+                                            </thead>
+
+                                            <tbody id="tabla-pokemones">
+                                                <tr th:each="pokemon : ${pokemones}"
+                                                    class="poke-fila p-2 mb-2 align-items-center" th:attr="data-id=${pokemon.id},
+                                    data-name=${pokemon.name},
+                                    data-height=${pokemon.height},
+                                    data-weight=${pokemon.weight},
+                                    data-img=${pokemon.sprites[0].front_default},
+                                    data-img-back=${pokemon.sprites[0].back_default},
+                                    data-type=${pokemon.types[0].name},
+                                    data-crie=${pokemon.cries[0].latest},
+                                    data-hp=${pokemon.stats[0].base_stat},
+                                    data-atk=${pokemon.stats[1].base_stat},
+                                    data-def=${pokemon.stats[2].base_stat},
+                                    data-spa=${pokemon.stats[3].base_stat},
+                                    data-spd=${pokemon.stats[4].base_stat},
+                                    data-speed=${pokemon.stats[5].base_stat}" onclick="cargarPokemon(this)">
+
+                                                    <td>
+                                                        <img th:src="${pokemon.sprites[0].front_default}"
+                                                            class="pokemon-picture" alt="Imagen del Pokémon" />
+                                                    </td>
+
+                                                    <td>
+                                                        <div>
+                                                            <span th:text="${pokemon.order}"></span> <span
+                                                                th:text="${pokemon.name}" class="m-0"></span>
+                                                        </div>
+                                                    </td>
+
+                                                    <td>
+                                                        <div>
+                                                            <div class="checkbox-container">
+                                                                <input type="checkbox" id="miCheckbox"
+                                                                    th:checked="${pokemon.is_default}?true:false" />
+                                                                <label for="miCheckbox" class="checkmark"></label>
+                                                            </div>
+
+                                                            <div>
+                                                                <span>Evo</span>
+                                                            </div>
+                                                        </div>
+
+                                                    </td>
+
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="table-container mytable mt-3">
+                    <table class="table-hover text-white align-middle">
+                        <thead class="text-center">
+                            <tr>
+                                <th class="col-1"></th>
+                                <th class="col-1">Datos</th>
+                                <th class="col-1">Contacto</th>
+                                <th class="col-1">Dirección</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr th:each="pokemon : ${pokemones}" class="poke-fila p-2 mb-2 align-items-center" th:attr="data-id=${pokemon.id},
+                                    data-name=${pokemon.name},
+                                    data-height=${pokemon.height},
+                                    data-weight=${pokemon.weight},
+                                    data-img=${pokemon.sprites[0].front_default},
+                                    data-img-back=${pokemon.sprites[0].back_default},
+                                    data-type=${pokemon.types[0].name},
+                                    data-crie=${pokemon.cries[0].latest},
+                                    data-hp=${pokemon.stats[0].base_stat},
+                                    data-atk=${pokemon.stats[1].base_stat},
+                                    data-def=${pokemon.stats[2].base_stat},
+                                    data-spa=${pokemon.stats[3].base_stat},
+                                    data-spd=${pokemon.stats[4].base_stat},
+                                    data-speed=${pokemon.stats[5].base_stat}" onclick="cargarPokemon(this)">
+
+                                <td>
+                                    <img th:src="${pokemon.sprites[0].front_default}" class="pokemon-picture"
+                                        alt="Imagen del Pokémon" />
+                                </td>
+
+                                <td>
+                                    <div>
+                                        <span th:text="${pokemon.order}"></span> <span th:text="${pokemon.name}"
+                                            class="m-0"></span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div>
+                                        <i class="bi bi-arrows-vertical"></i> <span th:text="${pokemon.height}"></span>
+                                    </div>
+                                    <div>
+                                        <i class="bi bi-arrows"></i> <span th:text="${pokemon.weight}"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <div class="checkbox-container">
+                                            <input type="checkbox" id="miCheckbox"
+                                                th:checked="${pokemon.is_default}?true:false" />
+                                            <label for="miCheckbox" class="checkmark"></label>
+                                        </div>
+
+                                        <div>
+                                            <span>Evo</span>
+                                        </div>
+                                    </div>
+
+                                </td>
+
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+
+    <script>
+        let radarChart = null; // fuera de la función para que se destruya el grafico cada vez que se genere uno nuevo!
+
+        function cargarPokemon(row) {
+
+            if (radarChart) {
+                radarChart.destroy(); // 
+            }
+
+            const name = row.getAttribute("data-name");
+            const height = row.getAttribute("data-height");
+            const weight = row.getAttribute("data-weight");
+            const img = row.getAttribute("data-img");
+            const imgBack = row.getAttribute("data-img-back");
+            const type = row.getAttribute("data-type");
+            const cry = row.getAttribute("data-crie");
+
+            const stats = {
+                hp: parseInt(row.getAttribute("data-hp")),
+                attack: parseInt(row.getAttribute("data-atk")),
+                def: parseInt(row.getAttribute("data-def")),
+                spa: parseInt(row.getAttribute("data-spa")),
+                spd: parseInt(row.getAttribute("data-spd")),
+                speed: parseInt(row.getAttribute("data-speed"))
+
+            };
+
+
+
+            // Guarda el cry en el botón
+            const playButton = document.querySelector(".poke-buttons .btn:first-child");
+            playButton.setAttribute("data-crie", cry);
+
+            // Actualiza la imagen
+            document.querySelector(".poke-front img").src = img;
+
+
+
+
+
+            const data = {
+                labels: ['HP', 'ATK', 'DEF', 'SpA', 'SpD', 'speed'],
+                datasets: [{
+                    label: '',
+                    data: [
+                        stats.hp,
+                        stats.attack,
+                        stats.def,
+                        stats.spa,
+                        stats.spd,
+                        stats.speed
+
+                    ],
+                    backgroundColor: 'rgba(250, 105, 65, 0.786)',
+                    borderColor: '#afe2ff',
+                    borderWidth: 1,
+                    pointBackgroundColor: 'rgba(255, 99, 132, .5)'
+                }]
+            };
+
+            const config = {
+                type: 'radar',
+                data: data,
+                options: {
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 120,
+                            ticks: {
+                                stepSize: 20
+                            },
+                            grid: {
+                                color: 'rgba(200, 200, 200, 0.2)'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 14,
+                                    color: 'white'
+                                }
+                            },
+                            ticks: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                color: 'white'
+                            }
+                        }
+                    }
+                }
+            };
+
+            radarChart = new Chart(document.getElementById('radarChart'), config);
+
+        }
+    </script>
+
+    <script>
+        function reproducirCry(button) {
+            const cry = button.getAttribute("data-crie");
+            if (cry) {
+                const audio = new Audio(cry);
+                audio.play();
+            } else {
+                alert("No hay cry disponible para este Pokémon.");
+            }
+        }
+    </script>
+
+
+    <!--<script>
+                const stats = {
+                    hp: 78,
+                    attack: 84,
+                    defense: 78,
+                    spAttack: 109,
+                    spDefense: 85,
+                    speed: 100
+                };
+        
+                const data = {
+                    labels: ['A', 'B', 'C', 'D', 'E', 'F'],
+                    datasets: [{
+                        label: '',
+                        data: [
+                            stats.hp,
+                            stats.attack,
+                            stats.defense,
+                            stats.spAttack,
+                            stats.spDefense,
+                            stats.speed
+                        ],
+                        backgroundColor: 'rgba(250, 105, 65, 0.786)',
+                        borderColor: '#afe2ff', 
+                        borderWidth: 1,
+                        pointBackgroundColor: 'rgba(255, 99, 132, .5)'
+                    }]
+                };
+        
+                const config = {
+                    type: 'radar',
+                    data: data,
+                    options: {
+                        scales: {
+                            r: {
+                                min: 0,
+                                max: 120,
+                                ticks: {
+                                    stepSize: 20
+                                },
+                                grid: {
+                                    color: 'rgba(200, 200, 200, 0.2)'
+                                },
+                                pointLabels: {
+                                    font: {
+                                        size: 14,
+                                        color: 'white'
+                                    }
+                                },
+                                ticks: {
+                                display: false 
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                labels: {
+                                    color: 'white'
+                                }
+                            }
+                        }
+                    }
+                };
+        
+                new Chart(document.getElementById('radarChart'), config);
+            </script>-->
+</body>
+
+</html>
