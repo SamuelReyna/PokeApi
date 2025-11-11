@@ -1,4 +1,4 @@
-package risosu.it.PokeApiClient.JPA;
+    package risosu.it.PokeApiClient.JPA;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
