@@ -11,6 +11,15 @@ public class Entrenador {
     private String Username;
     private String Password;
     private int Estado;
+    private int Verify;
+
+    public int getVerify() {
+        return Verify;
+    }
+
+    public void setVerify(int Verify) {
+        this.Verify = Verify;
+    }
     public Rol rol = new Rol();
 
     public Rol getRol() {
@@ -44,7 +53,7 @@ public class Entrenador {
     public Entrenador() {
     }
 
-    public Entrenador(Long IdEntrenador, String Nombre, String ApellidoPaterno, String ApellidoMaterno, String Sexo, String Correo, String Username, Rol rol, String Password) {
+    public Entrenador(Long IdEntrenador, String Nombre, String ApellidoPaterno, String ApellidoMaterno, String Sexo, String Correo, String Username, Rol rol, String Password, int Verify) {
         this.IdEntrenador = IdEntrenador;
         this.Nombre = Nombre;
         this.ApellidoPaterno = ApellidoPaterno;
@@ -53,6 +62,7 @@ public class Entrenador {
         this.Correo = Correo;
         this.Username = Username;
         this.Password = Password;
+        this.Verify = Verify;
         this.rol = rol;
     }
 

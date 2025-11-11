@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Usuarios - Admin Pokédex</title>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
         <!-- Bootstrap 5 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -184,7 +185,9 @@
                         <table class="table table-hover align-middle">
                             <thead>
                                 <tr>
-                                    <th >Nombre</th>
+                                    <th>Verificado</th>
+                                    <th>Nombre</th>
+                                    <th>Username</th>
                                     <th>Correo</th>
                                     <th>Rol</th>
                                     <th>Estado</th>
@@ -193,7 +196,16 @@
                             </thead>
                             <tbody>
                                 <tr th:each="entrenador : ${Entrenadores}">
+                                    <td>
+                                        <!-- Si verify = 1 -->
+                                        <i class="fa-solid fa-check text-success" th:if="${entrenador.verify == 1}"></i>
+
+                                        <!-- Si verify ≠ 1 -->
+                                        <i class="fa-solid fa-cube text-secondary" th:if="${entrenador.verify != 1}"></i>
+                                    </td>
                                     <td th:text="|${entrenador.nombre} ${entrenador.apellidoPaterno} ${entrenador.apellidoMaterno}|">Samuel Reynagonzalez</td>
+                                    <td th:text="${entrenador.username}">samuel@rancheritos.com</td>
+
                                     <td th:text="${entrenador.correo}">samuel@rancheritos.com</td>
                                     <td th:text="${entrenador.rol.nombre}">Admin</td>
                                     <!--                                    <td th:if="${entrenador.estado} == 1"><span class="badge bg-success">Activo</span></td>
@@ -432,56 +444,66 @@
         </script>
 
         <script>
-            document.addEventListener('DOMContentLoaded', () => {
+            $(document).ready(function () {
                 let idSeleccionado = null;
                 let estadoActual = null;
                 let botonClicado = null;
 
-                const estadoModal = document.getElementById('estadoModal');
-                const estadoMensaje = document.getElementById('estadoMensaje');
-                const confirmarBtn = document.getElementById('confirmEstadoBtn');
+                const $estadoModal = $('#estadoModal');
+                const $estadoMensaje = $('#estadoMensaje');
+                const $confirmarBtn = $('#confirmEstadoBtn');
 
-                estadoModal.addEventListener('show.bs.modal', event => {
-                    const boton = event.relatedTarget;
-                    idSeleccionado = boton.getAttribute('data-id');
-                    estadoActual = parseInt(boton.getAttribute('data-estado'));
+                // Escucha el evento del modal cuando se muestra
+                $estadoModal.on('show.bs.modal', function (event) {
+                    const boton = $(event.relatedTarget);
+                    idSeleccionado = boton.data('id');
+                    estadoActual = parseInt(boton.data('estado'));
                     botonClicado = boton;
 
-                    const nombre = boton.getAttribute('data-nombre');
+                    const nombre = boton.data('nombre');
                     const accion = estadoActual === 1 ? 'Desactivar' : 'Activar';
 
-                    estadoMensaje.textContent = `¿Seguro que deseas ${accion} al usuario ${nombre}?`;
-                    confirmarBtn.textContent = accion.charAt(0).toUpperCase() + accion.slice(1);
+                    $estadoMensaje.text(`¿Seguro que deseas ${accion} al usuario ${nombre}?`);
+                    $confirmarBtn.text(accion.charAt(0).toUpperCase() + accion.slice(1));
                 });
 
-                confirmarBtn.addEventListener('click', async () => {
+                // Confirmar acción (PATCH al servidor)
+                $confirmarBtn.on('click', async function () {
+                    const nuevoEstado = estadoActual === 1 ? 0 : 1;
+
                     try {
-                        const response = await fetch(`/api/entrenador/${idSeleccionado}/estado`, {
+                        const response = await fetch(`http://localhost:8081/api/entrenador/${idSeleccionado}/estado`, {
                             method: 'PATCH',
-                            headers: {'Content-Type': 'application/json'},
+                            headers: {'Content-Type': 'application/json'}
                         });
 
                         if (response.ok) {
-                            // Cambia visualmente el botón
-                            botonClicado.setAttribute('data-estado', nuevoEstado);
-                            botonClicado.textContent = nuevoEstado === 1 ? 'Inactivo' : 'Activo';
+                            // Actualiza los datos del botón dinámicamente
+                            botonClicado.data('estado', nuevoEstado);
 
-                            botonClicado.classList.remove('btn-success', 'btn-secondary');
-                            botonClicado.classList.add(nuevoEstado === 1 ? 'bg-success' : 'bg-secondary');
+                            // Cambia el texto del botón
+                            const nuevoTexto = nuevoEstado === 1 ? 'Activo' : 'Inactivo';
+                            botonClicado.html(`<span>${nuevoTexto}</span>`);
+
+                            // Cambia las clases de color
+                            botonClicado
+                                    .removeClass('bg-success bg-secondary')
+                                    .addClass(nuevoEstado === 1 ? 'bg-success' : 'bg-secondary');
 
                             // Cierra el modal
-                            const modal = bootstrap.Modal.getInstance(estadoModal);
-                            modal.hide();
+                            $estadoModal.modal('hide');
+
                         } else {
                             alert('Error al actualizar el estado.');
                         }
-                    } catch (err) {
-                        console.error(err);
+                    } catch (error) {
+                        console.error('Error al conectar con el servidor:', error);
                         alert('Error al conectar con el servidor.');
                     }
                 });
             });
         </script>
+
 
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
