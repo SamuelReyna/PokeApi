@@ -1,31 +1,36 @@
 package risosu.it.PokeApiClient.ML;
 
-public class Rol {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    private int IdRol;
-    private String Nombre;
+    
+public class Rol {
+    
+    @JsonProperty("idrol")
+    private int idrol;
+
+    private String nombre;
 
     public Rol() {
     }
 
-    public Rol(int IdRol, String Nombre) {
-        this.IdRol = IdRol;
-        this.Nombre = Nombre;
+    public Rol(String Nombre, int IdRol) {
+        this.nombre = Nombre;
+        this.idrol = IdRol;
     }
 
     public int getIdRol() {
-        return IdRol;
+        return idrol;
     }
 
     public void setIdRol(int IdRol) {
-        this.IdRol = IdRol;
+        this.idrol = IdRol;
     }
 
     public String getNombre() {
-        return Nombre;
+        return nombre;
     }
 
     public void setNombre(String Nombre) {
-        this.Nombre = Nombre;
+        this.nombre = Nombre;
     }
 }

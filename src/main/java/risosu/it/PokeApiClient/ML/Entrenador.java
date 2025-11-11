@@ -10,6 +10,28 @@ public class Entrenador {
     private String Correo;
     private String Username;
     private String Password;
+    private int Estado;
+    public Rol rol = new Rol();
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
+    }
+
+    public Entrenador(Rol rol) {
+        this.rol = rol;
+    }
+
+    public int getEstado() {
+        return Estado;
+    }
+
+    public void setEstado(int Estado) {
+        this.Estado = Estado;
+    }
 
     public String getPassword() {
         return Password;
@@ -18,8 +40,6 @@ public class Entrenador {
     public void setPassword(String Password) {
         this.Password = Password;
     }
-
-    public Rol rol;
 
     public Entrenador() {
     }
@@ -33,7 +53,6 @@ public class Entrenador {
         this.Correo = Correo;
         this.Username = Username;
         this.Password = Password;
-
         this.rol = rol;
     }
 
@@ -91,14 +110,6 @@ public class Entrenador {
 
     public void setUsername(String Username) {
         this.Username = Username;
-    }
-
-    public Rol getRol() {
-        return rol;
-    }
-
-    public void setRol(Rol rol) {
-        this.rol = rol;
     }
 
 }

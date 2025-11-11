@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Usuarios - Admin Pokédex</title>
+
+        <!-- Bootstrap 5 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Icons -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+        <style>
+            @import url('https://fonts.cdnfonts.com/css/pokemon-solid');
+            :root {
+                --sidebar-width: 260px;
+                --poke-red: #e3350d;
+                --poke-yellow: #ffcc00;
+                --poke-blue: #3b4cca;
+                --poke-bg: #f5f5f5;
+            }
+
+            body {
+                font-family: 'Press Start 2P', cursive;
+                font-size: 12px;
+                background: linear-gradient(180deg, #fff 0%, #f1f1f1 100%);
+                background-image: url('https://www.transparenttextures.com/patterns/pw-maze-white.png');
+                background-attachment: fixed;
+                color: #222;
+            }
+
+            /* Sidebar */
+            .sidebar {
+                width: var(--sidebar-width);
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                background: var(--poke-red);
+                border-right: 6px solid var(--poke-yellow);
+                padding: 1rem 0;
+                color: #fff;
+            }
+
+            .sidebar a {
+                color: #fff;
+                font-weight: bold;
+                letter-spacing: 1px;
+                text-shadow: 1px 1px 0 #000;
+            }
+
+            .sidebar .nav-link.active {
+                background: var(--poke-yellow);
+                color: #000;
+                border-radius: 10px;
+            }
+
+            .sidebar .nav-link:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            .content-area {
+                margin-left: var(--sidebar-width);
+                padding: 1.5rem;
+            }
+
+            @media (max-width: 991px) {
+                .sidebar {
+                    position: relative;
+                    width: 100%;
+                    height: auto;
+                }
+                .content-area {
+                    margin-left: 0;
+                }
+            }
+
+            /* Navbar */
+            .navbar {
+                background: var(--poke-blue) !important;
+                border-radius: 12px;
+                border: 3px solid var(--poke-yellow);
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+            }
+
+            h2 {
+                font-family: 'Pokemon Solid', sans-serif;
+                color: var(--poke-blue);
+                text-shadow: 2px 2px 0 var(--poke-yellow);
+            }
+
+            /* Tabla */
+            .table thead {
+                background: var(--poke-blue);
+                color: #fff;
+            }
+
+            .table-hover tbody tr:hover {
+                background-color: rgba(255, 204, 0, 0.2);
+            }
+
+            .badge.bg-success {
+                background-color: var(--poke-yellow) !important;
+                color: #000;
+                border: 1px solid #000;
+            }
+
+            /* Botones Pokémon */
+            .btn-primary {
+                background: var(--poke-red);
+                border: 3px solid var(--poke-yellow);
+                font-weight: bold;
+            }
+
+            .btn-primary:hover {
+                background: var(--poke-yellow);
+                color: #000;
+            }
+
+            footer {
+                font-size: 0.8rem;
+                text-transform: uppercase;
+                color: #444;
+                border-top: 3px solid var(--poke-yellow);
+                padding-top: 0.5rem;
+            }
+        </style>
+    </head>
+
+    <body>
+        <!-- Sidebar -->
+        <aside class="sidebar d-flex flex-column p-3">
+            <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <i class="fa-solid fa-layer-group fa-lg me-2"></i>
+                <span class="fs-5 fw-semibold">My Admin</span>
+            </a>
+            <hr class="text-white-50">
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li><a  th:href="@{/pokeControl/admin/dashboard}" class="nav-link text-white"><i class="fa-solid fa-chart-pie me-2"></i> Dashboard</a></li>
+                <li><a th:href="@{/pokeControl/admin/usuarios}" class="nav-link active"><i class="fa-solid fa-users me-2"></i> Usuarios</a></li>
+                <li><a href="configuracion.html" class="nav-link text-white"><i class="fa-solid fa-gear me-2"></i> Configuración</a></li>
+            </ul>
+            <hr class="text-white-50 mt-auto">
+            <div class="dropdown px-3">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://i.pravatar.cc/40" alt="avatar" class="rounded-circle me-2">
+                    <strong th:text="${username}">Admin</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="userMenu">
+                    <li><a class="dropdown-item" href="#">Perfil</a></li>
+                    <li><a class="dropdown-item" href="#">Ajustes</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" th:href="@{/usuario/logout}">Cerrar sesión</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="content-area">
+            <!-- Navbar superior -->
+            <nav class="navbar navbar-expand-lg mb-4">
+                <div class="container-fluid">
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Buscar usuario...">
+                        <button class="btn btn-light" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </form>
+                </div>
+            </nav>
+
+            <!-- Encabezado -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>Usuarios</h2>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                    <i class="fa-solid fa-plus me-2"></i>Agregar usuario
+                </button>
+            </div>
+
+            <!-- Tabla -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Lista de usuarios registrados</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th >Nombre</th>
+                                    <th>Correo</th>
+                                    <th>Rol</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="entrenador : ${Entrenadores}">
+                                    <td th:text="|${entrenador.nombre} ${entrenador.apellidoPaterno} ${entrenador.apellidoMaterno}|">Samuel Reynagonzalez</td>
+                                    <td th:text="${entrenador.correo}">samuel@rancheritos.com</td>
+                                    <td th:text="${entrenador.rol.nombre}">Admin</td>
+                                    <!--                                    <td th:if="${entrenador.estado} == 1"><span class="badge bg-success">Activo</span></td>
+                                                                        <td th:if="${entrenador.estado} == 0"><span class="badge bg-secondary">Inactivo</span></td>-->
+                                    <td>
+                                        <button
+                                            type="button"
+                                            class="btn estado-btn"
+                                            th:classappend="${entrenador.estado} == 1 ? 'badge bg-success' : 'badge bg-secondary'"
+                                            th:text="${entrenador.estado} == 1 ? 'Activo' : 'Inactivo'"
+                                            th:data-id="${entrenador.idEntrenador}"
+                                            th:data-nombre="${entrenador.username}"
+                                            th:data-estado="${entrenador.estado}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#estadoModal">
+                                        </button>
+                                    </td>
+
+                                    <td>
+                                        <i class="fa-solid fa-eye text-info me-2"></i>
+                                        <a href="#"
+                                           class="edit-btn"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#editUserModal"
+                                           th:data-id="${entrenador.idEntrenador}"
+                                           th:data-nombre="${entrenador.nombre}"
+                                           th:data-apellidopaterno="${entrenador.apellidoPaterno}"
+                                           th:data-apellidomaterno="${entrenador.apellidoMaterno}"
+                                           th:data-sexo="${entrenador.sexo}"
+                                           th:data-correo="${entrenador.correo}"
+                                           th:data-username="${entrenador.username}"
+                                           th:data-rol="${entrenador.rol.idRol}"><i class="fa-solid fa-pen-to-square text-warning me-2"></i></a>
+                                        <a th:href="@{/pokeControl/admin/usuarios/delete/{idEntrenador}(idEntrenador=${entrenador.idEntrenador})}">
+                                            <i class="fa-solid fa-trash text-danger"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="mt-4 text-muted small">
+                <div class="d-flex justify-content-between">
+                    <div>© 2025 My Admin Pokédex</div>
+                    <div>Versión 1.0</div>
+                </div>
+            </footer>
+        </main>
+
+        <!-- Modal Agregar Usuario -->
+        <div class="modal fade" id="addUserModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Agregar usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="userForm" method="POST" th:action="@{/pokeControl/admin/usuarios/add}" th:object="${entrenador}">
+                        <div class="modal-body" style="background-color: #fff9db;">
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-primary">Nombre</label>
+                                <input type="text" class="form-control border-2 border-dark" th:field="*{Nombre}" placeholder="Ej. Laura" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-primary">Apellido Paterno</label>
+                                <input type="text" class="form-control border-2 border-dark" th:field="*{ApellidoPaterno}" placeholder="Ej. Gómez" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-primary">Apellido Materno</label>
+                                <input type="text" class="form-control border-2 border-dark" th:field="*{ApellidoMaterno}" placeholder="Ej. Ruiz" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-primary">Sexo</label>
+                                <select class="form-select border-2 border-dark" th:field="*{Sexo}" required>
+                                    <option value="" disabled selected>Selecciona una opción</option>
+                                    <option th:value="'M'">Masculino</option>
+                                    <option th:value="'F'">Femenino</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-primary">Correo electrónico</label>
+                                <input type="email" class="form-control border-2 border-dark" th:field="*{Correo}" placeholder="Ej. usuario@mail.com" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-primary">Nombre de usuario</label>
+                                <input type="text" class="form-control border-2 border-dark" th:field="*{Username}" placeholder="Ej. laura123" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-primary">Rol</label>
+                                <select class="form-select" required th:field="*{Rol.IdRol}"> 
+                                    <option value="1">Admin</option> 
+                                    <option value="2">Usuario</option> 
+                                </select>
+                            </div>
+
+
+                        </div>
+
+                        <!-- Pie del modal -->
+                        <div class="modal-footer" style="background-color: #ffcc00;">
+                            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">
+                                <i class="fa-solid fa-xmark me-1"></i>Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary fw-bold" id="saveUser" style="border: 3px solid var(--poke-yellow);">
+                                <i class="fa-solid fa-floppy-disk me-1"></i>Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <form id="editUserForm" method="POST" th:action="@{/pokeControl/admin/usuarios/update}" th:object="${entrenador}">
+                        <div class="modal-body" style="background-color: #fff9db;">
+                            <input type="hidden" th:field="*{IdEntrenador}" id="editIdEntrenador">
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-primary">Nombre</label>
+                                <input type="text" class="form-control border-2 border-dark" th:field="*{Nombre}" id="editNombre" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-primary">Apellido Paterno</label>
+                                <input type="text" class="form-control border-2 border-dark" th:field="*{ApellidoPaterno}" id="editApellidoPaterno" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-primary">Apellido Materno</label>
+                                <input type="text" class="form-control border-2 border-dark" th:field="*{ApellidoMaterno}" id="editApellidoMaterno" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-primary">Sexo</label>
+                                <select class="form-select border-2 border-dark" th:field="*{Sexo}" id="editSexo" required>
+                                    <option value="" disabled>Selecciona una opción</option>
+                                    <option th:value="'M'">Masculino</option>
+                                    <option th:value="'F'">Femenino</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-primary">Correo electrónico</label>
+                                <input type="email" class="form-control border-2 border-dark" th:field="*{Correo}" id="editCorreo" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-primary">Nombre de usuario</label>
+                                <input type="text" class="form-control border-2 border-dark" th:field="*{Username}" id="editUsername" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-primary">Rol</label>
+                                <select class="form-select border-2 border-dark" th:field="*{Rol.IdRol}" id="editRol" required>
+                                    <option value="1">Admin</option>
+                                    <option value="2">Usuario</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer" style="background-color: #ffcc00;">
+                            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">
+                                <i class="fa-solid fa-xmark me-1"></i>Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary fw-bold" style="border: 3px solid var(--poke-yellow);">
+                                <i class="fa-solid fa-floppy-disk me-1"></i>Guardar cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="estadoModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-dark">
+                    <div class="modal-header bg-warning">
+                        <h5 class="modal-title fw-bold text-dark">Confirmar acción</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p id="estadoMensaje" class="fw-semibold text-dark"></p>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" id="confirmEstadoBtn" class="btn btn-primary">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const editModal = document.getElementById('editUserModal');
+                const inputs = {
+                    id: document.getElementById('editIdEntrenador'),
+                    nombre: document.getElementById('editNombre'),
+                    apellidoPaterno: document.getElementById('editApellidoPaterno'),
+                    apellidoMaterno: document.getElementById('editApellidoMaterno'),
+                    sexo: document.getElementById('editSexo'),
+                    correo: document.getElementById('editCorreo'),
+                    username: document.getElementById('editUsername'),
+                    rol: document.getElementById('editRol')
+                };
+
+                editModal.addEventListener('show.bs.modal', (event) => {
+                    const button = event.relatedTarget;
+                    if (!button)
+                        return;
+
+                    inputs.id.value = button.getAttribute('data-id');
+                    inputs.nombre.value = button.getAttribute('data-nombre');
+                    inputs.apellidoPaterno.value = button.getAttribute('data-apellidopaterno');
+                    inputs.apellidoMaterno.value = button.getAttribute('data-apellidomaterno');
+                    inputs.sexo.value = button.getAttribute('data-sexo');
+                    inputs.correo.value = button.getAttribute('data-correo');
+                    inputs.username.value = button.getAttribute('data-username');
+                    inputs.rol.value = button.getAttribute('data-rol');
+                });
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                let idSeleccionado = null;
+                let estadoActual = null;
+                let botonClicado = null;
+
+                const estadoModal = document.getElementById('estadoModal');
+                const estadoMensaje = document.getElementById('estadoMensaje');
+                const confirmarBtn = document.getElementById('confirmEstadoBtn');
+
+                estadoModal.addEventListener('show.bs.modal', event => {
+                    const boton = event.relatedTarget;
+                    idSeleccionado = boton.getAttribute('data-id');
+                    estadoActual = parseInt(boton.getAttribute('data-estado'));
+                    botonClicado = boton;
+
+                    const nombre = boton.getAttribute('data-nombre');
+                    const accion = estadoActual === 1 ? 'Desactivar' : 'Activar';
+
+                    estadoMensaje.textContent = `¿Seguro que deseas ${accion} al usuario ${nombre}?`;
+                    confirmarBtn.textContent = accion.charAt(0).toUpperCase() + accion.slice(1);
+                });
+
+                confirmarBtn.addEventListener('click', async () => {
+                    try {
+                        const response = await fetch(`/api/entrenador/${idSeleccionado}/estado`, {
+                            method: 'PATCH',
+                            headers: {'Content-Type': 'application/json'},
+                        });
+
+                        if (response.ok) {
+                            // Cambia visualmente el botón
+                            botonClicado.setAttribute('data-estado', nuevoEstado);
+                            botonClicado.textContent = nuevoEstado === 1 ? 'Inactivo' : 'Activo';
+
+                            botonClicado.classList.remove('btn-success', 'btn-secondary');
+                            botonClicado.classList.add(nuevoEstado === 1 ? 'bg-success' : 'bg-secondary');
+
+                            // Cierra el modal
+                            const modal = bootstrap.Modal.getInstance(estadoModal);
+                            modal.hide();
+                        } else {
+                            alert('Error al actualizar el estado.');
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert('Error al conectar con el servidor.');
+                    }
+                });
+            });
+        </script>
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+        <!--        <script>
+                    document.getElementById('saveUser')?.addEventListener('click', () => {
+                        const form = document.getElementById('userForm');
+                        if (form.checkValidity()) {
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('addUserModal'));
+                            modal.hide();
+                            alert('Usuario agregado (demo)');
+                        } else {
+                            form.reportValidity();
+                        }
+                    });
+                </script>-->
+    </body>
+</html>
