@@ -196,12 +196,12 @@
                             </thead>
                             <tbody>
                                 <tr th:each="entrenador : ${Entrenadores}">
-                                    <td>
+                                    <td class="text-center">
                                         <!-- Si verify = 1 -->
-                                        <i class="fa-solid fa-check text-success" th:if="${entrenador.verify == 1}"></i>
+                                        <i class="fa-solid fa-circle-check text-success" th:if="${entrenador.verify == 1}"></i>
 
                                         <!-- Si verify ≠ 1 -->
-                                        <i class="fa-solid fa-cube text-secondary" th:if="${entrenador.verify != 1}"></i>
+                                        <i class="fa-regular fa-circle-check text-secondary" th:if="${entrenador.verify != 1}"></i>
                                     </td>
                                     <td th:text="|${entrenador.nombre} ${entrenador.apellidoPaterno} ${entrenador.apellidoMaterno}|">Samuel Reynagonzalez</td>
                                     <td th:text="${entrenador.username}">samuel@rancheritos.com</td>
