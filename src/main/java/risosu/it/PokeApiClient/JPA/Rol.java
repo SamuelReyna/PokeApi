@@ -13,17 +13,17 @@ public class Rol {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="idrol")
-    private int idrol;
+    @Column(name = "idrol")
+    private int IdRol;
     @Column(name = "nombre")
     private String nombre;
 
     public int getIdrol() {
-        return idrol;
+        return IdRol;
     }
 
     public void setIdrol(int idrol) {
-        this.idrol = idrol;
+        this.IdRol = idrol;
     }
 
     public String getNombre() {
@@ -35,7 +35,7 @@ public class Rol {
     }
 
     public Rol(int idrol, String nombre) {
-        this.idrol = idrol;
+        this.IdRol = idrol;
         this.nombre = nombre;
     }
 

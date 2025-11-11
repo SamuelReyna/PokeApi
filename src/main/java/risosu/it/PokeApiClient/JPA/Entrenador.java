@@ -158,7 +158,7 @@ public class Entrenador implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.verify == 1;
     }
 
     @Override

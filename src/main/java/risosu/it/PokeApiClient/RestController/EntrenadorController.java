@@ -42,6 +42,13 @@ public class EntrenadorController {
         return ResponseEntity.ok(entrenadorService.patchEntrenador(idEntrenador, entrenador));
     }
 
+    @PatchMapping("/{idEntrenador}/estado")
+    public ResponseEntity BajaLogica(@PathVariable("idEntrenador") Long idEntrenador) {
+        Entrenador entrenador = new Entrenador();
+        entrenador.setEstado(1);
+        return ResponseEntity.ok(entrenadorService.patchEntrenador(idEntrenador, entrenador));
+    }
+
     @DeleteMapping("/{idEntrenador}")
     public ResponseEntity Delete(@PathVariable("idEntrenador") int idEntrenador) {
         return ResponseEntity.ok(entrenadorService.Delete(Long.valueOf(idEntrenador)));

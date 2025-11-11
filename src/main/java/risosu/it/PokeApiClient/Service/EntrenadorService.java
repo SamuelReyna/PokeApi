@@ -97,8 +97,8 @@ public class EntrenadorService {
         if (cambios.getRol() != null) {
             entrenador.setRol(cambios.getRol());
         }
-        if (cambios.getEstado() != 0) { // si 0 no es válido como valor de cambio
-            entrenador.setEstado(cambios.getEstado());
+        if (cambios.getEstado() == 1) { // si 0 no es válido como valor de cambio
+            entrenador.setEstado(entrenador.getEstado() == 1 ? 0 : 1);
         }
 
         return iEntrenadorRepository.save(entrenador);
