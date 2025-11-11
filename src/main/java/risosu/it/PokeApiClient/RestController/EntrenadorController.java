@@ -43,8 +43,8 @@ public class EntrenadorController {
     }
 
     @DeleteMapping("/{idEntrenador}")
-    public ResponseEntity Delete(@PathVariable("idEntrenador") Long idEntrenador) {
-        return ResponseEntity.ok(entrenadorService.Delete(idEntrenador));
+    public ResponseEntity Delete(@PathVariable("idEntrenador") int idEntrenador) {
+        return ResponseEntity.ok(entrenadorService.Delete(Long.valueOf(idEntrenador)));
     }
 
 }

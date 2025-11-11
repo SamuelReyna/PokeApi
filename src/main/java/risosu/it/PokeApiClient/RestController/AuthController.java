@@ -553,9 +553,8 @@ public class AuthController {
     public ResponseEntity Register(@RequestBody Entrenador entrenador) {
         entrenador.setVerify(0);
         entrenador.setEstado(0);
-        entrenador.setPassword(passwordEncoder.encode(entrenador.getPassword()));
         entrenador.rol = new Rol();
-        entrenador.rol.setIdrol(1);
+        entrenador.rol.setIdrol(2);
         Entrenador newEntrenador = entrenadorService.Add(entrenador);
 
         String token = verifyTokenService.GenerateToken(entrenador.getIdEntrenador());
