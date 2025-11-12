@@ -31,12 +31,20 @@ public class EntrenadorController {
     private final String url = "http://localhost:8081/api/entrenador";
 
     @GetMapping("/dashboard")
-    public String adminDashboard(HttpSession session, Model model) {
+    public String adminDashboard(HttpSession session, Model model, @ModelAttribute("entrenador") Entrenador entrenador) {
         String token = (String) session.getAttribute("token");
         if (token == null) {
             return "redirect:/pokemon";
 
         } else if (session.getAttribute("token") != null) {
+            RestTemplate restTemplate = new RestTemplate();
+
+            ResponseEntity<Integer> responseEntity
+                    = restTemplate.exchange(url + "/count", HttpMethod.GET, HttpEntity.EMPTY, Integer.class);
+            if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
+                model.addAttribute("totalUsers", responseEntity.getBody());
+            }
+
             model.addAttribute("username", session.getAttribute("username"));
             model.addAttribute("role", session.getAttribute("role"));
         }
@@ -130,4 +138,5 @@ public class EntrenadorController {
         return "redirect:/pokeControl/admin/usuarios";
     }
 
+ 
 }

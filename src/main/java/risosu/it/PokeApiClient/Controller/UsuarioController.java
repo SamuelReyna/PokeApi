@@ -1,4 +1,4 @@
-package risosu.it.PokeApiClient.Controller;
+    package risosu.it.PokeApiClient.Controller;
 
 import jakarta.servlet.http.HttpSession;
 import java.util.Map;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -69,6 +70,21 @@ public class UsuarioController {
     @GetMapping("/login")
     public String Login(@ModelAttribute("Entrenador") Entrenador entrenador) {
         return "login";
+    }
+
+    @GetMapping("/profile/{username}")
+    public String profile(@PathVariable("username") String username, Model model) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<Entrenador> responseEntity
+                = restTemplate.exchange("http://localhost:8081/api/entrenador/" + username + "/username", HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<Entrenador>() {
+                });
+        if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
+            Entrenador entrenador = responseEntity.getBody();
+            model.addAttribute("entrenador", entrenador);
+        }
+
+        return "profile";
     }
 
     @PostMapping("/login")

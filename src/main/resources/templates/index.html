@@ -16,12 +16,61 @@
     </head>
 
     <body>
+        <style>
+            .pokeBuscador {
+                position: relative;
+            }
+            body{
+                font-family: 'Press Start 2P', monospace;
+                color: #1a2e1a;
+                text-transform: uppercase;
+            }
+
+            .pokeInput {
+                background-color: rgba(255, 255, 255, 0.9);
+                border: 2px solid #ffcb05; /* color Pikachu */
+                border-radius: 20px;
+                padding-left: 10px;
+                font-family: 'Press Start 2P', cursive;
+                font-size: 10px;
+                color: #2a75bb; /* azul Pokémon */
+                transition: all 0.3s ease;
+                width: 180px;
+            }
+
+            .pokeInput::placeholder {
+                color: #3b4cca;
+                opacity: 0.7;
+            }
+
+            .pokeInput:focus {
+                outline: none;
+                box-shadow: 0 0 5px 2px #ffcb05;
+                background-color: #fff;
+            }
+
+            .pokeBuscador button {
+                border-radius: 20px;
+                font-family: 'Press Start 2P', cursive;
+                font-size: 10px;
+                border: 2px solid #ffcb05;
+                color: #fff;
+                background-color: #3b4cca;
+                transition: 0.3s;
+            }
+
+            .pokeBuscador button:hover {
+                background-color: #2a75bb;
+            }
+
+        </style>
 
         <div class="container">
 
             <nav th:if="${token} != null" class="navbar navbar-expand-lg navbar-light navStyle mb-4 navTamaño">
                 <div class="container navcontenido">
-                    <!-- Dropdown de Dashboard -->
+
+                    <!-- Dropdown Dashboard -->
                     <div class="dropdown">
                         <a class="navbar-brand dropdown-toggle text-white d-flex align-items-center" href="#" id="dashboardDropdown" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
@@ -31,23 +80,36 @@
                             <li><a class="dropdown-item" th:href="@{admin/dashboard}"><i class="bi bi-grid-fill me-2"></i> Dashboard</a></li>
                             <li><a class="dropdown-item" th:href="@{/usuario/perfil}"><i class="bi bi-person-circle me-2"></i> Mi perfil</a></li>
                             <li><a class="dropdown-item" th:href="@{/pokemon}"><i class="bi bi-file-earmark-text-fill me-2"></i> Lista de pokemones</a></li>
-
                         </ul>
                     </div>
 
-                    <!-- Botón para colapsar en móviles -->
+                    <!-- Botón colapsable móvil -->
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
                             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
 
-                    <!-- Contenido colapsable -->
+                    <!-- Contenido del navbar -->
                     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <div class="navbar-nav ms-auto">
-                            <a th:href="@{/usuario/register}" class="nav-item nav-link text-white d-flex align-items-center me-3">
+                        <div class="navbar-nav ms-auto align-items-center">
+
+                            <!-- PokeBuscador integrado -->
+                            <input 
+                                id="pokeBuscador" 
+                                type="text" 
+                                class="form-control pokeBuscadorInput" 
+                                placeholder="Buscar Pokémon..."
+                                aria-label="Buscar Pokémon"
+                                oninput="buscarPokemon(this.value)">
+                            <i class="bi bi-search text-white ms-2"></i>
+
+                            <!-- Usuario -->
+                            <a th:href="@{/usuario/profile/{username}(username=${username})}" class="nav-item nav-link text-white d-flex align-items-center me-3">
                                 <i class="bi bi-person-fill me-1"></i>
                                 <span th:text="${username}">Entrenador</span>
                             </a>
+
+                            <!-- Logout -->
                             <a th:href="@{/usuario/logout}" class="nav-item nav-link text-white d-flex align-items-center">
                                 <i class="bi bi-box-arrow-right me-1"></i> Cerrar sesión
                             </a>
@@ -57,36 +119,50 @@
             </nav>
 
 
+
             <nav th:if="${token} == null" class="navbar navbar-expand-lg navbar-light navStyle mb-4 navTamaño">
                 <div class="container navcontenido">
+
                     <!-- Enlace de Inicio -->
                     <a class="navbar-brand text-white d-flex align-items-center" th:href="@{/pokemon}">
                         <i class="bi bi-house-door-fill me-2"></i> Inicio
                     </a>
 
                     <!-- Botón para colapsar en móviles -->
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
                             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
 
-                    <!-- Contenido colapsable -->
+                    <!-- Contenido del navbar -->
                     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <div class="navbar-nav ms-auto">
+                        <div class="navbar-nav ms-auto align-items-center">
+
+                            <!-- PokeBuscador integrado -->
+                            <input 
+                                id="pokeBuscador" 
+                                type="text" 
+                                class="form-control pokeBuscadorInput" 
+                                placeholder="Buscar Pokémon..."
+                                aria-label="Buscar Pokémon"
+                                oninput="buscarPokemon(this.value)" >
+                            <i class="bi bi-search text-white ms-2"></i>
+
+
+                            <!-- Registrar -->
                             <a th:href="@{/usuario/register}" class="nav-item nav-link text-white d-flex align-items-center me-3">
                                 <i class="bi bi-person-plus-fill me-1"></i> Registrar
                             </a>
+
+                            <!-- Iniciar sesión -->
                             <a th:href="@{/usuario/login}" class="nav-item nav-link text-white d-flex align-items-center">
                                 <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar sesión
                             </a>
                         </div>
                     </div>
-                    
-                    <div class="pokeBuscador">  
-                     <input type="text" id="pokeBuscador" placeholder="PokeBusqueda!" oninput="buscarPokemon(this.value)">
-                    </div>
-                    
+                </div>
             </nav>
+
 
 
             <div class="text-center mt-3 text-white">
@@ -207,7 +283,7 @@
                                     let radarChart = null; // fuera de la función para que se destruya el grafico cada vez que se genere uno nuevo!
 
                                     function cargarPokemon(row) {
-                                        
+
                                         if (radarChart) {
                                             radarChart.destroy(); // 
                                         }
@@ -299,7 +375,7 @@
                                             }
                                         };
 
-                                      radarChart = new Chart(document.getElementById('radarChart'), config);
+                                        radarChart = new Chart(document.getElementById('radarChart'), config);
 
                                     }
         </script>
@@ -384,57 +460,57 @@
         
                 new Chart(document.getElementById('radarChart'), config);
             </script>-->
+
+        <!--        <script>
+                    function buscarPokemon(nombre) {
+                        if (nombre === "") {
+                            document.getElementById("pokeResult").innerHTML = "";
+                            return;
+                        }
         
-        <script>
-            function buscarPokemon(nombre){
-                if(nombre === ""){
-                    document.getElementById("pokeResult").innerHTML = "";
-                    return;
-                }
-                
-            fetch()
-            }
-        </script>
-        
+                        fetch()
+                    }
+                </script>-->
+
         <script>
             function buscarPokemon(nombre) {
-  fetch(`/pokeControl/searchByName?pokeBusqueda=${encodeURIComponent(nombre)}`)
-    .then(res => res.json())
-    .then(data => actualizarTabla(data))
-    .catch(err => console.error("Error al buscar Pokémon:", err));
-}
+                fetch(`/pokeControl/searchByName?pokeBusqueda=${encodeURIComponent(nombre)}`)
+                        .then(res => res.json())
+                        .then(data => actualizarTabla(data))
+                        .catch(err => console.error("Error al buscar Pokémon:", err));
+            }
 
-function actualizarTabla(pokemones) {
-  const cuerpo = document.getElementById("tabla-pokemones");
-  cuerpo.innerHTML = ""; // Limpia la tabla
+            function actualizarTabla(pokemones) {
+                const cuerpo = document.getElementById("tabla-pokemones");
+                cuerpo.innerHTML = ""; // Limpia la tabla
 
-  if (pokemones.length === 0) {
-    cuerpo.innerHTML = `<tr><td colspan="4" class="text-center text-white">No se encontraron Pokémon.</td></tr>`;
-    return;
-  }
+                if (pokemones.length === 0) {
+                    cuerpo.innerHTML = `<tr><td colspan="4" class="text-center text-white">No se encontraron Pokémon.</td></tr>`;
+                    return;
+                }
 
-  pokemones.forEach(pokemon => {
-    const fila = document.createElement("tr");
-    fila.className = "poke-fila p-2 mb-2 align-items-center";
-    fila.setAttribute("onclick", "cargarPokemon(this)");
+                pokemones.forEach(pokemon => {
+                    const fila = document.createElement("tr");
+                    fila.className = "poke-fila p-2 mb-2 align-items-center";
+                    fila.setAttribute("onclick", "cargarPokemon(this)");
 
-    // Atributos data-* para cargar en el radar chart
-    fila.dataset.id = pokemon.id;
-    fila.dataset.name = pokemon.name;
-    fila.dataset.height = pokemon.height;
-    fila.dataset.weight = pokemon.weight;
-    fila.dataset.img = pokemon.sprites[0].front_default;
-    fila.dataset.imgBack = pokemon.sprites[0].back_default;
-    fila.dataset.type = pokemon.types[0].name;
-    fila.dataset.crie = pokemon.cries[0].latest;
-    fila.dataset.hp = pokemon.stats[0].base_stat;
-    fila.dataset.atk = pokemon.stats[1].base_stat;
-    fila.dataset.def = pokemon.stats[2].base_stat;
-    fila.dataset.spa = pokemon.stats[3].base_stat;
-    fila.dataset.spd = pokemon.stats[4].base_stat;
-    fila.dataset.speed = pokemon.stats[5].base_stat;
+                    // Atributos data-* para cargar en el radar chart
+                    fila.dataset.id = pokemon.id;
+                    fila.dataset.name = pokemon.name;
+                    fila.dataset.height = pokemon.height;
+                    fila.dataset.weight = pokemon.weight;
+                    fila.dataset.img = pokemon.sprites[0].front_default;
+                    fila.dataset.imgBack = pokemon.sprites[0].back_default;
+                    fila.dataset.type = pokemon.types[0].name;
+                    fila.dataset.crie = pokemon.cries[0].latest;
+                    fila.dataset.hp = pokemon.stats[0].base_stat;
+                    fila.dataset.atk = pokemon.stats[1].base_stat;
+                    fila.dataset.def = pokemon.stats[2].base_stat;
+                    fila.dataset.spa = pokemon.stats[3].base_stat;
+                    fila.dataset.spd = pokemon.stats[4].base_stat;
+                    fila.dataset.speed = pokemon.stats[5].base_stat;
 
-    fila.innerHTML = `
+                    fila.innerHTML = `
       <td>
         <img src="${pokemon.sprites[0].front_default}" class="pokemon-picture" alt="Imagen del Pokémon" />
       </td>
@@ -456,9 +532,9 @@ function actualizarTabla(pokemones) {
       </td>
     `;
 
-    cuerpo.appendChild(fila);
-  });
-}
+                    cuerpo.appendChild(fila);
+                });
+            }
         </script>
     </body>
 
