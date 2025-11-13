@@ -43,6 +43,7 @@ public class PokeController {
     
     private final String url = "http://localhost:8081//";
 
+
 //Este controlador es accedido desde vista "loading" para validar si existe ya el archivo JSON y redirigir:
     @GetMapping("/status")
     @ResponseBody

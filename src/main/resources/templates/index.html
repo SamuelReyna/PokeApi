@@ -648,6 +648,72 @@
                 </script>-->
 
         <script>
+            function getSelectedTypes() {
+                const checkboxes = document.querySelectorAll("#checkboxList input[type='checkbox']");
+                const tiposSeleccionados = [];
+
+                checkboxes.forEach(ch => {
+                    if (ch.checked) {
+                        tiposSeleccionados.push(ch.value);
+                    }
+                });
+
+                return tiposSeleccionados;
+            }
+            async function cargarTypes() {
+                try {
+                    const res = await fetch("https://pokeapi.co/api/v2/type");
+                    const data = await res.json();
+
+                    const contenedor = document.getElementById("checkboxList");
+
+                    data.results.forEach(type => {
+                        const item = document.createElement("div");
+
+
+                        item.innerHTML = `
+    <label>
+        <input type="checkbox" value="${type.name}" onchange="buscarPorTipos()">
+        ${type.name.toUpperCase()}
+    </label>
+`;
+
+
+                        contenedor.appendChild(item);
+                    });
+
+                } catch (error) {
+                    console.error("Error al cargar types:", error);
+                }
+            }
+
+            function toggleCheckboxList() {
+                const lista = document.getElementById("checkboxList");
+                lista.style.display = lista.style.display === "block" ? "none" : "block";
+            }
+
+
+// Llamar función
+            cargarTypes();
+            function buscarPorTipos() {
+                const tipos = getSelectedTypes();
+
+                if (tipos.length === 0) {
+                    fetch(`/pokeControl/searchByTypes`)
+                            .then(res => res.json())
+                            .then(data => actualizarTabla(data))
+                            .catch(err => console.error("Error al buscar por tipos:", err));
+                }
+
+                const params = new URLSearchParams();
+                tipos.forEach(t => params.append("types", t));
+
+                fetch(`/pokeControl/searchByTypes?` + params.toString())
+                        .then(res => res.json())
+                        .then(data => actualizarTabla(data))
+                        .catch(err => console.error("Error al buscar por tipos:", err));
+            }
+
             function buscarPokemon(nombre) {
                 if (nombre === "") {
                     document.getElementById("pokeResult").innerHTML = "";
