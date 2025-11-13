@@ -43,8 +43,18 @@ public class Pokemon {
     public List<Cries> cries; //Efectos de sonido
 
     public List<Stats> stats;
-    
+
     public List<Type> types;
+
+    public Species species;
+
+    public Species getSpecies() {
+        return species;
+    }
+
+    public void setSpecies(Species species) {
+        this.species = species;
+    }
 
     public List<Type> getTypes() {
         return types;

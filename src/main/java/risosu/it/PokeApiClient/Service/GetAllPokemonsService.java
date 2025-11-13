@@ -1,7 +1,9 @@
 package risosu.it.PokeApiClient.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,15 +14,22 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import risosu.it.PokeApiClient.ML.Cries;
+import risosu.it.PokeApiClient.ML.Habitat;
 import risosu.it.PokeApiClient.ML.Pokemon;
 import risosu.it.PokeApiClient.ML.PokemonListResponse;
 import risosu.it.PokeApiClient.ML.Result;
 import risosu.it.PokeApiClient.ML.Sprite;
 import risosu.it.PokeApiClient.ML.Stats;
 import risosu.it.PokeApiClient.ML.Type;
+import risosu.it.PokeApiClient.ML.Species;
+import risosu.it.PokeApiClient.ML.SpeciesDetail;
+import risosu.it.PokeApiClient.ML.Color;
 
 @Service
 public class GetAllPokemonsService {
@@ -45,11 +54,9 @@ public class GetAllPokemonsService {
 
     }
 
-    public void persistirPokemones() throws Exception {
+    public void persistirPokemones() throws IOException {
         List<Result> listaPokemones = ObtenerListPokemones();
-
         List<CompletableFuture<Pokemon>> pokemones = new ArrayList<>();
-
         AtomicInteger counter = new AtomicInteger();
 
         for (Result r : listaPokemones) {
@@ -60,6 +67,9 @@ public class GetAllPokemonsService {
                 } catch (InterruptedException e) {
                     System.err.println("Error al obtener " + r.getName() + ": " + e.getMessage());
                     return null;
+                } catch (JsonProcessingException ex) {
+                    Logger.getLogger(GetAllPokemonsService.class.getName()).log(Level.SEVERE, null, ex);
+                    return null;
                 }
             }, executor).whenComplete((p, ex) -> {
                 int done = counter.incrementAndGet();
@@ -69,29 +79,22 @@ public class GetAllPokemonsService {
             });
 
             pokemones.add(fut);
-
-//            List<Pokemon> buffer = new ArrayList<>();
-//            for (CompletableFuture<Pokemon> f : pokemones) {
-//                Pokemon p = f.get();
-//                if (p != null) {
-//                    buffer.add(p);
-//                }
-//                if (buffer.size() >= 50) {
-//                    buffer.clear();
-//                }
-//            }
-            List<Pokemon> pokemons = pokemones.stream()
-                    .map(CompletableFuture::join)
-                    .filter(Objects::nonNull)
-                    .toList();
-            mapper.writerWithDefaultPrettyPrinter().writeValue(new File("pokemons.json"), pokemons);
-            System.out.println("✅ Archivo 'pokemons.json' creado con " + pokemons.size() + " pokemones");
         }
 
+        // Esperar a que todos terminen
+        List<Pokemon> pokemons = pokemones.stream()
+                .map(CompletableFuture::join)
+                .filter(Objects::nonNull)
+                .toList();
+
+        // Guardar en archivo JSON solo una vez
+        mapper.writerWithDefaultPrettyPrinter().writeValue(new File("pokemons.json"), pokemons);
+
+        System.out.println("✅ Archivo 'pokemons.json' creado con " + pokemons.size() + " pokemones");
     }
 
     private Pokemon
-            obtenerDetallesPokemon(String url) {
+            obtenerDetallesPokemon(String url) throws JsonProcessingException {
         var resp = webClient.get()
                 .uri(url)
                 .retrieve()
@@ -106,6 +109,7 @@ public class GetAllPokemonsService {
         Pokemon pokemon = new Pokemon();
         Cries cries = new Cries();
         Sprite sprites = new Sprite();
+        Species speciesML = new Species();
 
         Map<String, Object> criesMap = (Map<String, Object>) resp.get("cries");
         if (criesMap != null) {
@@ -159,6 +163,44 @@ public class GetAllPokemonsService {
             }
         }
 
+        Map<String, Object> species = (Map<String, Object>) resp.get("species");
+
+        if (species != null) {
+
+            ObjectMapper mapper = new ObjectMapper();
+            speciesML.setName((String) species.get("name"));
+            speciesML.setUrl((String) species.get("url"));
+            String specieJson = webClient
+                    .get()
+                    .uri(speciesML.getUrl())
+                    .accept(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN)
+                    .retrieve()
+                    .bodyToMono(String.class).block();
+
+            Map<String, Object> specieResp = mapper.readValue(specieJson, Map.class);
+            SpeciesDetail speciesDetail = new SpeciesDetail();
+            speciesDetail.setId((int) specieResp.get("id"));
+            speciesDetail.setName((String) specieResp.get("name"));
+
+            Map<String, Object> habitats = (Map<String, Object>) specieResp.get("habitat");
+            if (habitats != null) {
+                Habitat habitat = new Habitat();
+                habitat.setName((String) habitats.get("name"));
+                habitat.setUrl((String) habitats.get("url"));
+                speciesDetail.setHabitat(habitat);
+            }
+
+            Map<String, Object> colors = (Map<String, Object>) specieResp.get("color");
+            if (colors != null) {
+                Color color = new Color();
+                color.setName((String) colors.get("name"));
+                color.setUrl((String) colors.get("url"));
+                speciesDetail.setColor(color);
+            }
+
+            speciesML.setSpeciesDetail(speciesDetail);
+        }
+
         pokemon.setId((Integer) resp.get("id"));
         pokemon.setName((String) resp.get("name"));
         pokemon.setHeight((Integer) resp.get("height"));
@@ -170,6 +212,7 @@ public class GetAllPokemonsService {
         pokemon.setSprites(List.of(sprites));
         pokemon.setStats(listaStats);
         pokemon.setTypes(listTypes);
+        pokemon.setSpecies(speciesML);
 
         return pokemon;
 

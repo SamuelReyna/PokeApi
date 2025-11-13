@@ -177,6 +177,7 @@
                                 <tr>
                                     <th class="col-1"></th>
                                     <th class="col-1">Name</th>
+                                    <th class="col-1">Tipos</th>
                                     <th class="col-1">Medidas</th>
                                     <th class="col-1">FormaBase</th>
                                 </tr>
@@ -184,20 +185,21 @@
 
                             <tbody id="tabla-pokemones">
                                 <tr th:each="pokemon : ${pokemones}" class="poke-fila p-2 mb-2 align-items-center"
-                                    th:attr="data-id=${pokemon.id},
+                                    th:attr="
+                                    data-id=${pokemon.id},
                                     data-name=${pokemon.name},
                                     data-height=${pokemon.height},
                                     data-weight=${pokemon.weight},
+                                    data-types=${#strings.listJoin(pokemon.types.?[name != null].![name], ' ')},
                                     data-img=${pokemon.sprites[0].front_default},
                                     data-img-back=${pokemon.sprites[0].back_default},
-                                    data-type=${pokemon.types[0].name},
                                     data-crie=${pokemon.cries[0].latest},
                                     data-hp=${pokemon.stats[0].base_stat},
                                     data-atk=${pokemon.stats[1].base_stat},
                                     data-def=${pokemon.stats[2].base_stat},
                                     data-spa=${pokemon.stats[3].base_stat},
                                     data-spd=${pokemon.stats[4].base_stat},
-                                    data-speed=${pokemon.stats[5].base_stat}"
+                                    data-speed=${pokemon.stats[5].base_stat}"s
 
 
 
@@ -212,7 +214,11 @@
                                             <span th:text="${pokemon.order}"></span> <span th:text="${pokemon.name}" class="m-0"></span>
                                         </div>
                                     </td>
-
+                                    <td>
+                                        <span th:each=" type :${pokemon.types}">
+                                             <span th:text="${type.name}"> </span>
+                                        </span>
+                                    </td>
                                     <td>
                                         <div>
                                             <i class="bi bi-arrows-vertical"></i> <span th:text="${pokemon.height}"></span>
@@ -221,6 +227,7 @@
                                             <i class="bi bi-arrows"></i> <span th:text="${pokemon.weight}"></span>
                                         </div>
                                     </td>
+
                                     <td>
                                         <div>
                                             <div class="checkbox-container">
@@ -293,7 +300,7 @@
                                         const weight = row.getAttribute("data-weight");
                                         const img = row.getAttribute("data-img");
                                         const imgBack = row.getAttribute("data-img-back");
-                                        const type = row.getAttribute("data-type");
+                                        const type = row.getAttribute("data-types");
                                         const cry = row.getAttribute("data-crie");
 
                                         const stats = {
@@ -494,14 +501,22 @@
                     fila.className = "poke-fila p-2 mb-2 align-items-center";
                     fila.setAttribute("onclick", "cargarPokemon(this)");
 
-                    // Atributos data-* para cargar en el radar chart
+                    // 🧩 Atributos data-* para usar en el radar chart
                     fila.dataset.id = pokemon.id;
                     fila.dataset.name = pokemon.name;
                     fila.dataset.height = pokemon.height;
                     fila.dataset.weight = pokemon.weight;
                     fila.dataset.img = pokemon.sprites[0].front_default;
                     fila.dataset.imgBack = pokemon.sprites[0].back_default;
-                    fila.dataset.type = pokemon.types[0].name;
+
+                    // ✅ Concatenar todos los tipos con espacio
+                    const typeNames = pokemon.types
+                            .filter(t => t.name)
+                            .map(t => t.name)
+                            .join(' ');
+
+                    fila.dataset.types = typeNames;
+
                     fila.dataset.crie = pokemon.cries[0].latest;
                     fila.dataset.hp = pokemon.stats[0].base_stat;
                     fila.dataset.atk = pokemon.stats[1].base_stat;
@@ -520,6 +535,11 @@
         </div>
       </td>
       <td>
+        <div>
+          <span class="m-0">${typeNames}</span>
+        </div>
+      </td>
+      <td>
         <div><i class="bi bi-arrows-vertical"></i> <span>${pokemon.height}</span></div>
         <div><i class="bi bi-arrows"></i> <span>${pokemon.weight}</span></div>
       </td>
@@ -535,6 +555,68 @@
                     cuerpo.appendChild(fila);
                 });
             }
+
+
+//            function actualizarTabla(pokemones) {
+//                const cuerpo = document.getElementById("tabla-pokemones");
+//                cuerpo.innerHTML = ""; // Limpia la tabla
+//
+//                if (pokemones.length === 0) {
+//                    cuerpo.innerHTML = `<tr><td colspan="4" class="text-center text-white">No se encontraron Pokémon.</td></tr>`;
+//                    return;
+//                }
+//
+//                pokemones.forEach(pokemon => {
+//                    const fila = document.createElement("tr");
+//                    fila.className = "poke-fila p-2 mb-2 align-items-center";
+//                    fila.setAttribute("onclick", "cargarPokemon(this)");
+//
+//                    // Atributos data-* para cargar en el radar chart
+//                    fila.dataset.id = pokemon.id;
+//                    fila.dataset.name = pokemon.name;
+//                    fila.dataset.height = pokemon.height;
+//                    fila.dataset.weight = pokemon.weight;
+//                    fila.dataset.img = pokemon.sprites[0].front_default;
+//                    fila.dataset.imgBack = pokemon.sprites[0].back_default;
+//                    fila.dataset.type = pokemon.types[0].name;
+//                    fila.dataset.crie = pokemon.cries[0].latest;
+//                    fila.dataset.hp = pokemon.stats[0].base_stat;
+//                    fila.dataset.atk = pokemon.stats[1].base_stat;
+//                    fila.dataset.def = pokemon.stats[2].base_stat;
+//                    fila.dataset.spa = pokemon.stats[3].base_stat;
+//                    fila.dataset.spd = pokemon.stats[4].base_stat;
+//                    fila.dataset.speed = pokemon.stats[5].base_stat;
+//
+//                    fila.innerHTML = `
+//      <td>
+//        <img src="${pokemon.sprites[0].front_default}" class="pokemon-picture" alt="Imagen del Pokémon" />
+//      </td>
+//      <td>
+//        <div>
+//          <span>${pokemon.order}</span> <span class="m-0">${pokemon.name}</span>
+//        </div>
+//      </td>
+//              <td>
+//        <div>
+//           <span class="m-0">${#strings.listJoin(pokemon.types.?[name != null].![name], ' ')}</span>
+//        </div>
+//      </td>
+//      <td>
+//        <div><i class="bi bi-arrows-vertical"></i> <span>${pokemon.height}</span></div>
+//        <div><i class="bi bi-arrows"></i> <span>${pokemon.weight}</span></div>
+//      </td>
+//      <td>
+//        <div class="checkbox-container">
+//          <input type="checkbox" ${pokemon.is_default ? "checked" : ""} />
+//          <label class="checkmark"></label>
+//        </div>
+//        <div><span>Evo</span></div>
+//      </td>
+//    `;
+//
+//                    cuerpo.appendChild(fila);
+//                });
+//            }
         </script>
     </body>
 
