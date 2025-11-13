@@ -32,7 +32,7 @@ import risosu.it.PokeApiClient.ML.Result;
 @Controller
 @RequestMapping("/pokeControl")
 public class PokeController {
-     
+
 //Este controlador es accedido desde vista "loading" para validar si existe ya el archivo JSON y redirigir:
     @GetMapping("/status")
     @ResponseBody
@@ -48,12 +48,12 @@ public class PokeController {
     public String mostrarVistaFinal(Model model, HttpSession session) {
         // Leer el archivo JSON
         ObjectMapper mapper = new ObjectMapper();
-        
+
         try {
             List<Pokemon> pokemones = Arrays.asList(
                     mapper.readValue(new File("pokemons.json"), Pokemon[].class)
             );
-            
+
             model.addAttribute("pokemones", pokemones);
             model.addAttribute("token", session.getAttribute("token"));
 
@@ -67,12 +67,11 @@ public class PokeController {
             model.addAttribute("error", "No se pudo leer el archivo");
         }
 
-        return "index"; 
+        return "index";
     }
-        
-        
-        @GetMapping("/searchByName")
-        @ResponseBody
+
+    @GetMapping("/searchByName")
+    @ResponseBody
     public List<Pokemon> SearchByName(@RequestParam String pokeBusqueda) {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -95,5 +94,31 @@ public class PokeController {
         }
         return resultados;
 
+    }
+
+    @GetMapping("/searchByTypes")
+    @ResponseBody
+    public List<Pokemon> FilterByTypes(@RequestParam(required = false) List<String> types) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<Pokemon> resultados = new ArrayList<>();
+
+        try {
+
+            List<Pokemon> pokemones = Arrays.asList(
+                    mapper.readValue(new File("pokemons.json"), Pokemon[].class));
+            if (types == null) {
+                return pokemones;
+            }
+            List<Pokemon> filtrados = pokemones.stream()
+                    .filter(p -> p.getTypes().stream().anyMatch(t -> types.contains(t.getName())))
+                    .collect(Collectors.toList());
+            resultados = filtrados;
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            System.out.println(e.getLocalizedMessage());
+        }
+        return resultados;
     }
 }
