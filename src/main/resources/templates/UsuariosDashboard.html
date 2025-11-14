@@ -154,7 +154,7 @@
                     <strong th:text="${username}">Admin</strong>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="userMenu">
-                    <li><a class="dropdown-item" href="#">Perfil</a></li>
+                    <li><a class="dropdown-item" th:href="@{/usuario/profile/{username}(username=${username})}">Perfil</a></li>
                     <li><a class="dropdown-item" href="#">Ajustes</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" th:href="@{/usuario/logout}">Cerrar sesión</a></li>
@@ -243,8 +243,16 @@
                                            th:data-correo="${entrenador.correo}"
                                            th:data-username="${entrenador.username}"
                                            th:data-rol="${entrenador.rol.idRol}"><i class="fa-solid fa-pen-to-square text-warning me-2"></i></a>
-                                        <a th:href="@{/pokeControl/admin/usuarios/delete/{idEntrenador}(idEntrenador=${entrenador.idEntrenador})}">
-                                            <i class="fa-solid fa-trash text-danger"></i>
+                                        <!--                                        <a th:href="@{/pokeControl/admin/usuarios/delete/{idEntrenador}(idEntrenador=${entrenador.idEntrenador})}">
+                                                                                    <i class="fa-solid fa-trash text-danger"></i>
+                                                                                </a>-->
+                                        <a href="#" 
+                                           class="text-danger" 
+                                           data-bs-toggle="modal" 
+                                           data-bs-target="#confirmDeleteModal"
+                                           th:data-id="${entrenador.idEntrenador}"
+                                           th:data-nombre="${entrenador.nombre}">
+                                            <i class="fa-solid fa-trash"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -257,11 +265,43 @@
             <!-- Footer -->
             <footer class="mt-4 text-muted small">
                 <div class="d-flex justify-content-between">
-                    <div>© 2025 My Admin Pokédex</div>
+                    <div>© 2025 My PokeAdmin</div>
                     <div>Versión 1.0</div>
                 </div>
             </footer>
         </main>
+
+        <!-- Modal de confirmación global -->
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg rounded-4">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="confirmDeleteLabel">
+                            <i class="fa-solid fa-triangle-exclamation me-2"></i> Confirmar eliminación
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p class="mb-0">
+                            ¿Seguro que deseas eliminar al usuario 
+                            <strong id="userNameToDelete">este usuario</strong>?  
+                            Esta acción no se puede deshacer.
+                        </p>
+                    </div>
+
+                    <div class="modal-footer d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fa-solid fa-xmark me-1"></i> Cancelar
+                        </button>
+
+                        <a id="confirmDeleteBtn" href="#" class="btn btn-danger">
+                            <i class="fa-solid fa-trash me-1"></i> Eliminar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Modal Agregar Usuario -->
         <div class="modal fade" id="addUserModal" tabindex="-1" aria-hidden="true">
@@ -416,6 +456,25 @@
                 </div>
             </div>
         </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const deleteModal = document.getElementById('confirmDeleteModal');
+                const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+                const userNameToDelete = document.getElementById('userNameToDelete');
+
+                deleteModal.addEventListener('show.bs.modal', event => {
+                    const button = event.relatedTarget;
+                    const userId = button.getAttribute('data-id');
+                    const userName = button.getAttribute('data-nombre');
+
+                    // Mostrar nombre del usuario en el modal
+                    userNameToDelete.textContent = userName || 'este usuario';
+
+                    // Actualizar enlace de eliminación
+                    confirmDeleteBtn.setAttribute('href', `/pokeControl/admin/usuarios/delete/${userId}`);
+                });
+            });
+        </script>
 
         <script>
             document.addEventListener('DOMContentLoaded', () => {

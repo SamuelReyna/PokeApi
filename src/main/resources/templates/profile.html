@@ -1,0 +1,243 @@
+
+
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Usuarios - Admin Pokédex</title>
+
+        <!-- Bootstrap 5 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Icons -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"><!-- En el <head> -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+
+
+        <style>
+            @import url('https://fonts.cdnfonts.com/css/pokemon-solid');
+            :root {
+                --sidebar-width: 260px;
+                --poke-red: #e3350d;
+                --poke-yellow: #ffcc00;
+                --poke-blue: #3b4cca;
+                --poke-bg: #f5f5f5;
+            }
+
+            body {
+                font-family: 'Press Start 2P', cursive;
+                font-size: 12px;
+                background: linear-gradient(180deg, #fff 0%, #f1f1f1 100%);
+                background-image: url('https://www.transparenttextures.com/patterns/pw-maze-white.png');
+                background-attachment: fixed;
+                color: #222;
+            }
+
+            /* Sidebar */
+            .sidebar {
+                width: var(--sidebar-width);
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                background: var(--poke-red);
+                border-right: 6px solid var(--poke-yellow);
+                padding: 1rem 0;
+                color: #fff;
+            }
+
+            .sidebar a {
+                color: #fff;
+                font-weight: bold;
+                letter-spacing: 1px;
+                text-shadow: 1px 1px 0 #000;
+            }
+
+            .sidebar .nav-link.active {
+                background: var(--poke-yellow);
+                color: #000;
+                border-radius: 10px;
+            }
+
+            .sidebar .nav-link:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            .content-area {
+                margin-left: var(--sidebar-width);
+                padding: 1.5rem;
+            }
+
+            @media (max-width: 991px) {
+                .sidebar {
+                    position: relative;
+                    width: 100%;
+                    height: auto;
+                }
+                .content-area {
+                    margin-left: 0;
+                }
+            }
+
+            /* Navbar */
+            .navbar {
+                background: var(--poke-blue) !important;
+                border-radius: 12px;
+                border: 3px solid var(--poke-yellow);
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+            }
+
+            h2 {
+                font-family: 'Pokemon Solid', sans-serif;
+                color: var(--poke-blue);
+                text-shadow: 2px 2px 0 var(--poke-yellow);
+            }
+
+            /* Tabla */
+            .table thead {
+                background: var(--poke-blue);
+                color: #fff;
+            }
+
+            .table-hover tbody tr:hover {
+                background-color: rgba(255, 204, 0, 0.2);
+            }
+
+            .badge.bg-success {
+                background-color: var(--poke-yellow) !important;
+                color: #000;
+                border: 1px solid #000;
+            }
+
+            /* Botones Pokémon */
+            .btn-primary {
+                background: var(--poke-red);
+                border: 3px solid var(--poke-yellow);
+                font-weight: bold;
+            }
+
+            .btn-primary:hover {
+                background: var(--poke-yellow);
+                color: #000;
+            }
+
+            footer {
+                font-size: 0.8rem;
+                text-transform: uppercase;
+                color: #444;
+                border-top: 3px solid var(--poke-yellow);
+                padding-top: 0.5rem;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Sidebar -->
+        <aside class="sidebar d-flex flex-column p-3">
+            <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <i class="fa-solid fa-layer-group fa-lg me-2"></i>
+                <span class="fs-5 fw-semibold">My Admin</span>
+            </a>
+            <hr class="text-white-50">
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li><a  th:href="@{/pokeControl/admin/dashboard}" class="nav-link text-white"><i class="fa-solid fa-chart-pie me-2"></i> Dashboard</a></li>
+                <li><a th:href="@{/pokeControl/admin/usuarios}" class="nav-link text-white"><i class="fa-solid fa-users me-2"></i> Usuarios</a></li>
+                <li><a href="configuracion.html" class="nav-link text-white"><i class="fa-solid fa-gear me-2"></i> Configuración</a></li>
+            </ul>
+            <hr class="text-white-50 mt-auto">
+            <div class="dropdown px-3">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://i.pravatar.cc/40" alt="avatar" class="rounded-circle me-2">
+                    <strong th:text="${username}">Admin</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="userMenu">
+                    <li><a class="dropdown-item" th:href="@{/usuario/profile}">Perfil</a></li>
+                    <li><a class="dropdown-item" href="#">Ajustes</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" th:href="@{/usuario/logout}">Cerrar sesión</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <!--            <nav class="navbar navbar-expand-lg mb-4">
+                            <div class="container-fluid">
+                                <form class="d-flex" id="searchForm">
+                                    <input id="searchInput" class="form-control me-2" type="search" placeholder="Buscar usuario...">
+                                    <button class="btn btn-light" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                </form>
+                            </div>
+                        </nav>-->
+
+
+
+            <!-- Encabezado -->
+            <!--            <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h2>Usuarios</h2>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                                <i class="fa-solid fa-plus me-2"></i>Agregar usuario
+                            </button>
+                        </div>-->
+
+            <div class="container mt-4">
+                <div class="card border-3 rounded-4 shadow-lg" 
+                     style="border-color: var(--poke-yellow); background-color: #fff9db; max-width: 500px; margin: 0 auto;">
+                    <div class="card-header text-center text-white fw-bold" 
+                         style="background-color: var(--poke-blue); border-bottom: 3px solid var(--poke-yellow);">
+                        <i class="fa-solid fa-user-astronaut me-2"></i> Perfil del Entrenador
+                    </div>
+
+                    <div class="card-body text-center">
+                        <img src="https://i.pravatar.cc/120" alt="Avatar" 
+                             class="rounded-circle border border-4 border-dark mb-3" width="120" height="120">
+
+                        <h5 class="fw-bold" style="color: var(--poke-blue); text-shadow: 1px 1px 0 var(--poke-yellow);">
+                            <span th:text="|${entrenador.nombre} ${entrenador.apellidoPaterno} ${entrenador.apellidoMaterno}">Ash Ketchum</span>
+                        </h5>
+
+                        <p class="mb-2 text-muted">
+                            <i class="fa-solid fa-envelope me-1 text-warning"></i> 
+                            <span th:text="${entrenador.correo}">ash@pokedex.com</span>
+                        </p>
+
+                        <p class="mb-2">
+                            <i class="fa-solid fa-venus-mars me-1 text-warning"></i>
+                            <span th:text="${entrenador.sexo == 'M' ? 'Masculino' : 'Femenino'}">Masculino</span>
+                        </p>
+
+                        <p class="mb-2">
+                            <i class="fa-solid fa-user-tag me-1 text-warning"></i> 
+                            <span th:text="${entrenador.rol.nombre}">Admin</span>
+                        </p>
+
+                        <p class="mb-3">
+                            <i class="fa-solid fa-id-badge me-1 text-warning"></i> 
+                            Usuario: <strong th:text="${entrenador.username}">ashketchum</strong>
+                        </p>
+
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="#" class="btn btn-primary">
+                                <i class="fa-solid fa-pen-to-square me-1"></i> Editar
+                            </a>
+                            <a href="#" class="btn btn-outline-danger fw-bold" 
+                               style="border: 3px solid var(--poke-yellow);">
+                                <i class="fa-solid fa-right-from-bracket me-1"></i> Cerrar sesión
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="mt-4 text-muted small">
+                <div class="d-flex justify-content-between">
+                    <div>© 2025 My PokeAdmin</div>
+                    <div>Versión 1.0</div>
+                </div>
+            </footer>
+        </main>
+    </body>
+</html>

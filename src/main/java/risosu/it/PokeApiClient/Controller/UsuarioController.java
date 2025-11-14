@@ -1,4 +1,4 @@
-package risosu.it.PokeApiClient.Controller;
+    package risosu.it.PokeApiClient.Controller;
 
 import jakarta.servlet.http.HttpSession;
 import java.util.Map;
@@ -6,6 +6,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +15,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -68,43 +72,77 @@ public class UsuarioController {
         return "login";
     }
 
+    @GetMapping("/profile/{username}")
+    public String profile(@PathVariable("username") String username, Model model) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<Entrenador> responseEntity
+                = restTemplate.exchange("http://localhost:8081/api/entrenador/" + username + "/username", HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<Entrenador>() {
+                });
+        if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
+            Entrenador entrenador = responseEntity.getBody();
+            model.addAttribute("entrenador", entrenador);
+        }
+
+        return "profile";
+    }
+
     @PostMapping("/login")
-    public String Login(@ModelAttribute("Entrenador") Entrenador entrenador, HttpSession session) {
+    public String Login(@ModelAttribute("Entrenador") Entrenador entrenador,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Entrenador> requestEntity = new HttpEntity<>(entrenador, headers);
 
-        ResponseEntity<Map<String, Object>> responseEntity
-                = restTemplate.exchange(url + "login",
-                        HttpMethod.POST,
-                        requestEntity,
+        try {
+            ResponseEntity<Map<String, Object>> responseEntity = restTemplate.exchange(
+                    url + "login",
+                    HttpMethod.POST,
+                    requestEntity,
+                    new ParameterizedTypeReference<Map<String, Object>>() {
+            }
+            );
+
+            if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                session.setAttribute("token", responseEntity.getBody().get("token"));
+
+                // Decodificar token
+                HttpHeaders headers1 = new HttpHeaders();
+                headers1.setContentType(MediaType.APPLICATION_JSON);
+                headers1.set("Authorization", "Bearer " + session.getAttribute("token"));
+
+                HttpEntity<String> entity = new HttpEntity<>(headers1);
+
+                ResponseEntity<Map<String, Object>> tokenDecode = restTemplate.exchange(
+                        url + "decode",
+                        HttpMethod.GET,
+                        entity,
                         new ParameterizedTypeReference<Map<String, Object>>() {
                 }
                 );
-        if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
-            session.setAttribute("token", responseEntity.getBody().get("token"));
 
-            HttpHeaders headers1 = new HttpHeaders();
+                session.setAttribute("role", tokenDecode.getBody().get("role"));
+                session.setAttribute("username", tokenDecode.getBody().get("sub"));
 
-            HttpEntity<String> entity = new HttpEntity<>(headers1);
-            headers1.setContentType(MediaType.APPLICATION_JSON);
+                return "redirect:/pokemon";
+            }
 
-            headers1.set("Authorization", "Bearer " + session.getAttribute("token"));
-
-            ResponseEntity<Map<String, Object>> tokenDecode
-                    = restTemplate.exchange(url + "decode",
-                            HttpMethod.GET,
-                            entity,
-                            new ParameterizedTypeReference<Map<String, Object>>() {
-                    });
-
-            session.setAttribute("role", (String) tokenDecode.getBody().get("role"));
-            session.setAttribute("username", (String) tokenDecode.getBody().get("sub"));
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            // Aquí capturas 400, 401, 403, 500, etc.
+            redirectAttributes.addFlashAttribute("message", "Usuario o contraseña incorrectos");
+            return "redirect:/usuario/login";
+        } catch (Exception e) {
+            // Cualquier otro error
+            redirectAttributes.addFlashAttribute("message", "Error interno al iniciar sesión");
+            return "redirect:/usuario/login";
         }
 
-        return "redirect:/pokemon";
+        // Fallback (no debería llegar aquí)
+        redirectAttributes.addFlashAttribute("message", "Error desconocido");
+        return "redirect:/usuario/login";
     }
 
     @GetMapping("/verify")

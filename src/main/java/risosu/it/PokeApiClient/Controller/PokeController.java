@@ -105,4 +105,30 @@ public class PokeController {
         return resultados;
 
     }
+
+    @GetMapping("/searchByTypes")
+    @ResponseBody
+    public List<Pokemon> FilterByTypes(@RequestParam(required = false) List<String> types) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<Pokemon> resultados = new ArrayList<>();
+
+        try {
+
+            List<Pokemon> pokemones = Arrays.asList(
+                    mapper.readValue(new File("pokemons.json"), Pokemon[].class));
+            if (types == null) {
+                return pokemones;
+            }
+            List<Pokemon> filtrados = pokemones.stream()
+                    .filter(p -> p.getTypes().stream().anyMatch(t -> types.contains(t.getName())))
+                    .collect(Collectors.toList());
+            resultados = filtrados;
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            System.out.println(e.getLocalizedMessage());
+        }
+        return resultados;
+    }
 }

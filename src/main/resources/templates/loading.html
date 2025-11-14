@@ -1,98 +1,140 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cargando Pokemones...</title>
-    <style>
-      body {
-        margin: 0;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background: linear-gradient(135deg, #6dd5ed, #2193b0);
-        font-family: 'Poppins', sans-serif;
-        color: white;
-        overflow: hidden;
-      }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cargando Pokemones...</title>
+        <style>
+            body {
+                margin: 0;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background: linear-gradient(135deg, #6dd5ed, #2193b0);
+                font-family: 'Press Start 2P', monospace;
+                color: #1a2e1a;
+                text-transform: uppercase;
+                overflow: hidden;
+            }
 
-      .pokeball {
-        width: 80px;
-        height: 80px;
-        border: 5px solid white;
-        border-radius: 50%;
-        position: relative;
-        background: linear-gradient(to bottom, red 50%, white 50%);
-        animation: spin 1s linear infinite;
-      }
+            /* Contenedor de animación */
+            .pikachu-container {
+                width: 300px;
+                height: 150px;
+                position: relative;
+                overflow: hidden;
+                margin-bottom: 40px;
+            }
 
-      .pokeball::before {
-        content: "";
-        position: absolute;
-        top: 37%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 25px;
-        height: 25px;
-        background: white;
-        border: 4px solid black;
-        border-radius: 50%;
-        z-index: 2;
-      }
+            /* Pikachu en movimiento */
+            .pikachu {
+                position: absolute;
+                bottom: 0;
+                width: 100px;
+                height: auto;
+                animation: move 2s ease-in-out infinite alternate;
+            }
 
-      .pokeball::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 0;
-        width: 100%;
-        height: 5px;
-        background: black;
-        transform: translateY(-50%);
-      }
+            @keyframes move {
+                0% {
+                    left: 0;
+                    transform: scaleX(1);
+                }
+                100% {
+                    left: calc(100% - 100px);
+                    transform: scaleX(-1); /* voltea el gif cuando regresa */
+                }
+            }
 
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
+            /* Barra de carga */
+            .progress-bar {
+                width: 300px;
+                height: 15px;
+                background: rgba(255, 255, 255, 0.3);
+                border-radius: 10px;
+                overflow: hidden;
+                position: relative;
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            }
 
-      h2 {
-        margin-top: 20px;
-        font-weight: 400;
-        letter-spacing: 1px;
-        animation: fadeIn 1.2s ease-in-out infinite alternate;
-      }
+            .progress {
+                width: 0%;
+                height: 100%;
+                background: linear-gradient(90deg, #ffcc00, #ffdd33);
+                border-radius: 10px;
+                transition: width 0.2s ease;
+            }
 
-      @keyframes fadeIn {
-        from { opacity: 0.4; transform: scale(0.98); }
-        to { opacity: 1; transform: scale(1.02); }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="pokeball"></div>
-    <h2>Obteniendo lista de pokemones...</h2>
-    <div id="estado" style="margin-top: 10px; font-size: 1.1em;"></div>
-  </body>
-  
-  <script>
-    function verificarEstado() {
-      fetch('/pokeControl/status')
-        .then(res => res.json())
-        .then(data => {
-          if (data.ready) {
-            window.location.href = "/pokeControl/listar"; // redirige a la vista final
-          } else {
-            document.getElementById('estado').innerText = "Procesando...";
-            setTimeout(verificarEstado, 2000); // vuelve a intentar en 2 segundos
-          }
-        });
-    }
+            h2 {
+                margin-top: 25px;
+                font-weight: 400;
+                letter-spacing: 1px;
+                animation: fadeIn 1.2s ease-in-out infinite alternate;
+            }
 
-    verificarEstado();
-  </script>
+            @keyframes fadeIn {
+                from {
+                    opacity: 0.4;
+                    transform: scale(0.98);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1.02);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="pikachu-container">
+            <img src="pikachu.gif" alt="Cargando Pikachu..." class="pikachu">
+        </div>
 
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+
+        <h2>Obteniendo lista de pokemones...</h2>
+        <div id="estado" style="margin-top: 10px; font-size: 1.1em;"></div>
+
+        <script>
+            // Simula la carga visual
+            let progress = 0;
+            const progressBar = document.getElementById('progress');
+            const estado = document.getElementById('estado');
+
+            function animarCarga() {
+                if (progress < 100) {
+                    progress = Math.min(progress + Math.random() * 8, 100); // 🔒 nunca pasa de 100
+                    progressBar.style.width = progress + "%";
+                    estado.innerText = "Procesando... " + Math.floor(progress) + "%";
+                    setTimeout(animarCarga, 200);
+                } else {
+                    verificarEstado();
+                }
+            }
+
+            // Simula el fetch real del backend
+            function verificarEstado() {
+                fetch('/pokeControl/status')
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.ready) {
+                                window.location.href = "/pokeControl/listar"; // redirige a la vista final
+                            } else {
+                                estado.innerText = "Esperando al servidor...";
+                                setTimeout(verificarEstado, 2000);
+                            }
+                        })
+                        .catch(() => {
+                            estado.innerText = "No se pudo conectar. Reintentando...";
+                            setTimeout(verificarEstado, 3000);
+                        });
+            }
+
+            // Inicia la animación
+            animarCarga();
+        </script>
+    </body>
 </html>
-    

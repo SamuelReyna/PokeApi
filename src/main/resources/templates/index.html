@@ -16,12 +16,184 @@
     </head>
 
     <body>
+        <style>
+            .pokeBuscador {
+                position: relative;
+            }
+            body{
+                font-family: 'Press Start 2P', monospace;
+                color: #1a2e1a;
+                text-transform: uppercase;
+            }
+
+            .pokeInput {
+                background-color: rgba(255, 255, 255, 0.9);
+                border: 2px solid #ffcb05; /* color Pikachu */
+                border-radius: 20px;
+                padding-left: 10px;
+                font-family: 'Press Start 2P', cursive;
+                font-size: 10px;
+                color: #2a75bb; /* azul Pokémon */
+                transition: all 0.3s ease;
+                width: 180px;
+            }
+
+            .pokeInput::placeholder {
+                color: #3b4cca;
+                opacity: 0.7;
+            }
+
+            .pokeInput:focus {
+                outline: none;
+                box-shadow: 0 0 5px 2px #ffcb05;
+                background-color: #fff;
+            }
+
+            .pokeBuscador button {
+                border-radius: 20px;
+                font-family: 'Press Start 2P', cursive;
+                font-size: 10px;
+                border: 2px solid #ffcb05;
+                color: #fff;
+                background-color: #3b4cca;
+                transition: 0.3s;
+            }
+
+            .pokeBuscador button:hover {
+                background-color: #2a75bb;
+            }
+            /* Igual que el estilo de tu input de buscador */
+            .pokeSelect {
+                background-color: #2c2f3f;
+                border: 1px solid #444;
+                color: white;
+                padding: 8px 12px;
+                border-radius: 8px;
+                cursor: pointer;
+                width: 200px;
+            }
+
+            .pokeSelect:hover {
+                background-color: #3a3d52;
+            }
+
+            .checkbox-list {
+                border: 1px solid #444;
+                background: #2c2f3f;
+                color: white;
+                width: 200px;
+                border-radius: 8px;
+                padding: 10px;
+                margin-top: 4px;
+                display: none;
+                position: absolute;
+                z-index: 1000;
+                max-height: 250px;
+                overflow-y: auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            }
+
+            .checkbox-list label {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px;
+                border-radius: 6px;
+                cursor: pointer;
+            }
+
+            .checkbox-list label:hover {
+                background: #3a3d52;
+            }
+
+            .checkbox-list input[type="checkbox"] {
+                accent-color: #ffcb05; /* Color amarillo Pokémon */
+                width: 16px;
+                height: 16px;
+                cursor: pointer;
+            }
+            /* CONTENEDOR PRINCIPAL (simula el input) */
+            .pokeSelect {
+                background-color: rgba(255, 255, 255, 0.9);
+                border: 2px solid #ffcb05;
+                border-radius: 20px;
+                padding: 8px 10px;
+                width: 180px;
+                cursor: pointer;
+
+                font-family: 'Press Start 2P', cursive;
+                font-size: 10px;
+                color: #2a75bb;
+                transition: all 0.3s ease;
+                text-align: left;
+            }
+
+            .pokeSelect:hover {
+                background-color: #fff;
+                box-shadow: 0 0 5px 2px #ffcb05;
+            }
+
+            /* LISTA DESPLEGABLE */
+            .checkbox-list {
+                position: absolute;
+                background-color: rgba(255, 255, 255, 0.97);
+                border: 2px solid #ffcb05;
+                border-radius: 20px;
+                padding: 12px;
+                margin-top: 6px;
+                width: 180px;
+
+                display: none;
+                max-height: 250px;
+                overflow-y: auto;
+                z-index: 100000;
+
+                font-family: 'Press Start 2P', cursive;
+                font-size: 10px;
+                color: #2a75bb;
+            }
+
+            /* ELEMENTOS INTERNOS */
+            .checkbox-list label {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+
+                padding: 6px 4px;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+
+            .checkbox-list label:hover {
+                background-color: #dbeafe; /* azul claro */
+            }
+
+            /* CHECKBOX POKEMON STYLE (amarillo) */
+            .checkbox-list input[type="checkbox"] {
+                width: 14px;
+                height: 14px;
+                accent-color: #ffcb05;
+                cursor: pointer;
+                border-radius: 4px;
+            }
+
+
+        </style>
+
+
 
         <div class="container">
+            <script>
+
+            </script>
+
 
             <nav th:if="${token} != null" class="navbar navbar-expand-lg navbar-light navStyle mb-4 navTamaño">
                 <div class="container navcontenido">
-                    <!-- Dropdown de Dashboard -->
+
+
+
+                    <!-- Dropdown Dashboard -->
                     <div class="dropdown">
                         <a class="navbar-brand dropdown-toggle text-white d-flex align-items-center" href="#" id="dashboardDropdown" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
@@ -31,23 +203,49 @@
                             <li><a class="dropdown-item" th:href="@{admin/dashboard}"><i class="bi bi-grid-fill me-2"></i> Dashboard</a></li>
                             <li><a class="dropdown-item" th:href="@{/usuario/perfil}"><i class="bi bi-person-circle me-2"></i> Mi perfil</a></li>
                             <li><a class="dropdown-item" th:href="@{/pokemon}"><i class="bi bi-file-earmark-text-fill me-2"></i> Lista de pokemones</a></li>
-
                         </ul>
                     </div>
 
-                    <!-- Botón para colapsar en móviles -->
+                    <div class="position-relative">
+                        <div class="pokeSelect" onclick="toggleCheckboxList()">
+                            Seleccionar tipos
+                        </div>
+
+                        <div id="checkboxList" class="checkbox-list"></div>
+                    </div>
+                    <button id="btnLimpiar" class="btn-limpiar" onclick="limpiarTipos()">
+                        LIMPIAR FILTROS
+                    </button>
+
+                    <div id="checkboxList"></div>
+
+                    <!-- Botón colapsable móvil -->
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
                             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
 
-                    <!-- Contenido colapsable -->
+                    <!-- Contenido del navbar -->
                     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <div class="navbar-nav ms-auto">
-                            <a th:href="@{/usuario/register}" class="nav-item nav-link text-white d-flex align-items-center me-3">
+                        <div class="navbar-nav ms-auto align-items-center">
+
+                            <!-- PokeBuscador integrado -->
+                            <input 
+                                id="pokeBuscador" 
+                                type="text" 
+                                class="form-control pokeBuscadorInput" 
+                                placeholder="Buscar Pokémon..."
+                                aria-label="Buscar Pokémon"
+                                oninput="buscarPokemon(this.value)">
+                            <i class="bi bi-search text-white ms-2"></i>
+
+                            <!-- Usuario -->
+                            <a th:href="@{/usuario/profile/{username}(username=${username})}" class="nav-item nav-link text-white d-flex align-items-center me-3">
                                 <i class="bi bi-person-fill me-1"></i>
                                 <span th:text="${username}">Entrenador</span>
                             </a>
+
+                            <!-- Logout -->
                             <a th:href="@{/usuario/logout}" class="nav-item nav-link text-white d-flex align-items-center">
                                 <i class="bi bi-box-arrow-right me-1"></i> Cerrar sesión
                             </a>
@@ -57,25 +255,55 @@
             </nav>
 
 
+
             <nav th:if="${token} == null" class="navbar navbar-expand-lg navbar-light navStyle mb-4 navTamaño">
                 <div class="container navcontenido">
+
                     <!-- Enlace de Inicio -->
                     <a class="navbar-brand text-white d-flex align-items-center" th:href="@{/pokemon}">
                         <i class="bi bi-house-door-fill me-2"></i> Inicio
                     </a>
+                    <div class="position-relative">
+                        <div class="pokeSelect" onclick="toggleCheckboxList()">
+                            Seleccionar tipos
+                        </div>
+
+                        <div id="checkboxList" class="checkbox-list"></div>
+                    </div>
+                    <button id="btnLimpiar" class="btn-limpiar" onclick="limpiarTipos()">
+                        LIMPIAR FILTROS
+                    </button>
+
+                    <div id="checkboxList"></div>
+
 
                     <!-- Botón para colapsar en móviles -->
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
                             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
 
-                    <!-- Contenido colapsable -->
+                    <!-- Contenido del navbar -->
                     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <div class="navbar-nav ms-auto">
+                        <div class="navbar-nav ms-auto align-items-center">
+
+                            <!-- PokeBuscador integrado -->
+                            <input 
+                                id="pokeBuscador" 
+                                type="text" 
+                                class="form-control pokeBuscadorInput" 
+                                placeholder="Buscar Pokémon..."
+                                aria-label="Buscar Pokémon"
+                                oninput="buscarPokemon(this.value)" >
+                            <i class="bi bi-search text-white ms-2"></i>
+
+
+                            <!-- Registrar -->
                             <a th:href="@{/usuario/register}" class="nav-item nav-link text-white d-flex align-items-center me-3">
                                 <i class="bi bi-person-plus-fill me-1"></i> Registrar
                             </a>
+
+                            <!-- Iniciar sesión -->
                             <a th:href="@{/usuario/login}" class="nav-item nav-link text-white d-flex align-items-center">
                                 <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar sesión
                             </a>
@@ -87,6 +315,7 @@
                     </div>
 
             </nav>
+
 
 
             <div class="text-center mt-3 text-white">
@@ -101,6 +330,7 @@
                                 <tr>
                                     <th class="col-1"></th>
                                     <th class="col-1">Name</th>
+                                    <th class="col-1">Tipos</th>
                                     <th class="col-1">Medidas</th>
                                     <th class="col-1"></th>
                                 </tr>
@@ -108,20 +338,21 @@
 
                             <tbody id="tabla-pokemones">
                                 <tr th:each="pokemon : ${pokemones}" class="poke-fila p-2 mb-2 align-items-center"
-                                    th:attr="data-id=${pokemon.id},
+                                    th:attr="
+                                    data-id=${pokemon.id},
                                     data-name=${pokemon.name},
                                     data-height=${pokemon.height},
                                     data-weight=${pokemon.weight},
+                                    data-types=${#strings.listJoin(pokemon.types.?[name != null].![name], ' ')},
                                     data-img=${pokemon.sprites[0].front_default},
                                     data-img-back=${pokemon.sprites[0].back_default},
-                                    data-type=${pokemon.types[0].name},
                                     data-crie=${pokemon.cries[0].latest},
                                     data-hp=${pokemon.stats[0].base_stat},
                                     data-atk=${pokemon.stats[1].base_stat},
                                     data-def=${pokemon.stats[2].base_stat},
                                     data-spa=${pokemon.stats[3].base_stat},
                                     data-spd=${pokemon.stats[4].base_stat},
-                                    data-speed=${pokemon.stats[5].base_stat}"
+                                    data-speed=${pokemon.stats[5].base_stat}"s
 
 
 
@@ -136,7 +367,11 @@
                                             <span th:text="${pokemon.order}"></span> <span th:text="${pokemon.name}" class="m-0"></span>
                                         </div>
                                     </td>
-
+                                    <td>
+                                        <span th:each=" type :${pokemon.types}">
+                                            <span th:text="${type.name}"> </span>
+                                        </span>
+                                    </td>
                                     <td>
                                         <div>
                                             <i class="bi bi-arrows-vertical"></i> <span th:text="${pokemon.height}"></span>
@@ -145,6 +380,7 @@
                                             <i class="bi bi-arrows"></i> <span th:text="${pokemon.weight}"></span>
                                         </div>
                                     </td>
+
                                     <td>
                                         <!--No modificar el id del checkbox pues no se podran seleccionar correctamente, el id debe ser dinamico :V-->
                                         <div class="checkbox-container">
@@ -226,7 +462,7 @@
                                         const weight = row.getAttribute("data-weight");
                                         const img = row.getAttribute("data-img");
                                         const imgBack = row.getAttribute("data-img-back");
-                                        const type = row.getAttribute("data-type");
+                                        const type = row.getAttribute("data-types");
                                         const cry = row.getAttribute("data-crie");
 
                                         const stats = {
@@ -323,8 +559,93 @@
                     alert("No hay cry disponible para este Pokémon.");
                 }
             }
+            function limpiarTipos() {
+                const checks = document.querySelectorAll('#checkboxList input[type="checkbox"]');
+                checks.forEach(c => c.checked = false);
+                buscarPorTipos(); // vuelve a cargar todo sin filtros
+            }
+
         </script>
 
+
+        <!--<script>
+                const stats = {
+                    hp: 78,
+                    attack: 84,
+                    defense: 78,
+                    spAttack: 109,
+                    spDefense: 85,
+                    speed: 100
+                };
+        
+                const data = {
+                    labels: ['A', 'B', 'C', 'D', 'E', 'F'],
+                    datasets: [{
+                        label: '',
+                        data: [
+                            stats.hp,
+                            stats.attack,
+                            stats.defense,
+                            stats.spAttack,
+                            stats.spDefense,
+                            stats.speed
+                        ],
+                        backgroundColor: 'rgba(250, 105, 65, 0.786)',
+                        borderColor: '#afe2ff', 
+                        borderWidth: 1,
+                        pointBackgroundColor: 'rgba(255, 99, 132, .5)'
+                    }]
+                };
+        
+                const config = {
+                    type: 'radar',
+                    data: data,
+                    options: {
+                        scales: {
+                            r: {
+                                min: 0,
+                                max: 120,
+                                ticks: {
+                                    stepSize: 20
+                                },
+                                grid: {
+                                    color: 'rgba(200, 200, 200, 0.2)'
+                                },
+                                pointLabels: {
+                                    font: {
+                                        size: 14,
+                                        color: 'white'
+                                    }
+                                },
+                                ticks: {
+                                display: false 
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                labels: {
+                                    color: 'white'
+                                }
+                            }
+                        }
+                    }
+                };
+        
+                new Chart(document.getElementById('radarChart'), config);
+            </script>-->
+
+        <!--        <script>
+                    function buscarPokemon(nombre) {
+                        if (nombre === "") {
+                            document.getElementById("pokeResult").innerHTML = "";
+                            return;
+                        }
+        
+                        fetch()
+                    }
+                </script>-->
 
         <script>
             function buscarPokemon(nombre) {
@@ -333,40 +654,27 @@
                     return;
                 }
 
-                fetch()
-            }
-        </script>
-
-        <script>
-            function buscarPokemon(nombre) {
-                fetch(`/pokeControl/searchByName?pokeBusqueda=${encodeURIComponent(nombre)}`)
-                        .then(res => res.json())
-                        .then(data => actualizarTabla(data))
-                        .catch(err => console.error("Error al buscar Pokémon:", err));
-            }
-
-            function actualizarTabla(pokemones) {
-                const cuerpo = document.getElementById("tabla-pokemones");
-                cuerpo.innerHTML = ""; // Limpia la tabla
-
-                if (pokemones.length === 0) {
-                    cuerpo.innerHTML = `<tr><td colspan="4" class="text-center text-white">No se encontraron Pokémon.</td></tr>`;
-                    return;
-                }
-
                 pokemones.forEach(pokemon => {
                     const fila = document.createElement("tr");
                     fila.className = "poke-fila p-2 mb-2 align-items-center";
                     fila.setAttribute("onclick", "cargarPokemon(this)");
 
-                    // Atributos data-* para cargar en el radar chart
+                    // 🧩 Atributos data-* para usar en el radar chart
                     fila.dataset.id = pokemon.id;
                     fila.dataset.name = pokemon.name;
                     fila.dataset.height = pokemon.height;
                     fila.dataset.weight = pokemon.weight;
                     fila.dataset.img = pokemon.sprites[0].front_default;
                     fila.dataset.imgBack = pokemon.sprites[0].back_default;
-                    fila.dataset.type = pokemon.types[0].name;
+
+                    // ✅ Concatenar todos los tipos con espacio
+                    const typeNames = pokemon.types
+                            .filter(t => t.name)
+                            .map(t => t.name)
+                            .join(' ');
+
+                    fila.dataset.types = typeNames;
+
                     fila.dataset.crie = pokemon.cries[0].latest;
                     fila.dataset.hp = pokemon.stats[0].base_stat;
                     fila.dataset.atk = pokemon.stats[1].base_stat;
@@ -385,6 +693,11 @@
         </div>
       </td>
       <td>
+        <div>
+          <span class="m-0">${typeNames}</span>
+        </div>
+      </td>
+      <td>
         <div><i class="bi bi-arrows-vertical"></i> <span>${pokemon.height}</span></div>
         <div><i class="bi bi-arrows"></i> <span>${pokemon.weight}</span></div>
       </td>
@@ -400,6 +713,68 @@
                     cuerpo.appendChild(fila);
                 });
             }
+
+
+//            function actualizarTabla(pokemones) {
+//                const cuerpo = document.getElementById("tabla-pokemones");
+//                cuerpo.innerHTML = ""; // Limpia la tabla
+//
+//                if (pokemones.length === 0) {
+//                    cuerpo.innerHTML = `<tr><td colspan="4" class="text-center text-white">No se encontraron Pokémon.</td></tr>`;
+//                    return;
+//                }
+//
+//                pokemones.forEach(pokemon => {
+//                    const fila = document.createElement("tr");
+//                    fila.className = "poke-fila p-2 mb-2 align-items-center";
+//                    fila.setAttribute("onclick", "cargarPokemon(this)");
+//
+//                    // Atributos data-* para cargar en el radar chart
+//                    fila.dataset.id = pokemon.id;
+//                    fila.dataset.name = pokemon.name;
+//                    fila.dataset.height = pokemon.height;
+//                    fila.dataset.weight = pokemon.weight;
+//                    fila.dataset.img = pokemon.sprites[0].front_default;
+//                    fila.dataset.imgBack = pokemon.sprites[0].back_default;
+//                    fila.dataset.type = pokemon.types[0].name;
+//                    fila.dataset.crie = pokemon.cries[0].latest;
+//                    fila.dataset.hp = pokemon.stats[0].base_stat;
+//                    fila.dataset.atk = pokemon.stats[1].base_stat;
+//                    fila.dataset.def = pokemon.stats[2].base_stat;
+//                    fila.dataset.spa = pokemon.stats[3].base_stat;
+//                    fila.dataset.spd = pokemon.stats[4].base_stat;
+//                    fila.dataset.speed = pokemon.stats[5].base_stat;
+//
+//                    fila.innerHTML = `
+//      <td>
+//        <img src="${pokemon.sprites[0].front_default}" class="pokemon-picture" alt="Imagen del Pokémon" />
+//      </td>
+//      <td>
+//        <div>
+//          <span>${pokemon.order}</span> <span class="m-0">${pokemon.name}</span>
+//        </div>
+//      </td>
+//              <td>
+//        <div>
+//           <span class="m-0">${#strings.listJoin(pokemon.types.?[name != null].![name], ' ')}</span>
+//        </div>
+//      </td>
+//      <td>
+//        <div><i class="bi bi-arrows-vertical"></i> <span>${pokemon.height}</span></div>
+//        <div><i class="bi bi-arrows"></i> <span>${pokemon.weight}</span></div>
+//      </td>
+//      <td>
+//        <div class="checkbox-container">
+//          <input type="checkbox" ${pokemon.is_default ? "checked" : ""} />
+//          <label class="checkmark"></label>
+//        </div>
+//        <div><span>Evo</span></div>
+//      </td>
+//    `;
+//
+//                    cuerpo.appendChild(fila);
+//                });
+//            }
         </script>
         
  <script>

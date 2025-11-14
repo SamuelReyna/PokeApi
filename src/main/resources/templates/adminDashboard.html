@@ -231,7 +231,7 @@
                     <strong th:text="${username}">Admin</strong>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="userMenu">
-                    <li><a class="dropdown-item" href="#">Perfil</a></li>
+                    <li><a class="dropdown-item" th:href="@{/usuario/profile/{username}(username=${username})}">Perfil</a></li>
                     <li><a class="dropdown-item" href="#">Ajustes</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" th:href="@{/usuario/logout}">Cerrar sesión</a></li>
@@ -262,8 +262,8 @@
                                 <img src="https://i.pravatar.cc/36" alt="avatar" class="rounded-circle">
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="topUser">
-                                <li><a class="dropdown-item" href="#">Mi perfil</a></li>
-                                <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+                                <li><a class="dropdown-item" th:href="@{/usuario/profile/{username}(username=${username})}">Mi perfil</a></li>
+                                <li><a class="dropdown-item" th:href="@{/usuario/logout}">Cerrar sesión</a></li>
                             </ul>
                         </div>
                     </div>
@@ -281,7 +281,7 @@
 
             <!-- Stats cards -->
             <div class="row g-3 mb-4">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card p-3 card-stat">
                         <div class="d-flex align-items-center">
                             <div class="me-3 bg-light rounded p-3">
@@ -289,53 +289,50 @@
                             </div>
                             <div>
                                 <h6 class="mb-0">Usuarios</h6>
-                                <h3 class="mb-0">1,254</h3>
-                                <small class="text-muted">+4.2% desde ayer</small>
+                                <h3 class="mb-0" th:text="${totalUsers}">1,254</h3>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card p-3 card-stat">
                         <div class="d-flex align-items-center">
                             <div class="me-3 bg-light rounded p-3">
-                                <i class="fa-solid fa-file-invoice-dollar fa-2x"></i>
+                                <i class="fa-solid fa-heart fa-2x"></i>
                             </div>
                             <div>
-                                <h6 class="mb-0">Ingresos</h6>
+                                <h6 class="mb-0">Pokemones favoritos</h6>
                                 <h3 class="mb-0">$24,800</h3>
-                                <small class="text-muted">+1.1% este mes</small>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-3">
-                    <div class="card p-3 card-stat">
-                        <div class="d-flex align-items-center">
-                            <div class="me-3 bg-light rounded p-3">
-                                <i class="fa-solid fa-chart-line fa-2x"></i>
-                            </div>
-                            <div>
-                                <h6 class="mb-0">Visitas</h6>
-                                <h3 class="mb-0">42,130</h3>
-                                <small class="text-muted">-0.8% semana</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!--                <div class="col-md-3">
+                                    <div class="card p-3 card-stat">
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-3 bg-light rounded p-3">
+                                                <i class="fa-solid fa-chart-line fa-2x"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0">Visitas</h6>
+                                                <h3 class="mb-0">42,130</h3>
+                                                <small class="text-muted">-0.8% semana</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>-->
 
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card p-3 card-stat">
                         <div class="d-flex align-items-center">
                             <div class="me-3 bg-light rounded p-3">
-                                <i class="fa-solid fa-ticket fa-2x"></i>
+                                <i class="fa-solid fa-paw fa-2x"></i>
                             </div>
                             <div>
-                                <h6 class="mb-0">Tickets</h6>
+                                <h6 class="mb-0">Tipos de pokemones</h6>
                                 <h3 class="mb-0">76</h3>
-                                <small class="text-muted">8 pendientes</small>
                             </div>
                         </div>
                     </div>
@@ -453,31 +450,68 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="createForm">
-                            <div class="mb-3">
-                                <label class="form-label">Nombre</label>
-                                <input type="text" class="form-control" required>
+                        <form id="userForm" method="POST" th:action="@{/pokeControl/admin/usuarios/add}" th:object="${entrenador}">
+                            <div class="modal-body" style="background-color: #fff9db;">
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-primary">Nombre</label>
+                                    <input type="text" class="form-control border-2 border-dark" th:field="*{Nombre}" placeholder="Ej. Laura" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-primary">Apellido Paterno</label>
+                                    <input type="text" class="form-control border-2 border-dark" th:field="*{ApellidoPaterno}" placeholder="Ej. Gómez" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-primary">Apellido Materno</label>
+                                    <input type="text" class="form-control border-2 border-dark" th:field="*{ApellidoMaterno}" placeholder="Ej. Ruiz" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-primary">Sexo</label>
+                                    <select class="form-select border-2 border-dark" th:field="*{Sexo}" required>
+                                        <option value="" disabled selected>Selecciona una opción</option>
+                                        <option th:value="'M'">Masculino</option>
+                                        <option th:value="'F'">Femenino</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-primary">Correo electrónico</label>
+                                    <input type="email" class="form-control border-2 border-dark" th:field="*{Correo}" placeholder="Ej. usuario@mail.com" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-primary">Nombre de usuario</label>
+                                    <input type="text" class="form-control border-2 border-dark" th:field="*{Username}" placeholder="Ej. laura123" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-primary">Rol</label>
+                                    <select class="form-select" required th:field="*{Rol.IdRol}"> 
+                                        <option value="1">Admin</option> 
+                                        <option value="2">Usuario</option> 
+                                    </select>
+                                </div>
+
+
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Rol</label>
-                                <select class="form-select">
-                                    <option>Usuario</option>
-                                    <option>Admin</option>
-                                </select>
+
+                            <!-- Pie del modal -->
+                            <div class="modal-footer" style="background-color: #ffcc00;">
+                                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">
+                                    <i class="fa-solid fa-xmark me-1"></i>Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-primary fw-bold" id="saveUser" style="border: 3px solid var(--poke-yellow);">
+                                    <i class="fa-solid fa-floppy-disk me-1"></i>Guardar
+                                </button>
                             </div>
                         </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="saveBtn">Guardar</button>
                     </div>
                 </div>
             </div>
         </div>
+
 
         <!-- Bootstrap JS + dependencies -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
