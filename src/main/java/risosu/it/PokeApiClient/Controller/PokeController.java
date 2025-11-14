@@ -1,4 +1,4 @@
-///*
+ ///*
 // * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
 // * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
 // */
@@ -17,13 +17,21 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import risosu.it.PokeApiClient.DTO.PokeDetailDTO;
 import risosu.it.PokeApiClient.DTO.PokemonDTO;
 import risosu.it.PokeApiClient.ML.Pokemon;
@@ -32,7 +40,9 @@ import risosu.it.PokeApiClient.ML.Result;
 @Controller
 @RequestMapping("/pokeControl")
 public class PokeController {
-     
+    
+    private final String url = "http://localhost:8081//";
+
 //Este controlador es accedido desde vista "loading" para validar si existe ya el archivo JSON y redirigir:
     @GetMapping("/status")
     @ResponseBody
@@ -48,12 +58,12 @@ public class PokeController {
     public String mostrarVistaFinal(Model model, HttpSession session) {
         // Leer el archivo JSON
         ObjectMapper mapper = new ObjectMapper();
-        
+
         try {
             List<Pokemon> pokemones = Arrays.asList(
                     mapper.readValue(new File("pokemons.json"), Pokemon[].class)
             );
-            
+
             model.addAttribute("pokemones", pokemones);
             model.addAttribute("token", session.getAttribute("token"));
 
@@ -67,12 +77,11 @@ public class PokeController {
             model.addAttribute("error", "No se pudo leer el archivo");
         }
 
-        return "index"; 
+        return "index";
     }
-        
-        
-        @GetMapping("/searchByName")
-        @ResponseBody
+
+    @GetMapping("/searchByName")
+    @ResponseBody
     public List<Pokemon> SearchByName(@RequestParam String pokeBusqueda) {
 
         ObjectMapper mapper = new ObjectMapper();

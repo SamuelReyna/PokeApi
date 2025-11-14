@@ -81,11 +81,11 @@
                             </a>
                         </div>
                     </div>
-                    
+
                     <div class="pokeBuscador">  
-                     <input type="text" id="pokeBuscador" placeholder="PokeBusqueda!" oninput="buscarPokemon(this.value)">
+                        <input type="text" id="pokeBuscador" placeholder="PokeBusqueda!" oninput="buscarPokemon(this.value)">
                     </div>
-                    
+
             </nav>
 
 
@@ -102,7 +102,7 @@
                                     <th class="col-1"></th>
                                     <th class="col-1">Name</th>
                                     <th class="col-1">Medidas</th>
-                                    <th class="col-1">FormaBase</th>
+                                    <th class="col-1"></th>
                                 </tr>
                             </thead>
 
@@ -146,16 +146,25 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <div>
-                                            <div class="checkbox-container">
-                                                <input type="checkbox" id="miCheckbox" th:checked="${pokemon.is_default}?true:false" />
-                                                <label for="miCheckbox" class="checkmark"></label>
-                                            </div>
-
-                                            <div>
-                                                <span>Evo</span>
-                                            </div>
+                                        <!--No modificar el id del checkbox pues no se podran seleccionar correctamente, el id debe ser dinamico :V-->
+                                        <div class="checkbox-container">
+                                            <input class="poke-checkbox" th:data-id="${pokemon.id}" type="checkbox" th:id="'checkbox-' + ${pokemon.id}" th:name="'seleccion-' + ${pokemon.id}" 
+                                                   th:data-name="${pokemon.name}" 
+                                                   th:data-height="${pokemon.height}"
+                                    th:data-weight="${pokemon.weight}"
+                                    th:data-img="${pokemon.sprites[0].front_default}"
+                                    th:data-img-back="${pokemon.sprites[0].back_default}"
+                                    th:data-type="${pokemon.types[0].name}"
+                                    th:data-crie="${pokemon.cries[0].latest}"
+                                    th:data-hp="${pokemon.stats[0].base_stat}"
+                                    th:data-atk="${pokemon.stats[1].base_stat}"
+                                    th:data-def="${pokemon.stats[2].base_stat}"
+                                    th:data-spa="${pokemon.stats[3].base_stat}"
+                                    th:data-spd="${pokemon.stats[4].base_stat}"
+                                    th:data-speed="${pokemon.stats[5].base_stat}"/>
+                                            <label th:for="'checkbox-' + ${pokemon.id}" class="checkmark"></label>
                                         </div>
+
 
                                     </td>
 
@@ -207,7 +216,7 @@
                                     let radarChart = null; // fuera de la función para que se destruya el grafico cada vez que se genere uno nuevo!
 
                                     function cargarPokemon(row) {
-                                        
+
                                         if (radarChart) {
                                             radarChart.destroy(); // 
                                         }
@@ -299,7 +308,7 @@
                                             }
                                         };
 
-                                      radarChart = new Chart(document.getElementById('radarChart'), config);
+                                        radarChart = new Chart(document.getElementById('radarChart'), config);
 
                                     }
         </script>
@@ -317,124 +326,56 @@
         </script>
 
 
-        <!--<script>
-                const stats = {
-                    hp: 78,
-                    attack: 84,
-                    defense: 78,
-                    spAttack: 109,
-                    spDefense: 85,
-                    speed: 100
-                };
-        
-                const data = {
-                    labels: ['A', 'B', 'C', 'D', 'E', 'F'],
-                    datasets: [{
-                        label: '',
-                        data: [
-                            stats.hp,
-                            stats.attack,
-                            stats.defense,
-                            stats.spAttack,
-                            stats.spDefense,
-                            stats.speed
-                        ],
-                        backgroundColor: 'rgba(250, 105, 65, 0.786)',
-                        borderColor: '#afe2ff', 
-                        borderWidth: 1,
-                        pointBackgroundColor: 'rgba(255, 99, 132, .5)'
-                    }]
-                };
-        
-                const config = {
-                    type: 'radar',
-                    data: data,
-                    options: {
-                        scales: {
-                            r: {
-                                min: 0,
-                                max: 120,
-                                ticks: {
-                                    stepSize: 20
-                                },
-                                grid: {
-                                    color: 'rgba(200, 200, 200, 0.2)'
-                                },
-                                pointLabels: {
-                                    font: {
-                                        size: 14,
-                                        color: 'white'
-                                    }
-                                },
-                                ticks: {
-                                display: false 
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: true,
-                                labels: {
-                                    color: 'white'
-                                }
-                            }
-                        }
-                    }
-                };
-        
-                new Chart(document.getElementById('radarChart'), config);
-            </script>-->
-        
         <script>
-            function buscarPokemon(nombre){
-                if(nombre === ""){
+            function buscarPokemon(nombre) {
+                if (nombre === "") {
                     document.getElementById("pokeResult").innerHTML = "";
                     return;
                 }
-                
-            fetch()
+
+                fetch()
             }
         </script>
-        
+
         <script>
             function buscarPokemon(nombre) {
-  fetch(`/pokeControl/searchByName?pokeBusqueda=${encodeURIComponent(nombre)}`)
-    .then(res => res.json())
-    .then(data => actualizarTabla(data))
-    .catch(err => console.error("Error al buscar Pokémon:", err));
-}
+                fetch(`/pokeControl/searchByName?pokeBusqueda=${encodeURIComponent(nombre)}`)
+                        .then(res => res.json())
+                        .then(data => actualizarTabla(data))
+                        .catch(err => console.error("Error al buscar Pokémon:", err));
+            }
 
-function actualizarTabla(pokemones) {
-  const cuerpo = document.getElementById("tabla-pokemones");
-  cuerpo.innerHTML = ""; // Limpia la tabla
+            function actualizarTabla(pokemones) {
+                const cuerpo = document.getElementById("tabla-pokemones");
+                cuerpo.innerHTML = ""; // Limpia la tabla
 
-  if (pokemones.length === 0) {
-    cuerpo.innerHTML = `<tr><td colspan="4" class="text-center text-white">No se encontraron Pokémon.</td></tr>`;
-    return;
-  }
+                if (pokemones.length === 0) {
+                    cuerpo.innerHTML = `<tr><td colspan="4" class="text-center text-white">No se encontraron Pokémon.</td></tr>`;
+                    return;
+                }
 
-  pokemones.forEach(pokemon => {
-    const fila = document.createElement("tr");
-    fila.className = "poke-fila p-2 mb-2 align-items-center";
-    fila.setAttribute("onclick", "cargarPokemon(this)");
+                pokemones.forEach(pokemon => {
+                    const fila = document.createElement("tr");
+                    fila.className = "poke-fila p-2 mb-2 align-items-center";
+                    fila.setAttribute("onclick", "cargarPokemon(this)");
 
-    // Atributos data-* para cargar en el radar chart
-    fila.dataset.id = pokemon.id;
-    fila.dataset.name = pokemon.name;
-    fila.dataset.height = pokemon.height;
-    fila.dataset.weight = pokemon.weight;
-    fila.dataset.img = pokemon.sprites[0].front_default;
-    fila.dataset.imgBack = pokemon.sprites[0].back_default;
-    fila.dataset.type = pokemon.types[0].name;
-    fila.dataset.crie = pokemon.cries[0].latest;
-    fila.dataset.hp = pokemon.stats[0].base_stat;
-    fila.dataset.atk = pokemon.stats[1].base_stat;
-    fila.dataset.def = pokemon.stats[2].base_stat;
-    fila.dataset.spa = pokemon.stats[3].base_stat;
-    fila.dataset.spd = pokemon.stats[4].base_stat;
-    fila.dataset.speed = pokemon.stats[5].base_stat;
+                    // Atributos data-* para cargar en el radar chart
+                    fila.dataset.id = pokemon.id;
+                    fila.dataset.name = pokemon.name;
+                    fila.dataset.height = pokemon.height;
+                    fila.dataset.weight = pokemon.weight;
+                    fila.dataset.img = pokemon.sprites[0].front_default;
+                    fila.dataset.imgBack = pokemon.sprites[0].back_default;
+                    fila.dataset.type = pokemon.types[0].name;
+                    fila.dataset.crie = pokemon.cries[0].latest;
+                    fila.dataset.hp = pokemon.stats[0].base_stat;
+                    fila.dataset.atk = pokemon.stats[1].base_stat;
+                    fila.dataset.def = pokemon.stats[2].base_stat;
+                    fila.dataset.spa = pokemon.stats[3].base_stat;
+                    fila.dataset.spd = pokemon.stats[4].base_stat;
+                    fila.dataset.speed = pokemon.stats[5].base_stat;
 
-    fila.innerHTML = `
+                    fila.innerHTML = `
       <td>
         <img src="${pokemon.sprites[0].front_default}" class="pokemon-picture" alt="Imagen del Pokémon" />
       </td>
@@ -456,10 +397,51 @@ function actualizarTabla(pokemones) {
       </td>
     `;
 
-    cuerpo.appendChild(fila);
-  });
-}
+                    cuerpo.appendChild(fila);
+                });
+            }
         </script>
+        
+ <script>
+document.querySelectorAll('.poke-checkbox').forEach(cb => {
+  cb.addEventListener('change', function () {
+    const estado = this.checked;
+
+    const pokemon = {
+      idPokemon: this.dataset.id,
+      favorito: estado,
+      nombre: this.dataset.name,
+      tipo: this.dataset.type,
+      altura: this.dataset.height,
+      peso: this.dataset.weight,
+      img: this.dataset.img,
+      imgBack: this.dataset.imgBack,
+      crie: this.dataset.crie,
+      hp: this.dataset.hp,
+      atk: this.dataset.atk,
+      def: this.dataset.def,
+      spa: this.dataset.spa,
+      spd: this.dataset.spd,
+      speed: this.dataset.speed
+    };
+
+    fetch('/pokeControl/standar/favoritos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(pokemon)
+    })
+    .then(res => res.ok ? res.json() : Promise.reject(res))
+    .then(data => {
+      console.log('Actualización exitosa:', data);
+      // Aquí puedes mostrar un toast, animación, etc.
+    })
+    .catch(err => {
+      console.error('Error al actualizar favorito:', err);
+    });
+  });
+});
+</script>
+
     </body>
 
 </html>
