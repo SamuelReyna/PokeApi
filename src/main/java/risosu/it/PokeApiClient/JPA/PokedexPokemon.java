@@ -4,6 +4,7 @@
  */
 package risosu.it.PokeApiClient.JPA;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
@@ -12,22 +13,24 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "pokedexPokemon")
+@Table(name = "pokedexpokemon")
 @IdClass(PokedexPokemonId.class)
 public class PokedexPokemon {
 
     @Id
+    @Column(name = "idpokedex")
     private int idPokedex;
 
     @Id
+    @Column(name = "idpokemon")
     private int idPokemon;
 
     @ManyToOne
-    @JoinColumn(name = "idPokedex", insertable = false, updatable = false)
+    @JoinColumn(name = "idpokedex", insertable = false, updatable = false)
     private Pokedex pokedex;
 
     @ManyToOne
-    @JoinColumn(name = "idPokemon", insertable = false, updatable = false)
+    @JoinColumn(name = "idpokemon", insertable = false, updatable = false)
     private Pokemon pokemon;
 
     public int getIdPokedex() {
@@ -46,7 +49,4 @@ public class PokedexPokemon {
         this.idPokemon = idPokemon;
     }
     
-    
-    
-
 }   

@@ -57,7 +57,7 @@ public class EntrenadorController {
         return ResponseEntity.ok(entrenadorService.Delete(Long.valueOf(idEntrenador)));
     }
     
-    @PostMapping("/{user}")
+  @PostMapping("/{user}")
     public ResponseEntity AddFavorites(@RequestBody PokeFavoritoDTO pokemon, @PathVariable String user){
         
         Long idPokemon = pokemon.getIdPokemon().longValue();

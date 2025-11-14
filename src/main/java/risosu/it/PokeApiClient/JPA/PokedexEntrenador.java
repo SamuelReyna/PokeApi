@@ -13,24 +13,24 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "entrenadoresPokedex")
+@Table(name = "entrenadorespokedex")
 @IdClass(PokedexEntrenadorId.class)
 public class PokedexEntrenador {
     
     @Id
-    @Column(name = "idEntrenador")
+    @Column(name = "identrenador")
     private int idEntrenador;
     
     @Id
-    @Column(name = "idPokedex")
+    @Column(name = "idpokedex")
     private int idPokedex;
     
        @ManyToOne
-    @JoinColumn(name = "idEntrenador", insertable = false, updatable = false)
+    @JoinColumn(name = "identrenador", insertable = false, updatable = false)
     private Entrenador entrenador;
 
     @ManyToOne
-    @JoinColumn(name = "idPokedex", insertable = false, updatable = false)
+    @JoinColumn(name = "idpokedex", insertable = false, updatable = false)
     private Pokedex pokedex;
 
     public int getIdEntrenador() {
