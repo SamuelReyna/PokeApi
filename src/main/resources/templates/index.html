@@ -720,26 +720,47 @@
                     return;
                 }
 
+                fetch()
+            }
+        </script>
+
+        <script>
+            function buscarPokemon(nombre) {
+                fetch(`/pokeControl/searchByName?pokeBusqueda=${encodeURIComponent(nombre)}`)
+                        .then(res => res.json())
+                        .then(data => actualizarTabla(data))
+                        .catch(err => console.error("Error al buscar Pokémon:", err));
+            }
+
+            function actualizarTabla(pokemones) {
+                const cuerpo = document.getElementById("tabla-pokemones");
+                cuerpo.innerHTML = ""; // Limpia la tabla
+
+                if (pokemones.length === 0) {
+                    cuerpo.innerHTML = `<tr><td colspan="4" class="text-center text-white">No se encontraron Pokémon.</td></tr>`;
+                    return;
+                }
+
                 pokemones.forEach(pokemon => {
                     const fila = document.createElement("tr");
                     fila.className = "poke-fila p-2 mb-2 align-items-center";
                     fila.setAttribute("onclick", "cargarPokemon(this)");
 
-                    // 🧩 Atributos data-* para usar en el radar chart
+                    // Atributos data-* para cargar en el radar chart
                     fila.dataset.id = pokemon.id;
                     fila.dataset.name = pokemon.name;
                     fila.dataset.height = pokemon.height;
                     fila.dataset.weight = pokemon.weight;
                     fila.dataset.img = pokemon.sprites[0].front_default;
                     fila.dataset.imgBack = pokemon.sprites[0].back_default;
-
-                    // ✅ Concatenar todos los tipos con espacio
-                    const typeNames = pokemon.types
-                            .filter(t => t.name)
-                            .map(t => t.name)
-                            .join(' ');
-
-                    fila.dataset.types = typeNames;
+                    fila.dataset.type = pokemon.types[0].name;
+                    fila.dataset.crie = pokemon.cries[0].latest;
+                    fila.dataset.hp = pokemon.stats[0].base_stat;
+                    fila.dataset.atk = pokemon.stats[1].base_stat;
+                    fila.dataset.def = pokemon.stats[2].base_stat;
+                    fila.dataset.spa = pokemon.stats[3].base_stat;
+                    fila.dataset.spd = pokemon.stats[4].base_stat;
+                    fila.dataset.speed = pokemon.stats[5].base_stat;
 
                     fila.dataset.crie = pokemon.cries[0].latest;
                     fila.dataset.hp = pokemon.stats[0].base_stat;
