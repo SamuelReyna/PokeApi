@@ -5,12 +5,15 @@
 package risosu.it.PokeApiClient.Controller;
 
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import risosu.it.PokeApiClient.DTO.FavoritosDTO;
 import risosu.it.PokeApiClient.DTO.PokeFavoritoDTO;
 import risosu.it.PokeApiClient.DTO.PokemonDTO;
 
@@ -29,34 +33,40 @@ public class EntrenadorControllerStandar {
     private final String url = "http://localhost:8081/api/entrenador";
     
     @PostMapping("/favoritos")
-    @ResponseBody
-    public ResponseEntity<?> actualizarFavorito(@RequestBody PokeFavoritoDTO pokemon,
-            HttpSession session) {
-        
-         String user = (String) session.getAttribute("username");
-        //Si se detecta que es el favorito del usuario, se manda al controlador de addFavorites en Backend.
-        if(pokemon.getFavorito()){
-         
-            try {
-                RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        
-        HttpEntity<?> entity = new HttpEntity<>(pokemon, headers);
+@ResponseBody
+public ResponseEntity<?> actualizarFavorito(@RequestBody PokeFavoritoDTO pokemon,
+                                            HttpSession session) {
 
-        
-        HttpEntity<PokeFavoritoDTO> responseEntity = restTemplate.exchange(
-                url + "/" + user, 
-                HttpMethod.POST, 
-                entity, 
-                new ParameterizedTypeReference<PokeFavoritoDTO>() {});
-            } catch (Exception e) {
-                String error = e.getLocalizedMessage();
-                System.out.println(error);
-            }
+    String user = (String) session.getAttribute("username");
+
+    if (pokemon.getFavorito()) {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<?> entity = new HttpEntity<>(pokemon, headers);
+
+            ResponseEntity<List<FavoritosDTO>> responseEntity = restTemplate.exchange(
+                url + "/" + user,
+                HttpMethod.POST,
+                entity,
+                new ParameterizedTypeReference<List<FavoritosDTO>>() {}
+            );
+            
+            List<FavoritosDTO> fav = new ArrayList<>();
+            
+            fav = responseEntity.getBody();
+
+            return ResponseEntity.ok(responseEntity.getBody());
+
+        } catch (Exception e) {
+            System.out.println("Error al actualizar favorito: " + e.getLocalizedMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar favorito");
         }
-        return null;
-        
     }
+
+    return ResponseEntity.badRequest().body("No se marcó como favorito");
+}
     
 }
