@@ -40,6 +40,16 @@ public class EntrenadorController {
         return ResponseEntity.ok(entrenadorService.Add(entrenador));
     }
 
+    @GetMapping("/{username}/username")
+    public ResponseEntity GetOne(@PathVariable("username") String username) {
+        return ResponseEntity.ok(entrenadorService.loadEntrenadorByUsername(username));
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity Count() {
+        return ResponseEntity.ok(entrenadorService.Count());
+    }
+
     @PatchMapping("/{idEntrenador}")
     public ResponseEntity Patch(@PathVariable("idEntrenador") Long idEntrenador, @RequestBody Entrenador entrenador) {
         return ResponseEntity.ok(entrenadorService.patchEntrenador(idEntrenador, entrenador));
@@ -56,15 +66,14 @@ public class EntrenadorController {
     public ResponseEntity Delete(@PathVariable("idEntrenador") int idEntrenador) {
         return ResponseEntity.ok(entrenadorService.Delete(Long.valueOf(idEntrenador)));
     }
-    
-  @PostMapping("/{user}")
-    public ResponseEntity AddFavorites(@RequestBody PokeFavoritoDTO pokemon, @PathVariable String user){
-        
+
+    @PostMapping("/{user}")
+    public ResponseEntity AddFavorites(@RequestBody PokeFavoritoDTO pokemon, @PathVariable String user) {
+
         Long idPokemon = pokemon.getIdPokemon().longValue();
         Boolean favorito = pokemon.getFavorito();
-        
+
         return ResponseEntity.ok(entrenadorService.AddFavorites(user, idPokemon, favorito, pokemon));
     }
-
 
 }
