@@ -4,6 +4,7 @@
  */
 package risosu.it.PokeApiClient.JPA;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +19,7 @@ import jakarta.persistence.Table;
 public class Pokemon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idPokemon")
+    @Column(name = "idpokemon")
     private int idPokemon;
     
     @Column(name = "nombre")
@@ -30,17 +31,78 @@ public class Pokemon {
     @Column(name = "ancho")
     private int ancho;
     
-    @Column(name = "enFormaBase")
-    private int enFormaBase;
+   
     
-    @OneToOne
-    @JoinColumn(name = "idSprite")
-    @Column(name = "idSprite")
+    @Column(name = "idjson", unique = true)
+    private int idJson;
+    
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "idsprite")
     private Sprite sprite;
     
-    @OneToOne
-    @JoinColumn(name = "idAudio")
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "idaudio")
     private Audio audio;
+    
+
+    public int getIdPokemon() {
+        return idPokemon;
+    }
+
+    public void setIdPokemon(int idPokemon) {
+        this.idPokemon = idPokemon;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getAltura() {
+        return altura;
+    }
+
+    public void setAltura(int altura) {
+        this.altura = altura;
+    }
+
+    public int getAncho() {
+        return ancho;
+    }
+
+    public void setAncho(int ancho) {
+        this.ancho = ancho;
+    }
+
+
+
+    public Sprite getSprite() {
+        return sprite;
+    }
+
+    public void setSprite(Sprite sprite) {
+        this.sprite = sprite;
+    }
+
+    public Audio getAudio() {
+        return audio;
+    }
+
+    public void setAudio(Audio audio) {
+        this.audio = audio;
+    }
+
+    public int getIdJson() {
+        return idJson;
+    }
+
+    public void setIdJson(int idJson) {
+        this.idJson = idJson;
+    }
+    
     
     
 }

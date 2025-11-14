@@ -12,7 +12,7 @@ public class DataSourceConfig {
     @Bean
     public DataSource dataSource() {
 
-        String jdbcurl = "jdbc:oracle:thin:@192.167.1.254:1521:orcl";
+        String jdbcurl = "jdbc:oracle:thin:@192.167.0.133:1521:orcl";
         String username = "PokemonClient";
         String password = "password1";
 

@@ -11,14 +11,14 @@ import java.util.Objects;
  *
  * @author Alien 15
  */
-public class EntrenadorPokedexId implements Serializable{
+public class PokedexEntrenadorId implements Serializable{
     private int idEntrenador;
     
     private int idPokedex;
     
-    public EntrenadorPokedexId (){}
+    public PokedexEntrenadorId (){}
     
-    public EntrenadorPokedexId (int idEntrenador, int idPokedex){
+    public PokedexEntrenadorId (int idEntrenador, int idPokedex){
         this.idEntrenador = idEntrenador;
         this.idPokedex = idPokedex;  
     }
@@ -26,8 +26,8 @@ public class EntrenadorPokedexId implements Serializable{
       @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PokedexPokemonId)) return false;
-        EntrenadorPokedexId that = (EntrenadorPokedexId) o;
+        if (!(o instanceof PokedexEntrenadorId)) return false;
+        PokedexEntrenadorId that = (PokedexEntrenadorId) o;
         return Objects.equals(idEntrenador, that.idEntrenador) &&
                Objects.equals(idPokedex, that.idPokedex);
     }

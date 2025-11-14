@@ -23,12 +23,29 @@ public class PokedexPokemon {
     private int idPokemon;
 
     @ManyToOne
-    @JoinColumn(name = "idpokedex", insertable = false, updatable = false)
+    @JoinColumn(name = "idPokedex", insertable = false, updatable = false)
     private Pokedex pokedex;
 
     @ManyToOne
-    @JoinColumn(name = "idpokemon", insertable = false, updatable = false)
+    @JoinColumn(name = "idPokemon", insertable = false, updatable = false)
     private Pokemon pokemon;
+
+    public int getIdPokedex() {
+        return idPokedex;
+    }
+
+    public void setIdPokedex(int idPokedex) {
+        this.idPokedex = idPokedex;
+    }
+
+    public int getIdPokemon() {
+        return idPokemon;
+    }
+
+    public void setIdPokemon(int idPokemon) {
+        this.idPokemon = idPokemon;
+    }
+    
     
     
 

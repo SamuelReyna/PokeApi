@@ -18,5 +18,22 @@ public class Pokedex {
     
     @Column(name = "nombre")
     private String nombre;
+
+    public int getIdPokedex() {
+        return idPokedex;
+    }
+
+    public void setIdPokedex(int idPokedex) {
+        this.idPokedex = idPokedex;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
     
+         
 }

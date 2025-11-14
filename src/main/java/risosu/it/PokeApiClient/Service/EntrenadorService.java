@@ -7,7 +7,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import risosu.it.PokeApiClient.DAO.IEntrenadorRepository;
+import risosu.it.PokeApiClient.DAO.IPokedexRepository;
 import risosu.it.PokeApiClient.JPA.Entrenador;
+import risosu.it.PokeApiClient.JPA.Pokedex;
+import risosu.it.PokeApiClient.DAO.IPokedexEntrenadorRepository;
+import risosu.it.PokeApiClient.DAO.IPokedexPokemonRepository;
+import risosu.it.PokeApiClient.DAO.IPokemonRepository;
+import risosu.it.PokeApiClient.DTO.PokeFavoritoDTO;
+import risosu.it.PokeApiClient.JPA.Audio;
+import risosu.it.PokeApiClient.JPA.PokedexEntrenador;
+import risosu.it.PokeApiClient.JPA.PokedexPokemon;
+import risosu.it.PokeApiClient.JPA.Pokemon;
+import risosu.it.PokeApiClient.JPA.Sprite;
 
 @Service
 public class EntrenadorService {
@@ -16,9 +27,24 @@ public class EntrenadorService {
 
     private final PasswordEncoder passwordEnconder;
 
-    public EntrenadorService(IEntrenadorRepository iEntrenadorRepository, PasswordEncoder passwordEncoder) {
+    private final IPokedexRepository iPokedexRepository;
+
+    private final IPokedexEntrenadorRepository iPokedexEntrenadorRepository;
+
+    private final IPokedexPokemonRepository iPokedexPokemonRepository;
+    
+    private final IPokemonRepository iPokemonRepository;
+
+    public EntrenadorService(IEntrenadorRepository iEntrenadorRepository, PasswordEncoder passwordEncoder,
+            IPokedexRepository iPokedexRepository, IPokedexEntrenadorRepository iPokedexEntrenadorRepository,
+            IPokedexPokemonRepository iPokedexPokemonRepository,
+            IPokemonRepository iPokemonRepository) {
         this.iEntrenadorRepository = iEntrenadorRepository;
         this.passwordEnconder = passwordEncoder;
+        this.iPokedexRepository = iPokedexRepository;
+        this.iPokedexEntrenadorRepository = iPokedexEntrenadorRepository;
+        this.iPokedexPokemonRepository = iPokedexPokemonRepository;
+        this.iPokemonRepository = iPokemonRepository;
     }
 
     public List<Entrenador> GetAll() {
@@ -145,4 +171,94 @@ public class EntrenadorService {
         }
     }
     
+    public Entrenador AddPokemon(PokeFavoritoDTO pokemon){
+       
+    Pokemon pokemonAguardar = new Pokemon();
+    pokemonAguardar.setNombre(pokemon.getNombre());
+    pokemonAguardar.setAltura(pokemon.getAltura());
+    pokemonAguardar.setAncho(pokemon.getPeso());
+    
+    Sprite foto = new Sprite();
+    foto.setDefaultfrontal(pokemon.getImg());
+    
+    Audio audio = new Audio();
+    audio.setActual(pokemon.getCrie());
+
+    pokemonAguardar.setSprite(foto);
+    
+    pokemonAguardar.setAudio(audio);
+    
+    pokemonAguardar.setIdJson(pokemon.getIdPokemon());
+   
+    iPokemonRepository.save(pokemonAguardar);
+    
+    
+        return null;
+    
+    }
+
+    public Entrenador AddFavorites(String user, Long pokeId, Boolean status, PokeFavoritoDTO pokemon) {
+        
+        Optional<Pokemon> existente = iPokemonRepository.findByIdJson(pokeId.intValue());
+
+        //Si el pokemon no esta registrado, registrarlo primero:
+        if(existente.isEmpty()){
+            AddPokemon(pokemon);
+        }else{
+            
+            //Si el pokeAnimal ya estaba registrado, ya no lo volvemos a registrar:
+            
+        Optional<Entrenador> entrenador = iEntrenadorRepository.findByUsername(user);
+        if (entrenador.isPresent()) {
+            Entrenador entrenador2 = entrenador.get();
+            int idEntrenador = entrenador2.getIdEntrenador();
+
+            String nombre = entrenador2.getNombre();
+
+            //Averiguamos si el usuario ya tiene una pokedex asignada: 
+            List<PokedexEntrenador> entrenadorPokemon = iPokedexEntrenadorRepository.findByIdEntrenador(idEntrenador);
+            
+            //Este objeto representa si un entrenador tiene asignada una pokedex:
+            PokedexEntrenador pokedexDeUsuario = new PokedexEntrenador();
+
+            //Este objeto reporesenta una pokedex:
+            Pokedex pokedexNew = new Pokedex();
+            
+            //Este objeto representa la relacion entre una pokedex y un pokemon(Favorito)
+            PokedexPokemon pokeFavorito = new PokedexPokemon();
+
+            //Si el usuario no tiene una pokedex asignada:
+            if (entrenadorPokemon.isEmpty()) {
+
+                // crear una pokedex nueva al usuario
+                pokedexNew.setNombre("¡Tu Pokedex!" + nombre);
+                iPokedexRepository.save(pokedexNew);
+                
+                //Asignarle la pokedex al usuario:
+                pokedexDeUsuario.setIdEntrenador(idEntrenador);
+                pokedexDeUsuario.setIdPokedex(pokedexNew.getIdPokedex());
+
+                iPokedexEntrenadorRepository.save(pokedexDeUsuario);
+                
+                //Establecemos la id de la nueva pokedex creada:
+                pokeFavorito.setIdPokedex(pokedexNew.getIdPokedex());
+            }else{
+            
+               //Si ya tiene una pokedex asignada, usamos esa id para la relacion:
+               pokeFavorito.setIdPokedex(entrenadorPokemon.get(0).getIdPokedex());
+       
+            }
+
+            //asignar el pokemon favorito del usuario a su pokedex:
+            pokeFavorito.setIdPokemon(pokeId.intValue());
+            iPokedexPokemonRepository.save(pokeFavorito);
+
+        }
+        }
+
+        
+        return null;
+
+    }
+
 }

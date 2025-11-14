@@ -1,5 +1,6 @@
 package risosu.it.PokeApiClient.RestController;
 
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,8 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import risosu.it.PokeApiClient.DTO.PokeFavoritoDTO;
 import risosu.it.PokeApiClient.Service.EntrenadorService;
 import risosu.it.PokeApiClient.JPA.Entrenador;
+import risosu.it.PokeApiClient.JPA.Pokemon;
 
 @RestController
 @RequestMapping("api/entrenador")
@@ -53,5 +56,15 @@ public class EntrenadorController {
     public ResponseEntity Delete(@PathVariable("idEntrenador") int idEntrenador) {
         return ResponseEntity.ok(entrenadorService.Delete(Long.valueOf(idEntrenador)));
     }
+    
+    @PostMapping("/{user}")
+    public ResponseEntity AddFavorites(@RequestBody PokeFavoritoDTO pokemon, @PathVariable String user){
+        
+        Long idPokemon = pokemon.getIdPokemon().longValue();
+        Boolean favorito = pokemon.getFavorito();
+        
+        return ResponseEntity.ok(entrenadorService.AddFavorites(user, idPokemon, favorito, pokemon));
+    }
+
 
 }
