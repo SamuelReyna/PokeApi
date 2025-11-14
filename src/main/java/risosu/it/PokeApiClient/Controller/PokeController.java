@@ -17,15 +17,18 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,11 +39,12 @@ import risosu.it.PokeApiClient.DTO.PokeDetailDTO;
 import risosu.it.PokeApiClient.DTO.PokemonDTO;
 import risosu.it.PokeApiClient.ML.Pokemon;
 import risosu.it.PokeApiClient.ML.Result;
+import risosu.it.PokeApiClient.ML.Entrenador;
 
 @Controller
 @RequestMapping("/pokeControl")
 public class PokeController {
-    
+
     private final String url = "http://localhost:8081//";
 
 //Este controlador es accedido desde vista "loading" para validar si existe ya el archivo JSON y redirigir:
@@ -130,5 +134,25 @@ public class PokeController {
             System.out.println(e.getLocalizedMessage());
         }
         return resultados;
+    }
+
+    @GetMapping("/profile/{username}")
+    public String profile(@PathVariable("username") String username, Model model, HttpSession session) {
+
+        model.addAttribute("token", session.getAttribute("token"));
+        if (session.getAttribute("token") != null) {
+            model.addAttribute("username", session.getAttribute("username"));
+            model.addAttribute("role", session.getAttribute("role"));
+        }
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<Entrenador> responseEntity
+                = restTemplate.exchange("http://localhost:8081/api/entrenador/" + username + "/username", HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<Entrenador>() {
+                });
+        if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
+            Entrenador entrenador = responseEntity.getBody();
+            model.addAttribute("entrenador", entrenador);
+        }
+        return "usuario";
     }
 }
