@@ -227,40 +227,49 @@
                             <thead class="text-center">
                                 <tr>
                                     <th class="col-1"></th>
-                                    <th class="col-1">Datos</th>
-                                    <th class="col-1">Contacto</th>
-                                    <th class="col-1">Dirección</th>
+                                    <th class="col-1">Name</th>
+                                    <th class="col-1">Tipos</th>
+                                    <th class="col-1">Medidas</th>
+                                    <th class="col-1"></th>F
                                 </tr>
                             </thead>
 
-                            <tbody>
-                                <tr th:each="pokemon : ${pokemones}" class="poke-fila p-2 mb-2 align-items-center" th:attr="data-id=${pokemon.id},
+                            <tbody id="tabla-pokemones">
+                                <tr th:each="pokemon : ${pokemones}" class="poke-fila p-2 mb-2 align-items-center"
+                                    th:attr="
+                                    data-id=${pokemon.id},
                                     data-name=${pokemon.name},
                                     data-height=${pokemon.height},
                                     data-weight=${pokemon.weight},
+                                    data-types=${#strings.listJoin(pokemon.types.?[name != null].![name], ' ')},
                                     data-img=${pokemon.sprites[0].front_default},
                                     data-img-back=${pokemon.sprites[0].back_default},
-                                    data-type=${pokemon.types[0].name},
                                     data-crie=${pokemon.cries[0].latest},
                                     data-hp=${pokemon.stats[0].base_stat},
                                     data-atk=${pokemon.stats[1].base_stat},
                                     data-def=${pokemon.stats[2].base_stat},
                                     data-spa=${pokemon.stats[3].base_stat},
                                     data-spd=${pokemon.stats[4].base_stat},
-                                    data-speed=${pokemon.stats[5].base_stat}" onclick="cargarPokemon(this)">
+                                    data-speed=${pokemon.stats[5].base_stat}"s
+
+
+
+                                    onclick="cargarPokemon(this)">
 
                                     <td>
-                                        <img th:src="${pokemon.sprites[0].front_default}" class="pokemon-picture"
-                                             alt="Imagen del Pokémon" />
+                                        <img th:src="${pokemon.sprites[0].front_default}" class="pokemon-picture" alt="Imagen del Pokémon" />
                                     </td>
 
                                     <td>
                                         <div>
-                                            <span th:text="${pokemon.order}"></span> <span th:text="${pokemon.name}"
-                                                                                           class="m-0"></span>
+                                            <span th:text="${pokemon.order}"></span> <span th:text="${pokemon.name}" class="m-0"></span>
                                         </div>
                                     </td>
-
+                                    <td>
+                                        <span th:each=" type :${pokemon.types}">
+                                            <span th:text="${type.name}"> </span>
+                                        </span>
+                                    </td>
                                     <td>
                                         <div>
                                             <i class="bi bi-arrows-vertical"></i> <span th:text="${pokemon.height}"></span>
@@ -269,18 +278,27 @@
                                             <i class="bi bi-arrows"></i> <span th:text="${pokemon.weight}"></span>
                                         </div>
                                     </td>
-                                    <td>
-                                        <div>
-                                            <div class="checkbox-container">
-                                                <input type="checkbox" id="miCheckbox"
-                                                       th:checked="${pokemon.is_default}?true:false" />
-                                                <label for="miCheckbox" class="checkmark"></label>
-                                            </div>
 
-                                            <div>
-                                                <span>Evo</span>
-                                            </div>
+                                    <td>
+                                        <!--No modificar el id del checkbox pues no se podran seleccionar correctamente, el id debe ser dinamico :V-->
+                                        <div class="checkbox-container">
+                                            <input class="poke-checkbox" th:data-id="${pokemon.id}" type="checkbox" th:id="'checkbox-' + ${pokemon.id}" th:name="'seleccion-' + ${pokemon.id}" 
+                                                   th:data-name="${pokemon.name}" 
+                                                   th:data-height="${pokemon.height}"
+                                                   th:data-weight="${pokemon.weight}"
+                                                   th:data-img="${pokemon.sprites[0].front_default}"
+                                                   th:data-img-back="${pokemon.sprites[0].back_default}"
+                                                   th:data-type="${pokemon.types[0].name}"
+                                                   th:data-crie="${pokemon.cries[0].latest}"
+                                                   th:data-hp="${pokemon.stats[0].base_stat}"
+                                                   th:data-atk="${pokemon.stats[1].base_stat}"
+                                                   th:data-def="${pokemon.stats[2].base_stat}"
+                                                   th:data-spa="${pokemon.stats[3].base_stat}"
+                                                   th:data-spd="${pokemon.stats[4].base_stat}"
+                                                   th:data-speed="${pokemon.stats[5].base_stat}"/>
+                                            <label th:for="'checkbox-' + ${pokemon.id}" class="checkmark"></label>
                                         </div>
+
 
                                     </td>
 
@@ -411,73 +429,6 @@
         </script>
 
 
-        <!--<script>
-                    const stats = {
-                        hp: 78,
-                        attack: 84,
-                        defense: 78,
-                        spAttack: 109,
-                        spDefense: 85,
-                        speed: 100
-                    };
-            
-                    const data = {
-                        labels: ['A', 'B', 'C', 'D', 'E', 'F'],
-                        datasets: [{
-                            label: '',
-                            data: [
-                                stats.hp,
-                                stats.attack,
-                                stats.defense,
-                                stats.spAttack,
-                                stats.spDefense,
-                                stats.speed
-                            ],
-                            backgroundColor: 'rgba(250, 105, 65, 0.786)',
-                            borderColor: '#afe2ff', 
-                            borderWidth: 1,
-                            pointBackgroundColor: 'rgba(255, 99, 132, .5)'
-                        }]
-                    };
-            
-                    const config = {
-                        type: 'radar',
-                        data: data,
-                        options: {
-                            scales: {
-                                r: {
-                                    min: 0,
-                                    max: 120,
-                                    ticks: {
-                                        stepSize: 20
-                                    },
-                                    grid: {
-                                        color: 'rgba(200, 200, 200, 0.2)'
-                                    },
-                                    pointLabels: {
-                                        font: {
-                                            size: 14,
-                                            color: 'white'
-                                        }
-                                    },
-                                    ticks: {
-                                    display: false 
-                                    }
-                                }
-                            },
-                            plugins: {
-                                legend: {
-                                    display: true,
-                                    labels: {
-                                        color: 'white'
-                                    }
-                                }
-                            }
-                        }
-                    };
-            
-                    new Chart(document.getElementById('radarChart'), config);
-                </script>-->
     </body>
 
 </html>
