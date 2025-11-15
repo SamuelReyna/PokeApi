@@ -11,39 +11,41 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.List;
 
 @Entity
 @Table(name = "pokemon")
 public class Pokemon {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idpokemon")
     private int idPokemon;
-    
+
     @Column(name = "nombre")
     private String nombre;
-    
+
     @Column(name = "alto")
     private int altura;
-    
+
     @Column(name = "ancho")
     private int ancho;
-    
-   
-    
+
     @Column(name = "idjson", unique = true)
     private int idJson;
-    
+
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "idsprite")
     private Sprite sprite;
-    
+
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "idaudio")
     private Audio audio;
-    
+
 
     public int getIdPokemon() {
         return idPokemon;
@@ -77,8 +79,6 @@ public class Pokemon {
         this.ancho = ancho;
     }
 
-
-
     public Sprite getSprite() {
         return sprite;
     }
@@ -102,7 +102,5 @@ public class Pokemon {
     public void setIdJson(int idJson) {
         this.idJson = idJson;
     }
-    
-    
-    
+
 }

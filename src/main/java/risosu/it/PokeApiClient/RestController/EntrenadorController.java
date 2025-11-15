@@ -76,4 +76,9 @@ public class EntrenadorController {
         return ResponseEntity.ok(entrenadorService.AddFavorites(user, idPokemon, favorito, pokemon));
     }
 
+    @GetMapping("/favorites/{idEntrenador}")
+    public ResponseEntity GetFavorites(@PathVariable("idEntrenador") int idEntrenador) {
+        return ResponseEntity.ok(entrenadorService.GetFavorites(idEntrenador));
+    }
+
 }

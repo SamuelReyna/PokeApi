@@ -280,4 +280,10 @@ public class EntrenadorService {
         return (int) iEntrenadorRepository.count();
     }
 
+    public List<PokedexEntrenador> GetFavorites(int idEntrenador) {
+        List<PokedexEntrenador> pokemonesFavs
+                = iPokedexEntrenadorRepository.cargaPokedexCompleta(idEntrenador);
+        return pokemonesFavs;
+    }
+
 }

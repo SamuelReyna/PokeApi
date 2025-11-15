@@ -4,6 +4,8 @@
  */
 package risosu.it.PokeApiClient.JPA;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -16,20 +18,37 @@ import jakarta.persistence.Table;
 @Table(name = "entrenadorespokedex")
 @IdClass(PokedexEntrenadorId.class)
 public class PokedexEntrenador {
-    
+
     @Id
     @Column(name = "identrenador")
     private int idEntrenador;
-    
+
     @Id
     @Column(name = "idpokedex")
     private int idPokedex;
-    
-       @ManyToOne
+
+    @ManyToOne
     @JoinColumn(name = "identrenador", insertable = false, updatable = false)
     private Entrenador entrenador;
 
+    public Entrenador getEntrenador() {
+        return entrenador;
+    }
+
+    public void setEntrenador(Entrenador entrenador) {
+        this.entrenador = entrenador;
+    }
+
+    public Pokedex getPokedex() {
+        return pokedex;
+    }
+
+    public void setPokedex(Pokedex pokedex) {
+        this.pokedex = pokedex;
+    }
+
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "idpokedex", insertable = false, updatable = false)
     private Pokedex pokedex;
 
@@ -49,6 +68,4 @@ public class PokedexEntrenador {
         this.idPokedex = idPokedex;
     }
 
-    
-    
 }
