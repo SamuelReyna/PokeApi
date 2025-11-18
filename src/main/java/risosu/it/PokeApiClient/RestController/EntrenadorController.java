@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import risosu.it.PokeApiClient.DTO.PokeFavoritoDTO;
+import risosu.it.PokeApiClient.DTO.EntrenadorDTO;
 import risosu.it.PokeApiClient.Service.EntrenadorService;
 import risosu.it.PokeApiClient.JPA.Entrenador;
 import risosu.it.PokeApiClient.JPA.Pokemon;
+import risosu.it.PokeApiClient.JPA.Rol;
 
 @RestController
 @RequestMapping("api/entrenador")
@@ -36,8 +38,19 @@ public class EntrenadorController {
     }
 
     @PostMapping()
-    public ResponseEntity Add(@RequestBody Entrenador entrenador) {
-        return ResponseEntity.ok(entrenadorService.Add(entrenador));
+    public ResponseEntity Add(@RequestBody EntrenadorDTO entrenador) {
+        Entrenador entrenadorBD = new Entrenador();
+        entrenadorBD.setNombre(entrenador.getNombre());
+        entrenadorBD.setApellidoPaterno(entrenador.getApellidoPaterno());
+        entrenadorBD.setApellidoMaterno(entrenador.getApellidoMaterno());
+        entrenadorBD.setCorreo(entrenador.getCorreo());
+        entrenadorBD.setSexo(entrenador.getSexo());
+        entrenadorBD.setPassword(entrenador.getPassword());
+        entrenadorBD.setUsername(entrenador.getUsername());
+        Rol rol = new Rol();
+        rol.setIdrol(entrenador.rol.getIdRol());
+        entrenadorBD.setRol(rol);
+        return ResponseEntity.ok(entrenadorService.Add(entrenadorBD));
     }
 
     @GetMapping("/{username}/username")
@@ -51,8 +64,19 @@ public class EntrenadorController {
     }
 
     @PatchMapping("/{idEntrenador}")
-    public ResponseEntity Patch(@PathVariable("idEntrenador") Long idEntrenador, @RequestBody Entrenador entrenador) {
-        return ResponseEntity.ok(entrenadorService.patchEntrenador(idEntrenador, entrenador));
+    public ResponseEntity Patch(@PathVariable("idEntrenador") Long idEntrenador, @RequestBody EntrenadorDTO entrenador) {
+        Entrenador entrenadorBD = new Entrenador();
+        entrenadorBD.setNombre(entrenador.getNombre());
+        entrenadorBD.setApellidoPaterno(entrenador.getApellidoPaterno());
+        entrenadorBD.setApellidoMaterno(entrenador.getApellidoMaterno());
+        entrenadorBD.setCorreo(entrenador.getCorreo());
+        entrenadorBD.setSexo(entrenador.getSexo());
+        entrenadorBD.setPassword(entrenador.getPassword());
+        entrenadorBD.setUsername(entrenador.getUsername());
+        Rol rol = new Rol();
+        rol.setIdrol(entrenador.rol.getIdRol());
+        entrenadorBD.setRol(rol);
+        return ResponseEntity.ok(entrenadorService.patchEntrenador(idEntrenador, entrenadorBD));
     }
 
     @PatchMapping("/{idEntrenador}/estado")

@@ -48,6 +48,7 @@ public class Entrenador implements UserDetails {
     public Rol rol;
     @Column(name = "estado")
     private int estado;
+
     @JsonBackReference
     @OneToMany(mappedBy = "entrenador", fetch = FetchType.LAZY)
     public List<PokedexEntrenador> pokedexes;
@@ -86,6 +87,15 @@ public class Entrenador implements UserDetails {
 
     public String getNombre() {
         return nombre;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    public String setUsername(String username) {
+        return this.username = username;
     }
 
     public void setNombre(String nombre) {
@@ -152,11 +162,6 @@ public class Entrenador implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + rol.getNombre()));
-    }
-
-    @Override
-    public String getUsername() {
-        return this.username;
     }
 
     @Override
