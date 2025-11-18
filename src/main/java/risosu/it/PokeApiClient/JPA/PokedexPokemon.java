@@ -4,9 +4,12 @@
  */
 package risosu.it.PokeApiClient.JPA;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
@@ -27,12 +30,14 @@ public class PokedexPokemon {
     @Column(name = "idpokemon")
     private int idPokemon;
 
-    @ManyToOne
-    @JoinColumn(name = "idpokedex", referencedColumnName = "idpokedex")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idpokedex", insertable = false, updatable = false)
+    @JsonBackReference(value = "pokedex-pokemons")
     private Pokedex pokedex;
 
-    @ManyToOne
-    @JoinColumn(name = "idpokemon", referencedColumnName = "idpokemon")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idpokemon", insertable = false, updatable = false)
+    @JsonIgnoreProperties("pokedexes")
     private Pokemon pokemon;
 
     public int getIdPokedex() {

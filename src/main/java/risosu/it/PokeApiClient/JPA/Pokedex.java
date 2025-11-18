@@ -1,6 +1,7 @@
 package risosu.it.PokeApiClient.JPA;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,6 +26,7 @@ public class Pokedex {
     private String nombre;
 
     @OneToMany(mappedBy = "pokedex", fetch = FetchType.LAZY)
+    @JsonManagedReference(value = "pokedexpokemon")
     private List<PokedexPokemon> pokedexPokemons;
 
     public List<PokedexPokemon> getPokedexPokemons() {

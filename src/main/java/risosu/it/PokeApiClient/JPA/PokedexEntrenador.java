@@ -27,26 +27,13 @@ public class PokedexEntrenador {
     @Column(name = "idpokedex")
     private int idPokedex;
 
+    // =================== RELACIÓN CON ENTRENADOR ===================
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "identrenador", insertable = false, updatable = false)
     private Entrenador entrenador;
 
-    public Entrenador getEntrenador() {
-        return entrenador;
-    }
-
-    public void setEntrenador(Entrenador entrenador) {
-        this.entrenador = entrenador;
-    }
-
-    public Pokedex getPokedex() {
-        return pokedex;
-    }
-
-    public void setPokedex(Pokedex pokedex) {
-        this.pokedex = pokedex;
-    }
-
+    // =================== RELACIÓN CON POKEDEX ===================
     @ManyToOne
     @JsonManagedReference
     @JoinColumn(name = "idpokedex", insertable = false, updatable = false)

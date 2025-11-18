@@ -1,9 +1,11 @@
 package risosu.it.PokeApiClient.JPA;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -46,7 +48,8 @@ public class Entrenador implements UserDetails {
     public Rol rol;
     @Column(name = "estado")
     private int estado;
-    @OneToMany(mappedBy = "entrenador")
+    @JsonBackReference
+    @OneToMany(mappedBy = "entrenador", fetch = FetchType.LAZY)
     public List<PokedexEntrenador> pokedexes;
 
     public Entrenador(int idEntrenador, String nombre, String apellidoPaterno, String apellidoMaterno, String sexo, String correo, String username, String password, Rol rol, int estado) {

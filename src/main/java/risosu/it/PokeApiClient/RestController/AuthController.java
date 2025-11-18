@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import risosu.it.PokeApiClient.JPA.Entrenador;
 import risosu.it.PokeApiClient.Service.EntrenadorService;
 import risosu.it.PokeApiClient.Component.JwtUtil;
+import risosu.it.PokeApiClient.DTO.LoginDTO;
 import risosu.it.PokeApiClient.Service.PasswordResetTokenService;
 import risosu.it.PokeApiClient.Service.VerifyTokenService;
 import risosu.it.PokeApiClient.Service.EmailService;
@@ -52,7 +53,7 @@ public class AuthController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity Login(@RequestBody Entrenador entrenador) {
+    public ResponseEntity Login(@RequestBody LoginDTO entrenador) {
         UserDetails user = entrenadorService.loadEntrenadorByUsername(entrenador.getUsername());
 
         if (user == null || !passwordEncoder.matches(entrenador.getPassword(), user.getPassword())) {
