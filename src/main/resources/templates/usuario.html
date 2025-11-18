@@ -12,8 +12,66 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
         <link rel="stylesheet" href="/style.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </head>
+
+    <style>
+        .card-opciones-pokedex {
+            background: #d62828;
+            border-radius: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            padding-bottom: 2rem;
+        }
+
+        .pokedex-card {
+            background: #d62828;
+            border-radius: 25px;
+            padding: 1.5rem;
+            max-width: 100%;
+        }
+
+        .profile-inner {
+            background: #e9f4ff;
+            padding: 2rem 1rem;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 90px;
+            height: 90px;
+            margin-top: -60px;
+            border-radius: 50%;
+            border: 4px solid white;
+            object-fit: cover;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+        }
+
+        .profile-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-top: 1rem;
+        }
+
+        .profile-info {
+            margin-top: 1rem;
+            padding: 0 0.5rem;
+        }
+
+        .profile-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .profile-item i {
+            font-size: 1.1rem;
+            color: #1d3557;
+        }
+
+    </style>
 
     <body>
 
@@ -124,95 +182,52 @@
 
 
             <div class="text-center mt-3 text-white">
-                <p class="fs-2">Lista de pokemons</p>
+                <p class="fs-2">Pokemones favoritos</p>
             </div>
 
             <div class="row">
                 <div class="col-3">
-                    <div class="card card-opciones-pokedex ">
+                    <div class="card card-opciones-pokedex p-3">
 
-                        <div class="row">
-                            <div class="col-12 d-flex ">
-                                <div class="pokeAdornos"></div>
-                                <div class="pokeAdornos-1"></div>
-                                <div class="pokeAdornos-2"></div>
-                                <div class="pokeAdornos-3"></div>
-                                <div class="pokeBuscador">
-
-                                    <input type="text" id="pokeBuscador-pokedex" placeholder=""
-                                           oninput="buscarPokemon(this.value)">
-
-                                </div>
-                            </div>
+                        <!-- Adornos superiores -->
+                        <div class="d-flex mb-3 gap-2">
+                            <div class="pokeAdornos"></div>
+                            <div class="pokeAdornos-1"></div>
+                            <div class="pokeAdornos-2"></div>
+                            <div class="pokeAdornos-3"></div>
                         </div>
 
-                        <div class="row pokedex mt-1">
+                        <!-- Contenido de la tarjeta -->
+                        <div class="pokedex-card mx-auto">
 
-                            <div class="col-10 mx-auto ">
+                            <div class="profile-inner">
 
-                                <div class="row pokedex mt-3">
-                                    <div class="col-10 poke-vista-pokedex">
-                                        <div class="poke-front-pokedex mt-3">
-                                            <table class="text-white">
-                                                <thead class="">
-                                                    <tr>
-                                                        <th class="col-1"></th>
-                                                        <th class="col-2">Name</th>
-                                                        <th class="col-1">Tipo</th>
+                                <!-- Foto -->
+                                <img class="profile-avatar"
+                                     src="https://i.pravatar.cc/150?u=[[${entrenador.idEntrenador}]]"
+                                     alt="avatar">
 
-                                                    </tr>
-                                                </thead>
+                                <!-- Nombre -->
+                                <div class="profile-name">
+                                    <span th:text="|${entrenador.nombre} ${entrenador.apellidoPaterno} ${entrenador.apellidoMaterno}|"></span>
+                                </div>
 
-                                                <tbody id="tabla-pokemones">
-                                                    <tr th:each="pokemon : ${pokemones}"
-                                                        class="poke-fila p-2 mb-2 align-items-center" th:attr="data-id=${pokemon.id},
-                                                        data-name=${pokemon.name},
-                                                        data-height=${pokemon.height},
-                                                        data-weight=${pokemon.weight},
-                                                        data-img=${pokemon.sprites[0].front_default},
-                                                        data-img-back=${pokemon.sprites[0].back_default},
-                                                        data-type=${pokemon.types[0].name},
-                                                        data-crie=${pokemon.cries[0].latest},
-                                                        data-hp=${pokemon.stats[0].base_stat},
-                                                        data-atk=${pokemon.stats[1].base_stat},
-                                                        data-def=${pokemon.stats[2].base_stat},
-                                                        data-spa=${pokemon.stats[3].base_stat},
-                                                        data-spd=${pokemon.stats[4].base_stat},
-                                                        data-speed=${pokemon.stats[5].base_stat}" onclick="cargarPokemon(this)">
+                                <!-- Datos con iconos -->
+                                <div class="profile-info">
 
-                                                        <td>
-                                                            <img th:src="${pokemon.sprites[0].front_default}"
-                                                                 class="pokemon-picture" alt="Imagen del Pokémon" />
-                                                        </td>
-
-                                                        <td>
-                                                            <div>
-                                                                <span th:text="${pokemon.order}"></span> <span
-                                                                    th:text="${pokemon.name}" class="m-0"></span>
-                                                            </div>
-                                                        </td>
-
-                                                        <td>
-                                                            <div>
-                                                                <div class="checkbox-container">
-                                                                    <input type="checkbox" id="miCheckbox"
-                                                                           th:checked="${pokemon.is_default}?true:false" />
-                                                                    <label for="miCheckbox" class="checkmark"></label>
-                                                                </div>
-
-                                                                <div>
-                                                                    <span>Evo</span>
-                                                                </div>
-                                                            </div>
-
-                                                        </td>
-
-
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                    <div class="profile-item">
+                                        <i class="fa-solid fa-user"></i>
+                                        <span th:text="${entrenador.username}"></span>
                                     </div>
+
+                                    <div class="profile-item">
+                                        <i class="fa-solid fa-envelope"></i>
+                                        <span th:text="${entrenador.correo}"></span>
+                                    </div>
+                                    <div class="profile-item">
+                                        <span th:text="${pokedex.nombre}"></span>
+                                    </div>
+
                                 </div>
 
                             </div>
@@ -221,83 +236,84 @@
 
                     </div>
                 </div>
+
                 <div class="col-8">
                     <div class="table-container mytable mt-3">
                         <table class="table-hover text-white align-middle">
-                            <thead class="text-center">
+                            <thead class="">
                                 <tr>
                                     <th class="col-1"></th>
                                     <th class="col-1">Name</th>
-                                    <th class="col-1">Tipos</th>
+                                    <!--                                    <th class="col-1">Tipos</th>-->
                                     <th class="col-1">Medidas</th>
-                                    <th class="col-1"></th>F
+                                    <th class="col-1"></th>
                                 </tr>
                             </thead>
 
                             <tbody id="tabla-pokemones">
-                                <tr th:each="pokemon : ${pokemones}" class="poke-fila p-2 mb-2 align-items-center"
-                                    th:attr="
-                                    data-id=${pokemon.id},
-                                    data-name=${pokemon.name},
-                                    data-height=${pokemon.height},
-                                    data-weight=${pokemon.weight},
-                                    data-types=${#strings.listJoin(pokemon.types.?[name != null].![name], ' ')},
-                                    data-img=${pokemon.sprites[0].front_default},
-                                    data-img-back=${pokemon.sprites[0].back_default},
-                                    data-crie=${pokemon.cries[0].latest},
-                                    data-hp=${pokemon.stats[0].base_stat},
-                                    data-atk=${pokemon.stats[1].base_stat},
-                                    data-def=${pokemon.stats[2].base_stat},
-                                    data-spa=${pokemon.stats[3].base_stat},
-                                    data-spd=${pokemon.stats[4].base_stat},
-                                    data-speed=${pokemon.stats[5].base_stat}"s
-
-
-
-                                    onclick="cargarPokemon(this)">
+                                <tr th:each="pokemon : ${pokemones}" class="poke-fila p-2 mb-2 align-items-center">
+                                    <!--                                    th:attr="
+                                                                        data-id=${pokemon.id},
+                                                                        data-name=${pokemon.name},
+                                                                        data-height=${pokemon.height},
+                                                                        data-weight=${pokemon.weight},
+                                                                        data-types=${#strings.listJoin(pokemon.types.?[name != null].![name], ' ')},
+                                                                        data-img=${pokemon.sprites[0].front_default},
+                                                                        data-img-back=${pokemon.sprites[0].back_default},
+                                                                        data-crie=${pokemon.cries[0].latest},
+                                                                        data-hp=${pokemon.stats[0].base_stat},
+                                                                        data-atk=${pokemon.stats[1].base_stat},
+                                                                        data-def=${pokemon.stats[2].base_stat},
+                                                                        data-spa=${pokemon.stats[3].base_stat},
+                                                                        data-spd=${pokemon.stats[4].base_stat},
+                                                                        data-speed=${pokemon.stats[5].base_stat}"
+                                    
+                                    
+                                    
+                                                                        onclick="cargarPokemon(this)">-->
 
                                     <td>
-                                        <img th:src="${pokemon.sprites[0].front_default}" class="pokemon-picture" alt="Imagen del Pokémon" />
+                                        <img th:src="${pokemon.sprite.defaultfrontal}" class="pokemon-picture" alt="Imagen del Pokémon" />
                                     </td>
 
                                     <td>
                                         <div>
-                                            <span th:text="${pokemon.order}"></span> <span th:text="${pokemon.name}" class="m-0"></span>
+                                            <span th:text="${pokemon.idPokemon}"></span> <span th:text="${pokemon.nombre}" class="m-0"></span>
                                         </div>
                                     </td>
-                                    <td>
-                                        <span th:each=" type :${pokemon.types}">
-                                            <span th:text="${type.name}"> </span>
-                                        </span>
-                                    </td>
+                                    <!--                                    <td>
+                                                                            <span th:each=" type :${pokemon.types}">
+                                                                                <span th:text="${type.name}"> </span>
+                                                                            </span>
+                                                                        </td>-->
                                     <td>
                                         <div>
-                                            <i class="bi bi-arrows-vertical"></i> <span th:text="${pokemon.height}"></span>
+                                            <i class="bi bi-arrows-vertical"></i> <span th:text="${pokemon.altura}"></span>
                                         </div>
                                         <div>
-                                            <i class="bi bi-arrows"></i> <span th:text="${pokemon.weight}"></span>
+                                            <i class="bi bi-arrows"></i> <span th:text="${pokemon.ancho}"></span>
                                         </div>
                                     </td>
 
                                     <td>
                                         <!--No modificar el id del checkbox pues no se podran seleccionar correctamente, el id debe ser dinamico :V-->
-                                        <div class="checkbox-container">
-                                            <input class="poke-checkbox" th:data-id="${pokemon.id}" type="checkbox" th:id="'checkbox-' + ${pokemon.id}" th:name="'seleccion-' + ${pokemon.id}" 
-                                                   th:data-name="${pokemon.name}" 
-                                                   th:data-height="${pokemon.height}"
-                                                   th:data-weight="${pokemon.weight}"
-                                                   th:data-img="${pokemon.sprites[0].front_default}"
-                                                   th:data-img-back="${pokemon.sprites[0].back_default}"
-                                                   th:data-type="${pokemon.types[0].name}"
-                                                   th:data-crie="${pokemon.cries[0].latest}"
-                                                   th:data-hp="${pokemon.stats[0].base_stat}"
-                                                   th:data-atk="${pokemon.stats[1].base_stat}"
-                                                   th:data-def="${pokemon.stats[2].base_stat}"
-                                                   th:data-spa="${pokemon.stats[3].base_stat}"
-                                                   th:data-spd="${pokemon.stats[4].base_stat}"
-                                                   th:data-speed="${pokemon.stats[5].base_stat}"/>
-                                            <label th:for="'checkbox-' + ${pokemon.id}" class="checkmark"></label>
-                                        </div>
+                                        <!--                                        <div class="checkbox-container">
+                                                                                    <input class="poke-checkbox" th:data-id="${pokemon.id}" type="checkbox" th:id="'checkbox-' + ${pokemon.id}" th:name="'seleccion-' + ${pokemon.id}" 
+                                                                                           th:data-name="${pokemon.name}" 
+                                                                                           th:data-height="${pokemon.height}"
+                                                                                           th:data-weight="${pokemon.weight}"
+                                                                                           th:data-img="${pokemon.sprites[0].front_default}"
+                                                                                           th:data-img-back="${pokemon.sprites[0].back_default}"
+                                                                                           th:data-type="${pokemon.types[0].name}"
+                                                                                           th:data-crie="${pokemon.cries[0].latest}"
+                                                                                           th:data-hp="${pokemon.stats[0].base_stat}"
+                                                                                           th:data-atk="${pokemon.stats[1].base_stat}"
+                                                                                           th:data-def="${pokemon.stats[2].base_stat}"
+                                                                                           th:data-spa="${pokemon.stats[3].base_stat}"
+                                                                                           th:data-spd="${pokemon.stats[4].base_stat}"
+                                                                                           th:data-speed="${pokemon.stats[5].base_stat}"/>
+                                                                                    <label th:for="'checkbox-' + ${pokemon.id}" class="checkmark"></label>
+                                                                                </div>-->
 
 
                                     </td>
@@ -310,123 +326,13 @@
                 </div>
             </div>
 
+
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
 
-        <script>
-                                        let radarChart = null; // fuera de la función para que se destruya el grafico cada vez que se genere uno nuevo!
 
-                                        function cargarPokemon(row) {
-
-                                            if (radarChart) {
-                                                radarChart.destroy(); // 
-                                            }
-
-                                            const name = row.getAttribute("data-name");
-                                            const height = row.getAttribute("data-height");
-                                            const weight = row.getAttribute("data-weight");
-                                            const img = row.getAttribute("data-img");
-                                            const imgBack = row.getAttribute("data-img-back");
-                                            const type = row.getAttribute("data-type");
-                                            const cry = row.getAttribute("data-crie");
-
-                                            const stats = {
-                                                hp: parseInt(row.getAttribute("data-hp")),
-                                                attack: parseInt(row.getAttribute("data-atk")),
-                                                def: parseInt(row.getAttribute("data-def")),
-                                                spa: parseInt(row.getAttribute("data-spa")),
-                                                spd: parseInt(row.getAttribute("data-spd")),
-                                                speed: parseInt(row.getAttribute("data-speed"))
-
-                                            };
-
-
-
-                                            // Guarda el cry en el botón
-                                            const playButton = document.querySelector(".poke-buttons .btn:first-child");
-                                            playButton.setAttribute("data-crie", cry);
-
-                                            // Actualiza la imagen
-                                            document.querySelector(".poke-front img").src = img;
-
-
-
-
-
-                                            const data = {
-                                                labels: ['HP', 'ATK', 'DEF', 'SpA', 'SpD', 'speed'],
-                                                datasets: [{
-                                                        label: '',
-                                                        data: [
-                                                            stats.hp,
-                                                            stats.attack,
-                                                            stats.def,
-                                                            stats.spa,
-                                                            stats.spd,
-                                                            stats.speed
-
-                                                        ],
-                                                        backgroundColor: 'rgba(250, 105, 65, 0.786)',
-                                                        borderColor: '#afe2ff',
-                                                        borderWidth: 1,
-                                                        pointBackgroundColor: 'rgba(255, 99, 132, .5)'
-                                                    }]
-                                            };
-
-                                            const config = {
-                                                type: 'radar',
-                                                data: data,
-                                                options: {
-                                                    scales: {
-                                                        r: {
-                                                            min: 0,
-                                                            max: 120,
-                                                            ticks: {
-                                                                stepSize: 20
-                                                            },
-                                                            grid: {
-                                                                color: 'rgba(200, 200, 200, 0.2)'
-                                                            },
-                                                            pointLabels: {
-                                                                font: {
-                                                                    size: 14,
-                                                                    color: 'white'
-                                                                }
-                                                            },
-                                                            ticks: {
-                                                                display: false
-                                                            }
-                                                        }
-                                                    },
-                                                    plugins: {
-                                                        legend: {
-                                                            display: true,
-                                                            labels: {
-                                                                color: 'white'
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            };
-
-                                            radarChart = new Chart(document.getElementById('radarChart'), config);
-
-                                        }
-        </script>
-
-        <script>
-            function reproducirCry(button) {
-                const cry = button.getAttribute("data-crie");
-                if (cry) {
-                    const audio = new Audio(cry);
-                    audio.play();
-                } else {
-                    alert("No hay cry disponible para este Pokémon.");
-                }
-            }
-        </script>
 
 
     </body>
