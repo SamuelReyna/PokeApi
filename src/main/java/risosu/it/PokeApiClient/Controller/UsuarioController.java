@@ -1,4 +1,4 @@
-    package risosu.it.PokeApiClient.Controller;
+package risosu.it.PokeApiClient.Controller;
 
 import jakarta.servlet.http.HttpSession;
 import java.util.Map;
@@ -23,6 +23,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import risosu.it.PokeApiClient.DTO.LoginDTO;
 
 import risosu.it.PokeApiClient.ML.Entrenador;
 import risosu.it.PokeApiClient.DTO.Password;
@@ -92,10 +93,15 @@ public class UsuarioController {
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
+        LoginDTO loginDTO = new LoginDTO();
+
+        loginDTO.setUsername(entrenador.getUsername());
+        loginDTO.setPassword(entrenador.getPassword());
+
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Entrenador> requestEntity = new HttpEntity<>(entrenador, headers);
+        HttpEntity<LoginDTO> requestEntity = new HttpEntity<>(loginDTO, headers);
 
         try {
             ResponseEntity<Map<String, Object>> responseEntity = restTemplate.exchange(
