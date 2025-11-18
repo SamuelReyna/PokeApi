@@ -4,8 +4,6 @@ import java.util.List;
 
 public class Pokemon {
 
-    private int id;
-
     public Pokemon(int id, String name, int order, Integer height, Integer weight, boolean is_default, List<Sprite> sprites, List<Cries> cries) {
         this.id = id;
         this.name = name;
@@ -17,16 +15,7 @@ public class Pokemon {
         this.cries = cries;
     }
 
-    public Pokemon() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    private int id;
 
     private String name;
 
@@ -54,6 +43,17 @@ public class Pokemon {
 
     public void setSpecies(Species species) {
         this.species = species;
+    }
+
+    public Pokemon() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public List<Type> getTypes() {

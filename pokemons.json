@@ -43623,6 +43623,80 @@
     }
   }
 }, {
+  "id" : 592,
+  "name" : "frillish",
+  "order" : 714,
+  "height" : 12,
+  "weight" : 330,
+  "is_default" : true,
+  "sprites" : [ {
+    "back_default" : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/592.png",
+    "back_female" : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/female/592.png",
+    "back_shiny_female" : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/female/592.png",
+    "front_female" : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/female/592.png",
+    "front_shiny_female" : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/female/592.png",
+    "front_default" : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/592.png",
+    "back_shiny" : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/592.png",
+    "front_shiny" : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/592.png"
+  } ],
+  "cries" : [ {
+    "latest" : "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/592.ogg",
+    "legacy" : "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/legacy/592.ogg"
+  } ],
+  "stats" : [ {
+    "base_stat" : 55,
+    "effort" : 0,
+    "name" : "hp",
+    "url" : "https://pokeapi.co/api/v2/stat/1/"
+  }, {
+    "base_stat" : 40,
+    "effort" : 0,
+    "name" : "attack",
+    "url" : "https://pokeapi.co/api/v2/stat/2/"
+  }, {
+    "base_stat" : 50,
+    "effort" : 0,
+    "name" : "defense",
+    "url" : "https://pokeapi.co/api/v2/stat/3/"
+  }, {
+    "base_stat" : 65,
+    "effort" : 0,
+    "name" : "special-attack",
+    "url" : "https://pokeapi.co/api/v2/stat/4/"
+  }, {
+    "base_stat" : 85,
+    "effort" : 1,
+    "name" : "special-defense",
+    "url" : "https://pokeapi.co/api/v2/stat/5/"
+  }, {
+    "base_stat" : 40,
+    "effort" : 0,
+    "name" : "speed",
+    "url" : "https://pokeapi.co/api/v2/stat/6/"
+  } ],
+  "types" : [ {
+    "slot" : 1,
+    "name" : "water",
+    "url" : "https://pokeapi.co/api/v2/type/11/"
+  }, {
+    "slot" : 2,
+    "name" : "ghost",
+    "url" : "https://pokeapi.co/api/v2/type/8/"
+  } ],
+  "species" : {
+    "name" : "frillish",
+    "url" : "https://pokeapi.co/api/v2/pokemon-species/592/",
+    "speciesDetail" : {
+      "id" : 592,
+      "name" : "frillish",
+      "habitat" : null,
+      "color" : {
+        "name" : "white",
+        "url" : "https://pokeapi.co/api/v2/pokemon-color/9/"
+      }
+    }
+  }
+}, {
   "id" : 593,
   "name" : "jellicent",
   "order" : 715,

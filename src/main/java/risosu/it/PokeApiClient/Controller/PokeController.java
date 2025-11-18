@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -37,9 +38,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import risosu.it.PokeApiClient.DTO.PokeDetailDTO;
 import risosu.it.PokeApiClient.DTO.PokemonDTO;
+import risosu.it.PokeApiClient.DTO.PokemonesFavoritosDTO;
 import risosu.it.PokeApiClient.ML.Pokemon;
 import risosu.it.PokeApiClient.ML.Result;
 import risosu.it.PokeApiClient.ML.Entrenador;
+import risosu.it.PokeApiClient.ML.PokedexResponse;
+import risosu.it.PokeApiClient.ML.PokemonListResponse;
 
 @Controller
 @RequestMapping("/pokeControl")
@@ -128,7 +132,7 @@ public class PokeController {
                     .filter(p -> p.getTypes().stream().anyMatch(t -> types.contains(t.getName())))
                     .collect(Collectors.toList());
             resultados = filtrados;
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
 
             System.out.println(e.getLocalizedMessage());
@@ -150,7 +154,58 @@ public class PokeController {
                 = restTemplate.exchange("http://localhost:8081/api/entrenador/" + username + "/username", HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<Entrenador>() {
                 });
         if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
+
             Entrenador entrenador = responseEntity.getBody();
+            Long id = entrenador.getIdEntrenador();
+
+            // Leer la respuesta como String (debug)
+            ResponseEntity<String> raw = restTemplate.getForEntity(
+                    "http://localhost:8081/api/entrenador/favorites/" + id,
+                    String.class
+            );
+            System.out.println("JSON recibido:\n" + raw.getBody());
+
+            // Ahora sí leer como Map genérico (raíz es objeto, NO lista)
+            ResponseEntity<List<Map<String, Object>>> response
+                    = restTemplate.exchange(
+                            "http://localhost:8081/api/entrenador/favorites/" + id,
+                            HttpMethod.GET,
+                            HttpEntity.EMPTY,
+                            new ParameterizedTypeReference<List<Map<String, Object>>>() {
+                    }
+                    );
+
+            List<Map<String, Object>> root = (List<Map<String, Object>>) response.getBody();
+            if (root == null) {
+                throw new RuntimeException("JSON raíz viene null");
+            }
+
+            Map<String, Object> obj = root.get(0);
+            // Obtener pokedex
+            Map<String, Object> pokedex = (Map<String, Object>) obj.get("pokedex");
+            if (pokedex == null) {
+                throw new RuntimeException("El campo 'pokedex' viene null.");
+            }
+
+            // Obtener pokedexPokemons
+            List<Map<String, Object>> pokedexPokemons
+                    = (List<Map<String, Object>>) pokedex.get("pokedexPokemons");
+
+            if (pokedexPokemons == null) {
+                throw new RuntimeException("El campo 'pokedexPokemons' viene null.");
+            }
+
+            // Sacar solo los pokemones
+            List<Map<String, Object>> pokemons
+                    = pokedexPokemons.stream()
+                            .map(item -> (Map<String, Object>) item.get("pokemon"))
+                            .filter(Objects::nonNull)
+                            .toList();
+
+            System.out.println("Pokemones mapeados:");
+            System.out.println(pokemons);
+
+            model.addAttribute("pokemones", pokemons);
             model.addAttribute("entrenador", entrenador);
         }
         return "usuario";
