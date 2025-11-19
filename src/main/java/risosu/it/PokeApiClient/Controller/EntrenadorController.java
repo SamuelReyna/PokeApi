@@ -1,9 +1,12 @@
 package risosu.it.PokeApiClient.Controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -25,6 +28,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import risosu.it.PokeApiClient.Service.PokeService;
 import risosu.it.PokeApiClient.ML.Entrenador;
 import risosu.it.PokeApiClient.ML.Pokemon;
+import risosu.it.PokeApiClient.ML.Type;
+import risosu.it.PokeApiClient.DTO.TypeDTO;
 
 @Controller
 @RequestMapping("/pokeControl/admin")
@@ -54,8 +59,16 @@ public class EntrenadorController {
             if (countPokemons.getStatusCode() == HttpStatusCode.valueOf(200)) {
                 model.addAttribute("totalPokemons", countPokemons.getBody());
             }
+
             List<Pokemon> pokefavs = pokeservice.getFavTypes();
-            System.out.println(pokefavs);
+
+            Map<String, Long> typeCount
+                    = pokefavs.stream()
+                            .flatMap(p -> p.getTypes().stream())
+                            .collect(Collectors.groupingBy(Type::getName, Collectors.counting()));
+            model.addAttribute("size", typeCount.size());
+
+            model.addAttribute("types", typeCount);
             model.addAttribute("username", session.getAttribute("username"));
             model.addAttribute("role", session.getAttribute("role"));
         }
