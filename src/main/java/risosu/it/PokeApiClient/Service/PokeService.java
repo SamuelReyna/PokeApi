@@ -33,23 +33,27 @@ public class PokeService {
             );
 
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity< List<Map< String, String>>> requestEntity
+            ResponseEntity<List<Map<String, Object>>> requestEntity
                     = restTemplate.exchange(
                             "http://localhost:8081/api/pokemon",
                             HttpMethod.GET,
                             HttpEntity.EMPTY,
-                            new ParameterizedTypeReference< List<Map<String, String>>>() {
+                            new ParameterizedTypeReference<List<Map<String, Object>>>() {
                     });
             if (requestEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
-                List<Map<String, String>> pokefavs = requestEntity.getBody();
+                List<Map<String, Object>> pokefavs = requestEntity.getBody();
                 System.out.println(pokefavs);
 
+                List<Integer> idsJson = pokefavs.stream()
+                        .map(p -> (Integer) p.get("idJson"))
+                        .toList();
+//                pokefavs.forEach(p -> {
+//                    System.out.println(p.get("idJson"));
+//                });
+
                 List<Pokemon> pokefavs2 = pokemonList.stream()
-                        .filter(pokemon
-                                -> pokefavs.stream()
-                                .anyMatch(fav -> fav.get("idJson").equals(String.valueOf(pokemon.getId())))
-                        )
-                        .collect(Collectors.toList());
+                        .filter(pokemon -> idsJson.contains(pokemon.getId()))
+                        .toList();
 
                 return pokefavs2;
 
