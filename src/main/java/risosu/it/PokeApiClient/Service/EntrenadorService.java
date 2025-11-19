@@ -16,9 +16,11 @@ import risosu.it.PokeApiClient.DAO.IPokedexPokemonRepository;
 import risosu.it.PokeApiClient.DAO.IPokemonRepository;
 import risosu.it.PokeApiClient.DTO.PokeFavoritoDTO;
 import risosu.it.PokeApiClient.DTO.EntrenadorDTO;
+import risosu.it.PokeApiClient.DTO.FavoritoDTO;
 import risosu.it.PokeApiClient.JPA.Audio;
 import risosu.it.PokeApiClient.JPA.PokedexEntrenador;
 import risosu.it.PokeApiClient.JPA.PokedexPokemon;
+import risosu.it.PokeApiClient.JPA.PokedexPokemonId;
 import risosu.it.PokeApiClient.JPA.Pokemon;
 import risosu.it.PokeApiClient.JPA.Sprite;
 
@@ -174,33 +176,48 @@ public class EntrenadorService {
         }
     }
     
-    public Pokemon AddPokemon(PokeFavoritoDTO pokemon) {
-        
+  
+    public int Count() {
+        return (int) iEntrenadorRepository.count();
+    }
+    
+     public Pokemon AddPokemon(PokeFavoritoDTO pokemon) {
+
         Pokemon pokemonAguardar = new Pokemon();
         pokemonAguardar.setNombre(pokemon.getNombre());
         pokemonAguardar.setAltura(pokemon.getAltura());
         pokemonAguardar.setAncho(pokemon.getPeso());
-        
+
         Sprite foto = new Sprite();
         foto.setDefaultfrontal(pokemon.getImg());
-        
+
         Audio audio = new Audio();
         audio.setActual(pokemon.getCrie());
-        
-        pokemonAguardar.setSprite(foto);
-        
-        pokemonAguardar.setAudio(audio);
-        
-        pokemonAguardar.setIdJson(pokemon.getIdPokemon());
-        
-        iPokemonRepository.saveAndFlush(pokemonAguardar);
-        
-        return pokemonAguardar;
-        
-    }
-    
-    public List<PokedexPokemon> AddFavorites(String user, Long pokeId, Boolean status, PokeFavoritoDTO pokemon) {
 
+        pokemonAguardar.setSprite(foto);
+
+        pokemonAguardar.setAudio(audio);
+
+        pokemonAguardar.setIdJson(pokemon.getIdPokemon());
+
+        iPokemonRepository.saveAndFlush(pokemonAguardar);
+
+        return pokemonAguardar;
+
+    }
+
+    public boolean AddFavorites(String user, Long pokeId, Boolean status, PokeFavoritoDTO pokemon) {
+
+         //Este objeto representa si un entrenador tiene asignada una pokedex:
+            PokedexEntrenador pokedexDeUsuario = new PokedexEntrenador();
+
+            //Este objeto reporesenta una pokedex:
+            Pokedex pokedexNew = new Pokedex();
+
+            //Este objeto representa la relacion entre una pokedex y un pokemon(Favorito)
+            PokedexPokemon pokeFavorito = new PokedexPokemon();
+        
+         List<FavoritoDTO> favoritosDTO = new ArrayList<>();
         //Buscamos el id del pokemon, para ver si ya esta registrado
         Optional<Pokemon> existente = iPokemonRepository.findByIdJson(pokeId.intValue());
 
@@ -218,28 +235,20 @@ public class EntrenadorService {
             pokeSave = AddPokemon(pokemon);
         } else {
             //Si el pokeAnimal ya estaba registrado, ya no lo volvemos a registrar:
+             pokeSave = existente.get();
         }
 
         //Necesitamos saber a que entrenador se le asiganara el pokemon como favorito, usamos su username para averiguarlo:
         Optional<Entrenador> entrenador = iEntrenadorRepository.findByUsername(user);
-        
+
         if (entrenador.isPresent()) {
             Entrenador entrenador2 = entrenador.get();
-            
+
             int idEntrenador = entrenador2.getIdEntrenador();
             String nombre = entrenador2.getNombre();
 
             //Averiguamos si el usuario ya tiene una pokedex asignada, usando su id: 
             List<PokedexEntrenador> entrenadorPokemon = iPokedexEntrenadorRepository.findByIdEntrenador(idEntrenador);
-
-            //Este objeto representa si un entrenador tiene asignada una pokedex:
-            PokedexEntrenador pokedexDeUsuario = new PokedexEntrenador();
-
-            //Este objeto reporesenta una pokedex:
-            Pokedex pokedexNew = new Pokedex();
-
-            //Este objeto representa la relacion entre una pokedex y un pokemon(Favorito)
-            PokedexPokemon pokeFavorito = new PokedexPokemon();
 
             //Si el usuario no tiene una pokedex asignada:
             if (entrenadorPokemon.isEmpty()) {
@@ -251,9 +260,9 @@ public class EntrenadorService {
                 //Asignarle la pokedex al usuario:
                 pokedexDeUsuario.setIdEntrenador(idEntrenador);
                 pokedexDeUsuario.setIdPokedex(pokedexNew.getIdPokedex());
-                
+
                 iPokedexEntrenadorRepository.save(pokedexDeUsuario);
-                
+
                 idPokedexEntrenador = pokedexNew.getIdPokedex();
                 //Establecemos la id de la nueva pokedex creada:
                 pokeFavorito.setIdPokedex(idPokedexEntrenador);
@@ -262,30 +271,105 @@ public class EntrenadorService {
                 //Si ya tiene una pokedex asignada, usamos esa id para la relacion:
                 idPokedexEntrenador = entrenadorPokemon.get(0).getIdPokedex();
                 pokeFavorito.setIdPokedex(idPokedexEntrenador);
-                
+
             }
 
-            //asignar el pokemon favorito del usuario a su pokedex:
-            pokeFavorito.setIdPokemon(pokeSave.getIdPokemon());
-            iPokedexPokemonRepository.save(pokeFavorito);
-
-            //retornar el objeto que contiene a los pokeFavoritos:
-            favoritos = iPokedexPokemonRepository.findByIdPokedex(idPokedexEntrenador);
-            
+           
         }
+ //asignar el pokemon favorito del usuario a su pokedex:
+            pokeFavorito.setIdPokemon(pokeSave.getIdPokemon());
+            
+            try {
+                iPokedexPokemonRepository.save(pokeFavorito);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+    }
+    
+   
+    
+    public List<FavoritoDTO> GetFavorites(String user) {
         
-        return favoritos;
+        //Este objeto representa la relacion entre una pokedex y un pokemon(Favorito)
+        PokedexPokemon pokeFavorito = new PokedexPokemon();
         
+        //Aqui lmacenaremos la lista de pokemons favoritos del usuario:
+        List<FavoritoDTO> favoritosDTO = new ArrayList<>();
+        
+         //Esta es la lista que representa a los pokemons favoritos:
+        List<PokedexPokemon> favoritos = new ArrayList<>();
+
+        
+        //Obtenemos el id del Usuario por medio de su username:
+        Optional<Entrenador> entrenador = iEntrenadorRepository.findByUsername(user);
+        Entrenador entrenador2 = entrenador.get();
+
+        int idEntrenador = entrenador2.getIdEntrenador();
+
+        //Averiguamos si el usuario ya tiene una pokedex asignada, usando su id: 
+        List<PokedexEntrenador> entrenadorPokemon = iPokedexEntrenadorRepository.findByIdEntrenador(idEntrenador);
+        int idPokedexEntrenador;
+        
+        //Si no tiene pokedex :
+        if(entrenadorPokemon.isEmpty()){
+        
+        }else{
+
+        idPokedexEntrenador = entrenadorPokemon.get(0).getIdPokedex();
+        pokeFavorito.setIdPokedex(idPokedexEntrenador);
+                
+        //retornar el objeto que contiene a los pokeFavoritos:
+        favoritos = iPokedexPokemonRepository.findByIdPokedex(idPokedexEntrenador);
+
+        //Enviar el idJson del pokemon y no el id de la persistencia:
+        for (PokedexPokemon favorito : favoritos) {
+
+            Integer idPokemon = favorito.getIdPokemon();
+
+            Optional<Pokemon> poke = iPokemonRepository.findById(idPokemon.longValue());
+            if (poke.isPresent()) {
+
+                int idJson = poke.get().getIdJson();
+                favoritosDTO.add(new FavoritoDTO(favorito.getIdPokedex(), idJson));
+            }
+        }
+        }
+         return favoritosDTO;
+
     }
     
-    public int Count() {
-        return (int) iEntrenadorRepository.count();
-    }
     
-    public List<PokedexEntrenador> GetFavorites(int idEntrenador) {
-        List<PokedexEntrenador> pokemonesFavs
-                = iPokedexEntrenadorRepository.cargaPokedexCompleta(idEntrenador);
-        return pokemonesFavs;
-    }
+  public boolean deleteFavorite(String username, Long pokeId) {
     
+    // 1. Buscar al entrenador por username
+    Optional<Entrenador> entrenadorOpt = iEntrenadorRepository.findByUsername(username);
+    if (entrenadorOpt.isEmpty()) return false;
+
+    Entrenador entrenador = entrenadorOpt.get();
+    int idEntrenador = entrenador.getIdEntrenador();
+
+    // 2. Buscar la(s) pokedex del entrenador
+    List<PokedexEntrenador> pokedexUser = 
+            iPokedexEntrenadorRepository.findByIdEntrenador(idEntrenador);
+
+    if (pokedexUser.isEmpty()) return false;
+
+    // decidir cuál pokédex usar:
+    
+    
+    // Supongamos que toma la primera por simplicidad:
+    int idPokedex = pokedexUser.get(0).getIdPokedex();
+
+    //  Crear la clave compuesta
+    PokedexPokemonId pk = new PokedexPokemonId(idPokedex, pokeId.intValue());
+
+    // Eliminar usando deleteById
+    if (!iPokedexPokemonRepository.existsById(pk)) {
+        return false; // no existe, no se puede eliminar
+    }
+
+    iPokedexPokemonRepository.deleteById(pk);
+    return true;
+}  
 }
