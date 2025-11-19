@@ -29,44 +29,43 @@ import risosu.it.PokeApiClient.DTO.PokemonDTO;
 @Controller
 @RequestMapping("/pokeControl/standar")
 public class EntrenadorControllerStandar {
-    
+
     private final String url = "http://localhost:8081/api/entrenador";
-    
+
     @PostMapping("/favoritos")
-@ResponseBody
-public ResponseEntity<?> actualizarFavorito(@RequestBody PokeFavoritoDTO pokemon,
-                                            HttpSession session) {
+    @ResponseBody
+    public ResponseEntity<?> actualizarFavorito(@RequestBody PokeFavoritoDTO pokemon,
+            HttpSession session) {
 
-    String user = (String) session.getAttribute("username");
+        String user = (String) session.getAttribute("username");
 
-    if (pokemon.getFavorito()) {
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+        if (pokemon.getFavorito()) {
+            try {
+                RestTemplate restTemplate = new RestTemplate();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
 
-            HttpEntity<?> entity = new HttpEntity<>(pokemon, headers);
+                HttpEntity<?> entity = new HttpEntity<>(pokemon, headers);
 
-            ResponseEntity<List<FavoritosDTO>> responseEntity = restTemplate.exchange(
-                url + "/" + user,
-                HttpMethod.POST,
-                entity,
-                new ParameterizedTypeReference<List<FavoritosDTO>>() {}
-            );
-            
-            List<FavoritosDTO> fav = new ArrayList<>();
-            
-            fav = responseEntity.getBody();
+                ResponseEntity<List<FavoritosDTO>> responseEntity = restTemplate.exchange(
+                        url + "/" + user,
+                        HttpMethod.POST,
+                        entity,
+                        new ParameterizedTypeReference<List<FavoritosDTO>>() {
+                }
+                );
 
-            return ResponseEntity.ok(responseEntity.getBody());
+                List<FavoritosDTO> fav = responseEntity.getBody();
 
-        } catch (Exception e) {
-            System.out.println("Error al actualizar favorito: " + e.getLocalizedMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar favorito");
+                return ResponseEntity.ok(fav);
+
+            } catch (Exception e) {
+                System.out.println("Error al actualizar favorito: " + e.getLocalizedMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar favorito");
+            }
         }
+
+        return ResponseEntity.badRequest().body("No se marcó como favorito");
     }
 
-    return ResponseEntity.badRequest().body("No se marcó como favorito");
-}
-    
 }

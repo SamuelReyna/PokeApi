@@ -48,7 +48,11 @@ public class EntrenadorController {
             if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
                 model.addAttribute("totalUsers", responseEntity.getBody());
             }
-
+            ResponseEntity<Integer> countPokemons
+                    = restTemplate.exchange("http://localhost:8081/api/pokemon/totals", HttpMethod.GET, HttpEntity.EMPTY, Integer.class);
+            if (countPokemons.getStatusCode() == HttpStatusCode.valueOf(200)) {
+                model.addAttribute("totalPokemons", countPokemons.getBody());
+            }
             model.addAttribute("username", session.getAttribute("username"));
             model.addAttribute("role", session.getAttribute("role"));
         }
@@ -142,5 +146,4 @@ public class EntrenadorController {
         return "redirect:/pokeControl/admin/usuarios";
     }
 
- 
 }

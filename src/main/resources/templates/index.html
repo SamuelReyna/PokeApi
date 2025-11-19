@@ -201,7 +201,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dashboardDropdown">
                             <li><a class="dropdown-item" th:href="@{admin/dashboard}"><i class="bi bi-grid-fill me-2"></i> Dashboard</a></li>
-                            <li><a class="dropdown-item" th:href="@{/usuario/perfil}"><i class="bi bi-person-circle me-2"></i> Mi perfil</a></li>
+                            <li><a class="dropdown-item" th:href="@{/pokeControl/profile/{username}(username=${username})}"><i class="bi bi-person-circle me-2"></i> Mis favoritos</a></li>
                             <li><a class="dropdown-item" th:href="@{/pokemon}"><i class="bi bi-file-earmark-text-fill me-2"></i> Lista de pokemones</a></li>
                         </ul>
                     </div>
@@ -350,7 +350,7 @@
                                     data-def=${pokemon.stats[2].base_stat},
                                     data-spa=${pokemon.stats[3].base_stat},
                                     data-spd=${pokemon.stats[4].base_stat},
-                                    data-speed=${pokemon.stats[5].base_stat}"s
+                                    data-speed=${pokemon.stats[5].base_stat}"
 
 
 
