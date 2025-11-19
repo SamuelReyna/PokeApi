@@ -446,239 +446,294 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
 
-        <script>
-                                     let radarChart = null;
+      <script>
+  let radarChart = null;
+  let favoritosSet = new Set(); // ids de favoritos (idJson)
+  document.addEventListener("DOMContentLoaded", () => {
+    cargarTypes();
+    // cargar favoritos iniciales y luego sincronizar UI
+    obtenerFavoritos().then(() => {
+      // Si ya hay pokemones renderizados por Thymeleaf, sincronizamos
+      sincronizarFavoritosUI();
+    });
+    // Delegación de eventos para checkboxes creados dinámicamente
+    bindCheckboxDelegation();
+  });
 
-                                     document.addEventListener("DOMContentLoaded", () => {
-                                         cargarTypes();
-                                     });
+  /* ---------- CARGAR TYPES ---------- */
+  async function cargarTypes() {
+    try {
+      const res = await fetch("https://pokeapi.co/api/v2/type");
+      const data = await res.json();
+      const contenedor = document.getElementById("checkboxList");
+      data.results.forEach(type => {
+        const item = document.createElement("div");
+        item.innerHTML = `<label><input type="checkbox" value="${type.name}" onchange="buscarPorTipos()">${type.name.toUpperCase()}</label>`;
+        contenedor.appendChild(item);
+      });
+    } catch (error) {
+      console.error("Error al cargar types:", error);
+    }
+  }
 
-                                     function cargarPokemon(row) {
-                                         if (radarChart) {
-                                             radarChart.destroy();
-                                         }
+  /* ---------- TOGGLE / LIMPIAR TIPOS ---------- */
+  function toggleCheckboxList() {
+    const lista = document.getElementById("checkboxList");
+    lista.style.display = lista.style.display === "block" ? "none" : "block";
+  }
+  function limpiarTipos() {
+    document.querySelectorAll('#checkboxList input[type="checkbox"]').forEach(c => c.checked = false);
+    buscarPorTipos();
+  }
+  function getSelectedTypes() {
+    return [...document.querySelectorAll("#checkboxList input[type='checkbox']:checked")].map(ch => ch.value);
+  }
+  function buscarPorTipos() {
+    const tipos = getSelectedTypes();
+    const params = new URLSearchParams();
+    tipos.forEach(t => params.append("types", t));
+    const url = tipos.length === 0 ? `/pokeControl/searchByTypes` : `/pokeControl/searchByTypes?${params.toString()}`;
+    fetch(url)
+      .then(res => res.json())
+      .then(data => actualizarTabla(data))
+      .catch(err => console.error("Error al buscar por tipos:", err));
+  }
 
-                                         const name = row.dataset.name;
-                                         const height = row.dataset.height;
-                                         const weight = row.dataset.weight;
-                                         const img = row.dataset.img;
-                                         const imgBack = row.dataset.imgBack;
-                                         const type = row.dataset.types;
-                                         const cry = row.dataset.crie;
+  /* ---------- BUSCAR POR NOMBRE ---------- */
+  function buscarPokemon(nombre) {
+    fetch(`/pokeControl/searchByName?pokeBusqueda=${encodeURIComponent(nombre)}`)
+      .then(res => res.json())
+      .then(data => actualizarTabla(data))
+      .catch(err => console.error("Error:", err));
+  }
 
-                                         const stats = {
-                                             hp: parseInt(row.dataset.hp),
-                                             attack: parseInt(row.dataset.atk),
-                                             def: parseInt(row.dataset.def),
-                                             spa: parseInt(row.dataset.spa),
-                                             spd: parseInt(row.dataset.spd),
-                                             speed: parseInt(row.dataset.speed)
-                                         };
+  /* ---------- CARGAR POKEMON EN PANEL ---------- */
+  function cargarPokemon(row) {
+    if (radarChart) radarChart.destroy();
 
-                                         // Botón de sonido
-                                         const playButton = document.querySelector(".poke-buttons .btn:first-child");
-                                         playButton.setAttribute("data-crie", cry);
+    const name = row.dataset.name;
+    const height = row.dataset.height;
+    const weight = row.dataset.weight;
+    const img = row.dataset.img;
+    const imgBack = row.dataset.imgBack;
+    const cry = row.dataset.crie;
 
-                                         // Imagen frontal
-                                         document.querySelector(".poke-front img").src = img;
+    const stats = {
+      hp: parseInt(row.dataset.hp || 0),
+      attack: parseInt(row.dataset.atk || 0),
+      def: parseInt(row.dataset.def || 0),
+      spa: parseInt(row.dataset.spa || 0),
+      spd: parseInt(row.dataset.spd || 0),
+      speed: parseInt(row.dataset.speed || 0)
+    };
 
-                                         // Configurar radar chart
-                                         const data = {
-                                             labels: ['HP', 'ATK', 'DEF', 'SpA', 'SpD', 'SPD'],
-                                             datasets: [{
-                                                     label: '',
-                                                     data: Object.values(stats),
-                                                     backgroundColor: 'rgba(250, 105, 65, 0.786)',
-                                                     borderColor: '#afe2ff',
-                                                     borderWidth: 1,
-                                                     pointBackgroundColor: 'rgba(255, 99, 132, .5)'
-                                                 }]
-                                         };
+    const playButton = document.querySelector(".poke-buttons .btn:first-child");
+    if (playButton) playButton.setAttribute("data-crie", cry);
 
-                                         const config = {
-                                             type: 'radar',
-                                             data: data,
-                                             options: {
-                                                 scales: {
-                                                     r: {
-                                                         min: 0,
-                                                         max: 120,
-                                                         ticks: {
-                                                             stepSize: 20,
-                                                             display: false
-                                                         },
-                                                         grid: {
-                                                             color: 'rgba(200, 200, 200, 1)'
-                                                         },
-                                                         pointLabels: {
-                                                             font: {
-                                                                 size: 14,
-                                                                 color: 'white'
-                                                             }
-                                                         }
-                                                     }
-                                                 },
-                                                 plugins: {
-                                                     legend: {
-                                                         display: false
-                                                     }
-                                                 }
-                                             }
-                                         };
+    const frontImg = document.querySelector(".poke-front img");
+    if (frontImg) frontImg.src = img || "/pokeBall.png";
 
-                                         radarChart = new Chart(document.getElementById('radarChart'), config);
-                                     }
+    const data = {
+      labels: ['HP', 'ATK', 'DEF', 'SpA', 'SpD', 'SPD'],
+      datasets: [{
+        label: '',
+        data: Object.values(stats),
+        backgroundColor: 'rgba(250, 105, 65, 0.786)',
+        borderColor: '#afe2ff',
+        borderWidth: 1,
+        pointBackgroundColor: 'rgba(255, 99, 132, .5)'
+      }]
+    };
+    const config = {
+      type: 'radar',
+      data: data,
+      options: {
+        scales: { r: { min: 0, max: 120, ticks: { stepSize: 20, display: false }, grid: { color: 'rgba(200,200,200,1)' }, pointLabels: { font: { size: 14, color: 'white' } } } },
+        plugins: { legend: { display: false } }
+      }
+    };
+    radarChart = new Chart(document.getElementById('radarChart'), config);
+  }
 
-                                     function reproducirCry(button) {
-                                         const cry = button.getAttribute("data-crie");
-                                         if (cry) {
-                                             new Audio(cry).play();
-                                         } else {
-                                             alert("No hay cry disponible.");
-                                         }
-                                     }
+  function reproducirCry(button) {
+    const cry = button.getAttribute("data-crie");
+    if (cry) new Audio(cry).play();
+    else alert("No hay cry disponible.");
+  }
 
-                                     function limpiarTipos() {
-                                         document.querySelectorAll('#checkboxList input[type="checkbox"]').forEach(c => c.checked = false);
-                                         buscarPorTipos();
-                                     }
+  /* ---------- ACTUALIZAR TABLA (dinámica) ---------- */
+  function actualizarTabla(pokemones) {
+    const cuerpo = document.getElementById("tabla-pokemones");
+    cuerpo.innerHTML = "";
 
-                                     // Obtener tipos seleccionados
-                                     function getSelectedTypes() {
-                                         return [...document.querySelectorAll("#checkboxList input[type='checkbox']:checked")]
-                                                 .map(ch => ch.value);
-                                     }
+    if (!pokemones || pokemones.length === 0) {
+      cuerpo.innerHTML = `<tr><td colspan="5" class="text-center text-white">No se encontraron Pokémon.</td></tr>`;
+      return;
+    }
 
-                                     // Cargar tipos desde la API
-                                     async function cargarTypes() {
-                                         try {
-                                             const res = await fetch("https://pokeapi.co/api/v2/type");
-                                             const data = await res.json();
-                                             const contenedor = document.getElementById("checkboxList");
+    pokemones.forEach(pokemon => {
+      const typeNames = (pokemon.types || []).filter(t => t.name).map(t => t.name).join(' ');
+      const fila = document.createElement("tr");
+      fila.className = "poke-fila p-2 mb-2 align-items-center";
+      fila.setAttribute("onclick", "cargarPokemon(this)");
 
-                                             data.results.forEach(type => {
-                                                 const item = document.createElement("div");
-                                                 item.innerHTML = `
-                     <label>
-                         <input type="checkbox" value="${type.name}" onchange="buscarPorTipos()">
-                         ${type.name.toUpperCase()}
-                     </label>`;
-                                                 contenedor.appendChild(item);
-                                             });
+      // data attributes
+      fila.dataset.id = pokemon.id;
+      fila.dataset.name = pokemon.name;
+      fila.dataset.height = pokemon.height;
+      fila.dataset.weight = pokemon.weight;
+      fila.dataset.img = (pokemon.sprites && pokemon.sprites[0]) ? pokemon.sprites[0].front_default : "";
+      fila.dataset.imgBack = (pokemon.sprites && pokemon.sprites[0]) ? pokemon.sprites[0].back_default : "";
+      fila.dataset.types = typeNames;
+      fila.dataset.crie = (pokemon.cries && pokemon.cries[0]) ? pokemon.cries[0].latest : "";
+      fila.dataset.hp = (pokemon.stats && pokemon.stats[0]) ? pokemon.stats[0].base_stat : 0;
+      fila.dataset.atk = (pokemon.stats && pokemon.stats[1]) ? pokemon.stats[1].base_stat : 0;
+      fila.dataset.def = (pokemon.stats && pokemon.stats[2]) ? pokemon.stats[2].base_stat : 0;
+      fila.dataset.spa = (pokemon.stats && pokemon.stats[3]) ? pokemon.stats[3].base_stat : 0;
+      fila.dataset.spd = (pokemon.stats && pokemon.stats[4]) ? pokemon.stats[4].base_stat : 0;
+      fila.dataset.speed = (pokemon.stats && pokemon.stats[5]) ? pokemon.stats[5].base_stat : 0;
 
-                                         } catch (error) {
-                                             console.error("Error al cargar types:", error);
-                                         }
-                                     }
+      // checkbox HTML con todos los data-* necesarios
+      const imgFront = fila.dataset.img || "/pokeBall.png";
+      const checkboxId = `checkbox-${pokemon.id}`;
 
-                                     // Mostrar u ocultar lista
-                                     function toggleCheckboxList() {
-                                         const lista = document.getElementById("checkboxList");
-                                         lista.style.display = lista.style.display === "block" ? "none" : "block";
-                                     }
+      fila.innerHTML = `
+        <td><img src="${imgFront}" class="pokemon-picture" /></td>
+        <td><div><span>${pokemon.order || ""}</span> <span>${pokemon.name}</span></div></td>
+        <td><div><span>${typeNames}</span></div></td>
+        <td><div><i class="bi bi-arrows-vertical"></i> ${pokemon.height}</div><div><i class="bi bi-arrows"></i> ${pokemon.weight}</div></td>
+        <td>
+          <div class="checkbox-container">
+            <input type="checkbox" class="poke-checkbox" id="${checkboxId}"
+                   data-id="${pokemon.id}"
+                   data-name="${pokemon.name}"
+                   data-type="${(pokemon.types && pokemon.types[0])? pokemon.types[0].name : ''}"
+                   data-height="${pokemon.height}"
+                   data-weight="${pokemon.weight}"
+                   data-img="${fila.dataset.img}"
+                   data-img-back="${fila.dataset.imgBack}"
+                   data-crie="${fila.dataset.crie}"
+                   data-hp="${fila.dataset.hp}"
+                   data-atk="${fila.dataset.atk}"
+                   data-def="${fila.dataset.def}"
+                   data-spa="${fila.dataset.spa}"
+                   data-spd="${fila.dataset.spd}"
+                   data-speed="${fila.dataset.speed}" />
+            <label for="${checkboxId}" class="checkmark"></label>
+          </div>
+        </td>
+      `;
 
-                                     // Buscar por tipos
-                                     function buscarPorTipos() {
-                                         const tipos = getSelectedTypes();
+      cuerpo.appendChild(fila);
+    });
 
-                                         const params = new URLSearchParams();
-                                         tipos.forEach(t => params.append("types", t));
+    // Después de re-crear la tabla, sincronizamos el estado de favoritos en la UI
+    sincronizarFavoritosUI();
+  }
 
-                                         const url = tipos.length === 0
-                                                 ? `/pokeControl/searchByTypes`
-                                                 : `/pokeControl/searchByTypes?${params.toString()}`;
+  /* ---------- FAVORITOS: delegación + fetch ---------- */
+  function bindCheckboxDelegation() {
+    const tbody = document.getElementById("tabla-pokemones");
+    // delegación: cuando un input.poke-checkbox cambia, manejamos la petición
+    tbody.addEventListener("change", function(e) {
+      const target = e.target;
+      if (target && target.classList && target.classList.contains("poke-checkbox")) {
+        // evitar que el click active el onclick de la fila (si el navegador lo intenta)
+        e.stopPropagation();
 
-                                         fetch(url)
-                                                 .then(res => res.json())
-                                                 .then(data => actualizarTabla(data))
-                                                 .catch(err => console.error("Error al buscar por tipos:", err));
-                                     }
+        const estado = target.checked;
+        const pokemon = {
+          idPokemon: parseInt(target.dataset.id),
+          favorito: estado,
+          nombre: target.dataset.name,
+          tipo: target.dataset.type,
+          altura: target.dataset.height,
+          peso: target.dataset.weight,
+          img: target.dataset.img,
+          imgBack: target.dataset.imgBack,
+          crie: target.dataset.crie,
+          hp: target.dataset.hp,
+          atk: target.dataset.atk,
+          def: target.dataset.def,
+          spa: target.dataset.spa,
+          spd: target.dataset.spd,
+          speed: target.dataset.speed
+        };
 
-                                     function buscarPokemon(nombre) {
-                                         fetch(`/pokeControl/searchByName?pokeBusqueda=${encodeURIComponent(nombre)}`)
-                                                 .then(res => res.json())
-                                                 .then(data => actualizarTabla(data))
-                                                 .catch(err => console.error("Error:", err));
-                                     }
+        fetch('/pokeControl/standar/favoritos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(pokemon)
+        })
+        .then(res => {
+          if (!res.ok) return res.text().then(t => Promise.reject(t));
+          return res.json();
+        })
+        .then(data => {
+          console.log('Actualización exitosa:', data);
+          // actualizar set local para mantener UI consistente
+          if (pokemon.favorito) favoritosSet.add(pokemon.idPokemon);
+          else favoritosSet.delete(pokemon.idPokemon);
+        })
+        .catch(err => {
+          console.error('Error al actualizar favorito:', err);
+          // opcional: revertir checkbox si falla
+          target.checked = !target.checked;
+        });
+      }
+    });
 
-                                     // Actualizar tabla con pokemons recibidos
-                                     function actualizarTabla(pokemones) {
-                                         const cuerpo = document.getElementById("tabla-pokemones");
-                                         cuerpo.innerHTML = "";
+    // Evitar que clic en checkbox dispare el onclick de la fila (al hacer click en label/input)
+    tbody.addEventListener("click", function(e) {
+      const target = e.target;
+      if (target && (target.classList && target.classList.contains("poke-checkbox") || target.tagName === 'LABEL')) {
+        e.stopPropagation();
+      }
+    }, true);
+  }
 
-                                         if (!pokemones || pokemones.length === 0) {
-                                             cuerpo.innerHTML = `<tr><td colspan="4" class="text-center text-white">No se encontraron Pokémon.</td></tr>`;
-                                             return;
-                                         }
+  async function obtenerFavoritos() {
+    try {
+      const res = await fetch(`/pokeControl/standar/getFavoritos`);
+      if (!res.ok) {
+        console.error("Error al obtener favoritos");
+        return;
+      }
+      const favoritos = await res.json();
+      // asumes que la respuesta es un array con campo idJson (según tu código anterior)
+      favoritosSet = new Set((favoritos || []).map(f => parseInt(f.idJson)));
+      return favoritosSet;
+    } catch (err) {
+      console.error("Error al obtener favoritos:", err);
+    }
+  }
 
-                                         pokemones.forEach(pokemon => {
-                                             const typeNames = pokemon.types
-                                                     .filter(t => t.name)
-                                                     .map(t => t.name)
-                                                     .join(' ');
+  function sincronizarFavoritosUI() {
+    // marca/desmarca checkboxes según favoritosSet
+    document.querySelectorAll('.poke-checkbox').forEach(cb => {
+      const idJson = parseInt(cb.dataset.id);
+      cb.checked = favoritosSet.has(idJson);
+    });
+  }
 
-                                             const fila = document.createElement("tr");
-                                             fila.className = "poke-fila p-2 mb-2 align-items-center";
-                                             fila.setAttribute("onclick", "cargarPokemon(this)");
+  /* ---------- Si necesitas exponer una función para recargar favoritos desde fuera ---------- */
+  async function recargarFavoritosYUI() {
+    await obtenerFavoritos();
+    sincronizarFavoritosUI();
+  }
 
-                                             // data attributes
-                                             fila.dataset.id = pokemon.id;
-                                             fila.dataset.name = pokemon.name;
-                                             fila.dataset.height = pokemon.height;
-                                             fila.dataset.weight = pokemon.weight;
-                                             fila.dataset.img = pokemon.sprites[0].front_default;
-                                             fila.dataset.imgBack = pokemon.sprites[0].back_default;
-                                             fila.dataset.types = typeNames;
-                                             fila.dataset.crie = pokemon.cries[0].latest;
-                                             fila.dataset.hp = pokemon.stats[0].base_stat;
-                                             fila.dataset.atk = pokemon.stats[1].base_stat;
-                                             fila.dataset.def = pokemon.stats[2].base_stat;
-                                             fila.dataset.spa = pokemon.stats[3].base_stat;
-                                             fila.dataset.spd = pokemon.stats[4].base_stat;
-                                             fila.dataset.speed = pokemon.stats[5].base_stat;
+  /* ---------- Botón de reproducir (delegado en DOM ya existe) ---------- */
+  document.addEventListener("click", function(e) {
+    const btn = e.target.closest && e.target.closest(".poke-buttons .btn");
+    if (btn && btn.matches(".poke-buttons .btn")) {
+      // si es el primer botón (reproducir)
+      if (btn.querySelector(".bi-play-fill")) reproducirCry(btn);
+    }
+  });
 
-                                             fila.innerHTML = `
-                 <td>
-                     <img src="${pokemon.sprites[0].front_default}" class="pokemon-picture" />
-                 </td>
-                 <td>
-                     <div><span>${pokemon.order}</span> <span>${pokemon.name}</span></div>
-                 </td>
-                 <td>
-                     <div><span>${typeNames}</span></div>
-                 </td>
-                 <td>
-                     <div><i class="bi bi-arrows-vertical"></i> ${pokemon.height}</div>
-                     <div><i class="bi bi-arrows"></i> ${pokemon.weight}</div>
-                 </td>
-                 <td>
-                     <div class="checkbox-container">
-                         <input type="checkbox" class="poke-checkbox" data-id="${pokemon.id}">
-                         <label class="checkmark"></label>
-                     </div>
-                 </td>`;
+</script>
 
-                                             cuerpo.appendChild(fila);
-                                         });
 
-                                         // añadir eventos a checkboxes
-                                         document.querySelectorAll('.poke-checkbox').forEach(cb => {
-                                             cb.addEventListener('change', function () {
-                                                 const pokemonId = this.dataset.id;
-                                                 const favorito = this.checked;
-
-                                                 fetch('/pokeControl/standar/favoritos', {
-                                                     method: 'POST',
-                                                     headers: {'Content-Type': 'application/json'},
-                                                     body: JSON.stringify({idPokemon: pokemonId, favorito})
-                                                 })
-                                                         .then(res => res.json())
-                                                         .then(data => console.log('Favorito actualizado:', data))
-                                                         .catch(err => console.error(err));
-                                             });
-                                         });
-                                     }
-        </script>
 
 
     </body>
