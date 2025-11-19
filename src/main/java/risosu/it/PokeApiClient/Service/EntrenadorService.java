@@ -348,8 +348,7 @@ public class EntrenadorService {
             return false;
         }
 
-        Entrenador entrenador = entrenadorOpt.get();
-        int idEntrenador = entrenador.getIdEntrenador();
+        Entrenador entrenador = entrenadorOpt.get();        int idEntrenador = entrenador.getIdEntrenador();
 
         // 2. Buscar la(s) pokedex del entrenador
         List<PokedexEntrenador> pokedexUser
@@ -362,16 +361,28 @@ public class EntrenadorService {
         // decidir cuál pokédex usar:
         // Supongamos que toma la primera por simplicidad:
         int idPokedex = pokedexUser.get(0).getIdPokedex();
+        
+        
+        //Buscar al pokemon por su idJson y obtener el id de BD:
+       Optional<Pokemon> pokeObj =  iPokemonRepository.findByIdJson(pokeId.intValue());
+        Pokemon poke = pokeObj.get();
+        int idPokemon = poke.getIdPokemon();
+        
 
         //  Crear la clave compuesta
-        PokedexPokemonId pk = new PokedexPokemonId(idPokedex, pokeId.intValue());
+        PokedexPokemonId pk = new PokedexPokemonId(idPokedex, idPokemon);
 
         // Eliminar usando deleteById
         if (!iPokedexPokemonRepository.existsById(pk)) {
             return false; // no existe, no se puede eliminar
         }
 
-        iPokedexPokemonRepository.deleteById(pk);
+        try {
+            iPokedexPokemonRepository.deleteById(pk);
+        } catch (Exception e) {
+            System.out.println("error:" +  e.getLocalizedMessage());
+           
+        }
         return true;
     }
 }
