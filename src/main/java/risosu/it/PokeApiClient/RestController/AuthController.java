@@ -26,6 +26,7 @@ import risosu.it.PokeApiClient.Service.VerifyTokenService;
 import risosu.it.PokeApiClient.Service.EmailService;
 import risosu.it.PokeApiClient.DTO.Password;
 import risosu.it.PokeApiClient.JPA.Rol;
+import risosu.it.PokeApiClient.DTO.EntrenadorDTO;
 
 @RestController
 @RequestMapping("auth")
@@ -551,14 +552,23 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity Register(@RequestBody Entrenador entrenador) {
-        entrenador.setVerify(0);
-        entrenador.setEstado(0);
-        entrenador.rol = new Rol();
-        entrenador.rol.setIdrol(2);
-        Entrenador newEntrenador = entrenadorService.Add(entrenador);
+    public ResponseEntity Register(@RequestBody EntrenadorDTO entrenador) {
 
-        String token = verifyTokenService.GenerateToken(entrenador.getIdEntrenador());
+        Entrenador entrenadorJPA = new Entrenador();
+        entrenadorJPA.setNombre(entrenador.getNombre());
+        entrenadorJPA.setApellidoPaterno(entrenador.getApellidoPaterno());
+        entrenadorJPA.setApellidoMaterno(entrenador.getApellidoMaterno());
+        entrenadorJPA.setCorreo(entrenador.getCorreo());
+        entrenadorJPA.setPassword(entrenador.getPassword());
+        entrenadorJPA.setSexo(entrenador.getSexo());
+        entrenadorJPA.setUsername(entrenador.getUsername());
+        entrenadorJPA.setVerify(0);
+        entrenadorJPA.setEstado(0);
+        entrenadorJPA.rol.setIdrol(2);
+
+        Entrenador newEntrenador = entrenadorService.Add(entrenadorJPA);
+
+        String token = verifyTokenService.GenerateToken(entrenadorJPA.getIdEntrenador());
 
         // 🔗 Enlace de verificación
         String linkVerificar = "http://localhost:8080/usuario/verifyAccount?token=" + token;
@@ -667,7 +677,7 @@ public class AuthController {
                 + "</body>\n"
                 + "</html>";
 
-        emailService.sendEmail(entrenador.getCorreo(), "Activación de cuenta", html);
+        emailService.sendEmail(entrenadorJPA.getCorreo(), "Activación de cuenta", html);
 
         if (newEntrenador.getIdEntrenador() > 0) {
             return ResponseEntity.ok(entrenador);

@@ -21,6 +21,7 @@ public class EntrenadorDTO {
     private int Estado;
     private int Verify;
 
+
     public int getVerify() {
         return Verify;
     }
