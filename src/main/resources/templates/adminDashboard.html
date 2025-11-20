@@ -228,7 +228,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="userMenu">
                     <li><a class="dropdown-item" th:href="@{/usuario/profile/{username}(username=${username})}">Perfil</a></li>
-                    <li><a class="dropdown-item" href="#">Ajustes</a></li>
+                    <li><a class="dropdown-item" th:href="@{/usuario/ajustes/{username}(username=${username})}">Ajustes</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" th:href="@{/usuario/logout}">Cerrar sesión</a></li>
                 </ul>
