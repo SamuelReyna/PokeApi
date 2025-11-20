@@ -91,7 +91,7 @@ public class AuthController {
 
             String token = passwordResetTokenService.GenerateToken(entrenador.getIdEntrenador());
 
-            String linkRestablecer = "http://localhost:8080/usuario/changePassword?token=" + token;
+            String linkRestablecer = "http://192.167.0.175:8080/usuario/changePassword?token=" + token;
 
             String html = """
                           <!DOCTYPE html>
@@ -343,7 +343,7 @@ public class AuthController {
             String token = verifyTokenService.GenerateToken(entrenador.getIdEntrenador());
 
             // 🔗 Enlace de verificación
-            String linkVerificar = "http://localhost:8080/auth/verifyAccount?token=" + token;
+            String linkVerificar = "http://192.167.0.175:8080/auth/verifyAccount?token=" + token;
 
             String html = """
                           <!DOCTYPE html>
@@ -530,7 +530,7 @@ public class AuthController {
                           <body>
                               <div class="container">
                                   <div class="header">
-                                      <h1>Contrase\u00f1a Actualizada</h1>
+                                      <h1>Cuenta validada</h1>
                                   </div>
                                   <div class="content">
                                       <p>\u00a1Hola """ + entreadorExist.getUsername() + "!</p>\n"
@@ -572,7 +572,7 @@ public class AuthController {
         String token = verifyTokenService.GenerateToken(entrenadorJPA.getIdEntrenador());
 
         // 🔗 Enlace de verificación
-        String linkVerificar = "http://localhost:8080/usuario/verifyAccount?token=" + token;
+        String linkVerificar = "http://192.167.0.175:8080/usuario/verifyAccount?token=" + token;
 
         String html = """
                           <!DOCTYPE html>
@@ -661,7 +661,7 @@ public class AuthController {
                           <body>
                               <div class="container">
                                   <div class="header">
-                                      <h1>\u00a1Bienvenido """ + entrenador.getUsername() + "!</h1>\n"
+                                      <h1>\u00a1Bienvenido   """ + entrenador.getUsername() + "!</h1>\n"
                 + "        </div>\n"
                 + "        <div class=\"content\">\n"
                 + "            <div class=\"pokeball\"></div>\n"

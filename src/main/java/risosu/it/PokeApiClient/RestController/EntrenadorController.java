@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import risosu.it.PokeApiClient.DTO.PokeFavoritoDTO;
 import risosu.it.PokeApiClient.DTO.EntrenadorDTO;
+import risosu.it.PokeApiClient.DTO.Password;
 import risosu.it.PokeApiClient.Service.EntrenadorService;
 import risosu.it.PokeApiClient.JPA.Entrenador;
 import risosu.it.PokeApiClient.JPA.Pokemon;
@@ -77,6 +78,15 @@ public class EntrenadorController {
         rol.setIdrol(entrenador.rol.getIdRol());
         entrenadorBD.setRol(rol);
         return ResponseEntity.ok(entrenadorService.patchEntrenador(idEntrenador, entrenadorBD));
+    }
+
+    @PatchMapping("/{idEntrenador}/password")
+    public ResponseEntity ChangePassword(@PathVariable("idEntrenador") Long idEntrenador, @RequestBody Password password) {
+        Entrenador entrenador = new Entrenador();
+        if (password.getPassword().equals(password.getConfirmPassword())) {
+            entrenador.setPassword(password.getPassword());
+        }
+        return ResponseEntity.ok(entrenadorService.patchEntrenador(idEntrenador, entrenador));
     }
 
     @PatchMapping("/{idEntrenador}/estado")
