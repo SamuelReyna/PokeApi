@@ -45,7 +45,9 @@ margin: 10px;
      padding: 30px;
      display: flex;
     justify-content: center;
-    height: 400px;
+    min-height: 400px;
+  height: auto;
+
     box-shadow: #222;
     perspective: 1000px; /* necesario en el contenedor para que gire */
     
@@ -67,8 +69,9 @@ margin: 10px;
 
 .poke-vista{
        
-        width: 220px;              /* tamaño fijo para evitar problemas de cálculo de 100% */
-        height: 210px;
+        max-width:  190px;
+        min-width: 130px;/* tamaño fijo para evitar problemas de cálculo de 100% */
+        height: 150px;
         padding: 10px;
         position: relative;
         transform-style: preserve-3d;
@@ -593,3 +596,286 @@ input:checked + .slider {
   margin-bottom: 8px;
 }
 
+/*Estilos de login-------------------------------------------------------------*/
+
+            body.login {
+                background-image: url('pokePaisaje.png');
+                background-size: cover;
+                background-position: center;
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: 'Press Start 2P', monospace;
+                color: #1a2e1a;
+                text-transform: uppercase;
+            }
+
+            
+            .gameboy-frame {
+                background: #cfcab3;
+                /*borde transparente*/
+                border: 10px solid rgba(255, 255, 255, 0.3);
+                border-radius: 20px;
+                padding: 25px;
+                width: 380px;
+                box-shadow: inset 0 0 10px rgba(9, 5, 46, 0.5), 0 10px 20px rgba(0,0,0,0.7);
+            }
+
+            .screen {
+                background: #ebff91;
+                
+                box-shadow: 0 0 1px #afec08, 0 0 40px
+#b8f851, 0 0 50px #ccff15;  /* efecto de resplandor wiccs!*/
+                border-radius: 10px;
+                padding: 25px;
+                
+                text-align: center;
+            }
+
+            .screen h2 {
+                font-size: 10px;
+                margin-bottom: 20px;
+            }
+
+            .form-control {
+                background: #c2d16d;
+                border: 2px solid #1a2e1a;
+                border-radius: 5px;
+                color: #1a2e1a;
+                font-size: 10px;
+            }
+
+            .form-control::placeholder {
+                color: #2d4a2d;
+            }
+
+            .form-control:focus {
+                box-shadow: none;
+                background: #b9cc6a;
+                border-color: #1a2e1a;
+            }
+
+            .btn-start {
+                background: #1a2e1a;
+                color: #9bbc0f;
+                border: 3px solid #3a3a3a;
+                font-size: 10px;
+                padding: 10px 20px;
+                border-radius: 50px;
+                transition: 0.2s;
+            }
+
+            .btn-start:hover {
+                background: #3a3a3a;
+                transform: scale(1.05);
+            }
+
+            .link {
+                color: #1a2e1a;
+                font-size: 9px;
+                display: inline-block;
+                margin-top: 15px;
+            }
+
+            .link a {
+                color: #1a2e1a;
+                text-decoration: underline;
+            }
+
+            .link a:hover {
+                color: #000;
+            }
+
+            /* Botones decorativos (como la consola Game Boy) */
+            .gb-buttons {
+                display: flex;
+                justify-content: center;
+                margin-top: 25px;
+                gap: 15px;
+            }
+
+            .btn-a, .btn-b {
+                width: 40px;
+                height: 40px;
+                background: #c4d1fe;
+                border-radius: 50%;
+                border: 3px solid #e1eafc;
+                box-shadow: 0 0 1px #afdffb, 0 0 40px
+#5151f8, 0 0 10px #93c2e4;  /* efecto de resplandor wiccs!*/
+              
+            }
+
+            .btn-b {
+                background: #963030;
+            }
+
+
+/*Estilos de tipos*/
+  
+            .pokeBuscador {
+                position: relative;
+            }
+            body{
+                font-family: 'Press Start 2P', monospace;
+                color: #1a2e1a;
+                text-transform: uppercase;
+            }
+
+            .pokeInput {
+                background-color: rgba(255, 255, 255, 0.9);
+                border: 2px solid #ffcb05; /* color Pikachu */
+                border-radius: 20px;
+                padding-left: 10px;
+                font-family: 'Press Start 2P', cursive;
+                font-size: 10px;
+                color: #2a75bb; /* azul Pokémon */
+                transition: all 0.3s ease;
+                width: 180px;
+            }
+
+            .pokeInput::placeholder {
+                color: #3b4cca;
+                opacity: 0.7;
+            }
+
+            .pokeInput:focus {
+                outline: none;
+                box-shadow: 0 0 5px 2px #ffcb05;
+                background-color: #fff;
+            }
+
+            .pokeBuscador button {
+                border-radius: 20px;
+                font-family: 'Press Start 2P', cursive;
+                font-size: 10px;
+                border: 2px solid #ffcb05;
+                color: #fff;
+                background-color: #3b4cca;
+                transition: 0.3s;
+            }
+
+            .pokeBuscador button:hover {
+                background-color: #2a75bb;
+            }
+            /* Igual que el estilo de tu input de buscador */
+            .pokeSelect {
+                background-color: #2c2f3f;
+                border: 1px solid #b3ffbc;
+                color: white;
+                padding: 8px 12px;
+                border-radius: 8px;
+                cursor: pointer;
+                
+            }
+
+            .pokeSelect:hover {
+                background-color: #3a3d52;
+            }
+
+            .checkbox-list {
+                border: 1px solid #444;
+                background: #2c2f3f;
+                color: white;
+                width: 200px;
+                border-radius: 8px;
+                padding: 10px;
+                margin-top: 4px;
+                display: none;
+                position: absolute;
+                z-index: 1000;
+                max-height: 250px;
+                overflow-y: auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            }
+
+            .checkbox-list label {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px;
+                border-radius: 6px;
+                cursor: pointer;
+            }
+
+            .checkbox-list label:hover {
+                background: #3a3d52;
+            }
+
+            .checkbox-list input[type="checkbox"] {
+                accent-color: #ffcb05; /* Color amarillo Pokémon */
+                width: 16px;
+                height: 16px;
+                cursor: pointer;
+            }
+            /* CONTENEDOR PRINCIPAL (simula el input) */
+            .pokeSelect {
+             
+                background-color: rgba(65, 211, 138, 0.795);
+                  backdrop-filter: blur(5px);
+                border-radius: 15px;
+                padding: 8px 10px;
+                width: 80px;
+                cursor: pointer;
+
+                font-family: 'Press Start 2P', cursive;
+                font-size: 10px;
+                
+                transition: all 0.3s ease;
+                text-align: left;
+            }
+
+            .pokeSelect:hover {
+                background-color: #d4ffae;
+                   box-shadow: 0 0 10px #c8ffc7, 0 0 40px
+#aaffca, 0 0 80px #b6ff6d;  /* efecto de resplandor wiccs!*/
+            }
+
+            /* LISTA DESPLEGABLE */
+            .checkbox-list {
+                position: absolute;
+                background-color: rgba(255, 255, 255, 0.97);
+                border: 2px solid #cbffea;
+                border-radius: 20px;
+                padding: 12px;
+                margin-top: 6px;
+                width: 180px;
+
+                display: none;
+                max-height: 100px;
+                overflow-y: auto;
+                z-index: 100000;
+
+                font-family: 'Press Start 2P', cursive;
+                font-size: 10px;
+                color: #2a75bb;
+                box-shadow: 0 0 10px #9adaff, 0 0 40px
+#63ffce, 0 0 80px #89b5ff;  /* efecto de resplandor wiccs!*/
+            }
+
+            /* ELEMENTOS INTERNOS */
+            .checkbox-list label {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+
+                padding: 6px 4px;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+
+            .checkbox-list label:hover {
+                background-color: #dbeafe; /* azul claro */
+            }
+
+            /* CHECKBOX POKEMON STYLE (amarillo) */
+            .checkbox-list input[type="checkbox"] {
+                width: 14px;
+                height: 14px;
+                accent-color: #ffcb05;
+                cursor: pointer;
+                border-radius: 4px;
+            }
+
+
+        
