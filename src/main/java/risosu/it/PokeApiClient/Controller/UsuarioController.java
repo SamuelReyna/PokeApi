@@ -88,6 +88,21 @@ public class UsuarioController {
         return "profile";
     }
 
+    @GetMapping("/ajustes/{username}")
+    public String ajustes(@PathVariable("username") String username, Model model) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<Entrenador> responseEntity
+                = restTemplate.exchange("http://localhost:8081/api/entrenador/" + username + "/username", HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<Entrenador>() {
+                });
+        if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
+            Entrenador entrenador = responseEntity.getBody();
+            model.addAttribute("entrenador", entrenador);
+        }
+
+        return "password";
+    }
+
     @PostMapping("/login")
     public String Login(@ModelAttribute("Entrenador") Entrenador entrenador,
             HttpSession session,
