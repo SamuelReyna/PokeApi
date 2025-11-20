@@ -123,12 +123,13 @@ public class EntrenadorService {
             entrenador.setCorreo(cambios.getCorreo());
         }
         if (cambios.getPassword() != null && !cambios.getPassword().isEmpty()) {
-            entrenador.setPassword(cambios.getPassword());
+            entrenador.setPassword(passwordEnconder.encode(cambios.getPassword()));
         }
         if (cambios.getUsername() != null && !cambios.getUsername().isEmpty()) {
             entrenador.setUsername(cambios.getUsername());
         }
         if (cambios.getRol() != null) {
+
             entrenador.setRol(cambios.getRol());
         }
         if (cambios.getEstado() == 1) { // si 0 no es válido como valor de cambio
