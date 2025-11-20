@@ -23,8 +23,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import risosu.it.PokeApiClient.DTO.Password;
 import risosu.it.PokeApiClient.Service.PokeService;
 import risosu.it.PokeApiClient.ML.Entrenador;
 import risosu.it.PokeApiClient.ML.Pokemon;
@@ -140,6 +142,30 @@ public class EntrenadorController {
             redirectAttributes.addFlashAttribute("message", "Éxito al guardar usuario");
         }
         return "redirect:/pokeControl/admin/usuarios";
+    }
+
+    @PostMapping("/usuarios/password")
+    public String password(RedirectAttributes redirectAttributes, @RequestParam("idEntrenador") int idEntrenador, @RequestParam("username") String username, Model model, @ModelAttribute("password") Password password) {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+
+        if (!password.getPassword().equals(password.getConfirmPassword())) {
+            redirectAttributes.addAttribute("message", "Las contraseñas no coinciden");
+            return "redirect:/usuario/ajustes/" + username;
+            // manejar error
+        }
+        HttpEntity<Password> entity = new HttpEntity<>(password);
+        ResponseEntity<Entrenador> responseEntity
+                = restTemplate.exchange("http://localhost:8081/api/entrenador/" + idEntrenador + "/password",
+                        HttpMethod.PATCH,
+                        entity, new ParameterizedTypeReference<Entrenador>() {
+                });
+        if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
+            return "redirect:/usuario/ajustes/" + username;
+
+        }
+
+        return "redirect:/password/" + username;
     }
 
     @GetMapping("/usuarios/delete/{idEntrenador}")

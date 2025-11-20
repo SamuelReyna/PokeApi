@@ -89,7 +89,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/ajustes/{username}")
-    public String ajustes(@PathVariable("username") String username, Model model) {
+    public String ajustes(@PathVariable("username") String username, Model model, @ModelAttribute("password") Password password) {
         RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity<Entrenador> responseEntity
