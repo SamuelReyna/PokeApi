@@ -564,6 +564,7 @@ public class AuthController {
         entrenadorJPA.setUsername(entrenador.getUsername());
         entrenadorJPA.setVerify(0);
         entrenadorJPA.setEstado(0);
+        entrenadorJPA.rol = new Rol();
         entrenadorJPA.rol.setIdrol(2);
 
         Entrenador newEntrenador = entrenadorService.Add(entrenadorJPA);
