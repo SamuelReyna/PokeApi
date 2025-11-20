@@ -1,4 +1,7 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
 
     <head>
         <title>Inicio</title>
@@ -187,120 +190,8 @@
 
 
 
-        <div class="container">
-            <script>
-
-            </script>
-
-            
-
-        
-            <nav  class="navbar navbar-expand-lg navbar-light navStyle mb-4 navTamaño">
-                <div class="container navcontenido">
-
-                    <!-- Enlace de Inicio -->
-                    <a class="navbar-brand text-white d-flex align-items-center" th:href="@{/pokemon}">
-                        <i class="bi bi-house-door-fill me-2"></i> Inicio
-                    </a>
-                   
-                    <!-- Botón para colapsar en móviles -->
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-                            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <!-- Contenido del navbar -->
-                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        
-                        <div th:if="${token} == null" class="navbar-nav ms-auto align-items-center">
-
-                            <!-- Registrar -->
-                            <a th:href="@{/usuario/register}" class="nav-item nav-link text-white d-flex align-items-center me-3">
-                                <i class="bi bi-person-plus-fill me-1"></i> Registrar
-                            </a>
-
-                            <!-- Iniciar sesión -->
-                            <a th:href="@{/usuario/login}" class="nav-item nav-link text-white d-flex align-items-center">
-                                <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar sesión
-                            </a>
-                        </div>
-                        
-                        <div th:if="${token} != null" class="navbar-nav ms-auto align-items-center">
-
-
-
-
-
-                            <!-- PokeBuscador integrado -->
-
-
-                            <input 
-
-
-                                id="pokeBuscador" 
-
-
-                                type="text" 
-
-
-                                class="form-control pokeBuscadorInput" 
-
-
-                                placeholder="Buscar Pokémon..."
-
-
-                                aria-label="Buscar Pokémon"
-
-
-                                oninput="buscarPokemon(this.value)">
-
-
-                            <i class="bi bi-search text-white ms-2"></i>
-
-
-
-
-
-                            <!-- Usuario -->
-
-
-                            <a th:href="@{/usuario/profile/{username}(username=${username})}" class="nav-item nav-link text-white d-flex align-items-center me-3">
-
-
-                                <i class="bi bi-person-fill me-1"></i>
-
-
-                                <span th:text="${username}">Entrenador</span>
-
-
-                            </a>
-
-
-
-
-
-                            <!-- Logout -->
-
-
-                            <a th:href="@{/usuario/logout}" class="nav-item nav-link text-white d-flex align-items-center">
-
-
-                                <i class="bi bi-box-arrow-right me-1"></i> Cerrar sesión
-
-
-                            </a>
-
-
-                        </div>
-                        
-                    </div>
-
-
-
-            </nav>
-
-
-
+        <div layout:fragment="content" class="container">
+     
             <div class="text-center mt-3 text-white">
                 <p class="fs-2">Lista de pokemons</p>
             </div>
@@ -308,7 +199,7 @@
              <div class="content">
                 <div class="row">
                     <div class="col-2">
-   <!-- PokeBuscador integrado -->
+                            <!-- PokeBuscador integrado -->
                             <input 
                                 id="pokeBuscador" 
                                 type="text" 
