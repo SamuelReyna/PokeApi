@@ -80,6 +80,11 @@ public class EntrenadorController {
     @GetMapping("/usuarios")
     public String usuario(Model model, HttpSession session, @ModelAttribute("entrenador") Entrenador entrenador) {
         RestTemplate restTemplate = new RestTemplate();
+        String role = (String) session.getAttribute("role");
+
+        if (!role.equals("[ROLE_Admin]")) {
+            return "redirect:/pokeControl/admin/dashboard";
+        }
 
         ResponseEntity<List<Entrenador>> responseEntity
                 = restTemplate.exchange(

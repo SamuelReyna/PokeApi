@@ -1,5 +1,6 @@
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
     <head>
         <title>Inicio</title>
         <meta charset="UTF-8">
@@ -15,217 +16,58 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </head>
 
-    <style>
-        .card-opciones-pokedex {
-            background: #d62828;
-            border-radius: 25px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-            padding-bottom: 2rem;
-        }
 
-        .pokedex-card {
-            background: #d62828;
-            border-radius: 25px;
-            padding: 1.5rem;
-            max-width: 100%;
-        }
-
-        .profile-inner {
-            background: #e9f4ff;
-            padding: 2rem 1rem;
-            border-radius: 20px;
-            text-align: center;
-        }
-
-        .profile-avatar {
-            width: 90px;
-            height: 90px;
-            margin-top: -60px;
-            border-radius: 50%;
-            border: 4px solid white;
-            object-fit: cover;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-        }
-
-        .profile-name {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-top: 1rem;
-        }
-
-        .profile-info {
-            margin-top: 1rem;
-            padding: 0 0.5rem;
-        }
-
-        .profile-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-        }
-
-        .profile-item i {
-            font-size: 1.1rem;
-            color: #1d3557;
-        }
-
-    </style>
 
     <body>
-
-        <div class="container">
-            <nav th:if="${token} != null" class="navbar navbar-expand-lg navbar-light navStyle mb-4 navTamaño">
-                <div class="container navcontenido">
-
-
-
-                    <!-- Dropdown Dashboard -->
-                    <div class="dropdown">
-                        <a class="navbar-brand dropdown-toggle text-white d-flex align-items-center" href="#" id="dashboardDropdown" role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-house-door-fill me-2"></i> Dashboard
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="dashboardDropdown">
-                            <li><a class="dropdown-item" th:href="@{/pokeControl/admin/dashboard}"><i class="bi bi-grid-fill me-2"></i> Dashboard</a></li>
-                            <li><a class="dropdown-item" th:href="@{/pokeControl/profile/{username}(username=${username})}"><i class="bi bi-heart-circle me-2"></i> Mis favoritos</a></li>
-                            <li><a class="dropdown-item" th:href="@{/pokemon}"><i class="bi bi-file-earmark-text-fill me-2"></i> Lista de pokemones</a></li>
-                        </ul>
-                    </div>
-
-
-
-                    <!-- Botón colapsable móvil -->
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-                            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <!-- Contenido del navbar -->
-                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <div class="navbar-nav ms-auto align-items-center">
-
-                            <!-- PokeBuscador integrado -->
-                            <input 
-                                id="pokeBuscador" 
-                                type="text" 
-                                class="form-control pokeBuscadorInput" 
-                                placeholder="Buscar Pokémon..."
-                                aria-label="Buscar Pokémon"
-                                oninput="buscarPokemon(this.value)">
-                            <i class="bi bi-search text-white ms-2"></i>
-
-                            <!-- Usuario -->
-                            <a th:href="@{/pokeControl/profile/{username}(username=${username})}" class="nav-item nav-link text-white d-flex align-items-center me-3">
-                                <i class="bi bi-person-fill me-1"></i>
-                                <span th:text="${username}">Entrenador</span>
-                            </a>
-
-                            <!-- Logout -->
-                            <a th:href="@{/usuario/logout}" class="nav-item nav-link text-white d-flex align-items-center">
-                                <i class="bi bi-box-arrow-right me-1"></i> Cerrar sesión
-                            </a>
-                        </div>
-                    </div>
+        <div layout:fragment="content">
+            <div class="container">
+                <div class="text-center mt-3 text-white">
+                    <p class="fs-2">Pokemones favoritos</p>
                 </div>
-            </nav>
 
+                <div class="row">
+                    <div class="col-3">
+                        <div class="card card-opciones-pokedex p-3">
 
+                            <!-- Adornos superiores -->
+                            <div class="d-flex mb-3 gap-2">
+                                <div class="pokeAdornos"></div>
+                                <div class="pokeAdornos-1"></div>
+                                <div class="pokeAdornos-2"></div>
+                                <div class="pokeAdornos-3"></div>
+                            </div>
 
-            <nav th:if="${token} == null" class="navbar navbar-expand-lg navbar-light navStyle mb-4 navTamaño">
-                <div class="container navcontenido">
+                            <!-- Contenido de la tarjeta -->
+                            <div class="pokedex-card mx-auto">
 
-                    <!-- Enlace de Inicio -->
-                    <a class="navbar-brand text-white d-flex align-items-center" th:href="@{/pokemon}">
-                        <i class="bi bi-house-door-fill me-2"></i> Inicio
-                    </a>
+                                <div class="profile-inner">
 
+                                    <!-- Foto -->
+                                    <img class="profile-avatar"
+                                         src="https://i.pravatar.cc/150?u=[[${entrenador.idEntrenador}]]"
+                                         alt="avatar">
 
-
-                    <!-- Botón para colapsar en móviles -->
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-                            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <!-- Contenido del navbar -->
-                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <div class="navbar-nav ms-auto align-items-center">
-
-                            <!-- PokeBuscador integrado -->
-                            <input 
-                                id="pokeBuscador" 
-                                type="text" 
-                                class="form-control pokeBuscadorInput" 
-                                placeholder="Buscar Pokémon..."
-                                aria-label="Buscar Pokémon"
-                                oninput="buscarPokemon(this.value)" >
-                            <i class="bi bi-search text-white ms-2"></i>
-
-
-                            <!-- Registrar -->
-                            <a th:href="@{/usuario/register}" class="nav-item nav-link text-white d-flex align-items-center me-3">
-                                <i class="bi bi-person-plus-fill me-1"></i> Registrar
-                            </a>
-
-                            <!-- Iniciar sesión -->
-                            <a th:href="@{/usuario/login}" class="nav-item nav-link text-white d-flex align-items-center">
-                                <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar sesión
-                            </a>
-                        </div>
-                    </div>
-
-
-
-            </nav>
-
-
-            <div class="text-center mt-3 text-white">
-                <p class="fs-2">Pokemones favoritos</p>
-            </div>
-
-            <div class="row">
-                <div class="col-3">
-                    <div class="card card-opciones-pokedex p-3">
-
-                        <!-- Adornos superiores -->
-                        <div class="d-flex mb-3 gap-2">
-                            <div class="pokeAdornos"></div>
-                            <div class="pokeAdornos-1"></div>
-                            <div class="pokeAdornos-2"></div>
-                            <div class="pokeAdornos-3"></div>
-                        </div>
-
-                        <!-- Contenido de la tarjeta -->
-                        <div class="pokedex-card mx-auto">
-
-                            <div class="profile-inner">
-
-                                <!-- Foto -->
-                                <img class="profile-avatar"
-                                     src="https://i.pravatar.cc/150?u=[[${entrenador.idEntrenador}]]"
-                                     alt="avatar">
-
-                                <!-- Nombre -->
-                                <div class="profile-name">
-                                    <span th:text="|${entrenador.nombre} ${entrenador.apellidoPaterno} ${entrenador.apellidoMaterno}|"></span>
-                                </div>
-
-                                <!-- Datos con iconos -->
-                                <div class="profile-info">
-
-                                    <div class="profile-item">
-                                        <i class="fa-solid fa-user"></i>
-                                        <span th:text="${entrenador.username}"></span>
+                                    <!-- Nombre -->
+                                    <div class="profile-name">
+                                        <span th:text="|${entrenador.nombre} ${entrenador.apellidoPaterno} ${entrenador.apellidoMaterno}|"></span>
                                     </div>
 
-                                    <div class="profile-item">
-                                        <i class="fa-solid fa-envelope"></i>
-                                        <span th:text="${entrenador.correo}"></span>
-                                    </div>
-                                    <div class="profile-item">
-                                        <span th:text="${pokedex.nombre}"></span>
+                                    <!-- Datos con iconos -->
+                                    <div class="profile-info">
+
+                                        <div class="profile-item">
+                                            <i class="fa-solid fa-user"></i>
+                                            <span th:text="${entrenador.username}"></span>
+                                        </div>
+
+                                        <div class="profile-item">
+                                            <i class="fa-solid fa-envelope"></i>
+                                            <span th:text="${entrenador.correo}"></span>
+                                        </div>
+                                        <div class="profile-item">
+                                            <span th:text="${pokedex.nombre}"></span>
+                                        </div>
+
                                     </div>
 
                                 </div>
@@ -233,99 +75,97 @@
                             </div>
 
                         </div>
-
                     </div>
-                </div>
 
-                <div class="col-8">
-                    <div class="table-container mytable mt-3">
-                        <table class="table-hover text-white align-middle">
-                            <thead class="">
-                                <tr>
-                                    <th class="col-1"></th>
-                                    <th class="col-1">Name</th>
-                                    <!--                                    <th class="col-1">Tipos</th>-->
-                                    <th class="col-1">Medidas</th>
-                                    <th class="col-1"></th>
-                                </tr>
-                            </thead>
+                    <div class="col-8">
+                        <div class="table-container mytable mt-3">
+                            <table class="table-hover text-white align-middle">
+                                <thead class="">
+                                    <tr>
+                                        <th class="col-1"></th>
+                                        <th class="col-1">Name</th>
+                                        <!--                                    <th class="col-1">Tipos</th>-->
+                                        <th class="col-1">Medidas</th>
+                                        <th class="col-1"></th>
+                                    </tr>
+                                </thead>
 
-                            <tbody id="tabla-pokemones">
-                                <tr th:each="pokemon : ${pokemones}" class="poke-fila p-2 mb-2 align-items-center">
-                                    <!--                                    th:attr="
-                                                                        data-id=${pokemon.id},
-                                                                        data-name=${pokemon.name},
-                                                                        data-height=${pokemon.height},
-                                                                        data-weight=${pokemon.weight},
-                                                                        data-types=${#strings.listJoin(pokemon.types.?[name != null].![name], ' ')},
-                                                                        data-img=${pokemon.sprites[0].front_default},
-                                                                        data-img-back=${pokemon.sprites[0].back_default},
-                                                                        data-crie=${pokemon.cries[0].latest},
-                                                                        data-hp=${pokemon.stats[0].base_stat},
-                                                                        data-atk=${pokemon.stats[1].base_stat},
-                                                                        data-def=${pokemon.stats[2].base_stat},
-                                                                        data-spa=${pokemon.stats[3].base_stat},
-                                                                        data-spd=${pokemon.stats[4].base_stat},
-                                                                        data-speed=${pokemon.stats[5].base_stat}"
-                                    
-                                    
-                                    
-                                                                        onclick="cargarPokemon(this)">-->
+                                <tbody id="tabla-pokemones">
+                                    <tr th:each="pokemon : ${pokemones}" class="poke-fila p-2 mb-2 align-items-center">
+                                        <!--                                    th:attr="
+                                                                            data-id=${pokemon.id},
+                                                                            data-name=${pokemon.name},
+                                                                            data-height=${pokemon.height},
+                                                                            data-weight=${pokemon.weight},
+                                                                            data-types=${#strings.listJoin(pokemon.types.?[name != null].![name], ' ')},
+                                                                            data-img=${pokemon.sprites[0].front_default},
+                                                                            data-img-back=${pokemon.sprites[0].back_default},
+                                                                            data-crie=${pokemon.cries[0].latest},
+                                                                            data-hp=${pokemon.stats[0].base_stat},
+                                                                            data-atk=${pokemon.stats[1].base_stat},
+                                                                            data-def=${pokemon.stats[2].base_stat},
+                                                                            data-spa=${pokemon.stats[3].base_stat},
+                                                                            data-spd=${pokemon.stats[4].base_stat},
+                                                                            data-speed=${pokemon.stats[5].base_stat}"
+                                        
+                                        
+                                        
+                                                                            onclick="cargarPokemon(this)">-->
 
-                                    <td>
-                                        <img th:src="${pokemon.sprite.defaultfrontal}" class="pokemon-picture" alt="Imagen del Pokémon" />
-                                    </td>
+                                        <td>
+                                            <img th:src="${pokemon.sprite.defaultfrontal}" class="pokemon-picture" alt="Imagen del Pokémon" />
+                                        </td>
 
-                                    <td>
-                                        <div>
-                                            <span th:text="${pokemon.idPokemon}"></span> <span th:text="${pokemon.nombre}" class="m-0"></span>
-                                        </div>
-                                    </td>
-                                    <!--                                    <td>
-                                                                            <span th:each=" type :${pokemon.types}">
-                                                                                <span th:text="${type.name}"> </span>
-                                                                            </span>
-                                                                        </td>-->
-                                    <td>
-                                        <div>
-                                            <i class="bi bi-arrows-vertical"></i> <span th:text="${pokemon.altura}"></span>
-                                        </div>
-                                        <div>
-                                            <i class="bi bi-arrows"></i> <span th:text="${pokemon.ancho}"></span>
-                                        </div>
-                                    </td>
+                                        <td>
+                                            <div>
+                                                <span th:text="${pokemon.idPokemon}"></span> <span th:text="${pokemon.nombre}" class="m-0"></span>
+                                            </div>
+                                        </td>
+                                        <!--                                    <td>
+                                                                                <span th:each=" type :${pokemon.types}">
+                                                                                    <span th:text="${type.name}"> </span>
+                                                                                </span>
+                                                                            </td>-->
+                                        <td>
+                                            <div>
+                                                <i class="bi bi-arrows-vertical"></i> <span th:text="${pokemon.altura}"></span>
+                                            </div>
+                                            <div>
+                                                <i class="bi bi-arrows"></i> <span th:text="${pokemon.ancho}"></span>
+                                            </div>
+                                        </td>
 
-                                    <td>
-                                        <!--No modificar el id del checkbox pues no se podran seleccionar correctamente, el id debe ser dinamico :V-->
-                                        <!--                                        <div class="checkbox-container">
-                                                                                    <input class="poke-checkbox" th:data-id="${pokemon.id}" type="checkbox" th:id="'checkbox-' + ${pokemon.id}" th:name="'seleccion-' + ${pokemon.id}" 
-                                                                                           th:data-name="${pokemon.name}" 
-                                                                                           th:data-height="${pokemon.height}"
-                                                                                           th:data-weight="${pokemon.weight}"
-                                                                                           th:data-img="${pokemon.sprites[0].front_default}"
-                                                                                           th:data-img-back="${pokemon.sprites[0].back_default}"
-                                                                                           th:data-type="${pokemon.types[0].name}"
-                                                                                           th:data-crie="${pokemon.cries[0].latest}"
-                                                                                           th:data-hp="${pokemon.stats[0].base_stat}"
-                                                                                           th:data-atk="${pokemon.stats[1].base_stat}"
-                                                                                           th:data-def="${pokemon.stats[2].base_stat}"
-                                                                                           th:data-spa="${pokemon.stats[3].base_stat}"
-                                                                                           th:data-spd="${pokemon.stats[4].base_stat}"
-                                                                                           th:data-speed="${pokemon.stats[5].base_stat}"/>
-                                                                                    <label th:for="'checkbox-' + ${pokemon.id}" class="checkmark"></label>
-                                                                                </div>-->
-
-
-                                    </td>
+                                        <td>
+                                            <!--No modificar el id del checkbox pues no se podran seleccionar correctamente, el id debe ser dinamico :V-->
+                                            <!--                                        <div class="checkbox-container">
+                                                                                        <input class="poke-checkbox" th:data-id="${pokemon.id}" type="checkbox" th:id="'checkbox-' + ${pokemon.id}" th:name="'seleccion-' + ${pokemon.id}" 
+                                                                                               th:data-name="${pokemon.name}" 
+                                                                                               th:data-height="${pokemon.height}"
+                                                                                               th:data-weight="${pokemon.weight}"
+                                                                                               th:data-img="${pokemon.sprites[0].front_default}"
+                                                                                               th:data-img-back="${pokemon.sprites[0].back_default}"
+                                                                                               th:data-type="${pokemon.types[0].name}"
+                                                                                               th:data-crie="${pokemon.cries[0].latest}"
+                                                                                               th:data-hp="${pokemon.stats[0].base_stat}"
+                                                                                               th:data-atk="${pokemon.stats[1].base_stat}"
+                                                                                               th:data-def="${pokemon.stats[2].base_stat}"
+                                                                                               th:data-spa="${pokemon.stats[3].base_stat}"
+                                                                                               th:data-spd="${pokemon.stats[4].base_stat}"
+                                                                                               th:data-speed="${pokemon.stats[5].base_stat}"/>
+                                                                                        <label th:for="'checkbox-' + ${pokemon.id}" class="checkmark"></label>
+                                                                                    </div>-->
 
 
-                                </tr>
-                            </tbody>
-                        </table>
+                                        </td>
+
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-
 
         </div>
 

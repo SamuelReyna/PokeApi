@@ -74,7 +74,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/profile/{username}")
-    public String profile(@PathVariable("username") String username, Model model) {
+    public String profile(@PathVariable("username") String username, Model model, HttpSession session) {
         RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity<Entrenador> responseEntity
@@ -83,6 +83,8 @@ public class UsuarioController {
         if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
             Entrenador entrenador = responseEntity.getBody();
             model.addAttribute("entrenador", entrenador);
+            model.addAttribute("role", session.getAttribute("role"));
+
         }
 
         return "profile";
