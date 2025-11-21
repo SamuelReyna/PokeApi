@@ -43,15 +43,18 @@ import risosu.it.PokeApiClient.ML.Pokemon;
 import risosu.it.PokeApiClient.ML.Result;
 import risosu.it.PokeApiClient.ML.Entrenador;
 import risosu.it.PokeApiClient.ML.PokedexResponse;
-import risosu.it.PokeApiClient.ML.PokemonListResponse;
+import risosu.it.PokeApiClient.ML.Type;
+import risosu.it.PokeApiClient.Service.PokeService;
 
 @Controller
 @RequestMapping("/pokeControl")
 public class PokeController {
 
+    @Autowired
+    private PokeService pokeService;
 //    private final String url = "http://localhost:8081//";
-
 //Este controlador es accedido desde vista "loading" para validar si existe ya el archivo JSON y redirigir:
+
     @GetMapping("/status")
     @ResponseBody
     public Map<String, Object> verificarEstado() {
@@ -128,10 +131,19 @@ public class PokeController {
             if (types == null) {
                 return pokemones;
             }
-            List<Pokemon> filtrados = pokemones.stream()
-                    .filter(p -> p.getTypes().stream().anyMatch(t -> types.contains(t.getName())))
+//            List<Pokemon> filtrados = pokemones.stream()
+//                    .filter(p -> p.getTypes().stream().anyMatch(t -> types.contains(t.getName())))
+//                    .collect(Collectors.toList());
+            resultados = pokemones.stream()
+                    .filter(p -> {
+                        List<String> pokeTypes = p.getTypes().stream()
+                                .map(Type::getName).sorted().collect(Collectors.toList());
+                        List<String> searchTypes = types.stream()
+                                .sorted()
+                                .collect(Collectors.toList());
+                        return pokeTypes.equals(searchTypes);
+                    })
                     .collect(Collectors.toList());
-            resultados = filtrados;
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -159,12 +171,11 @@ public class PokeController {
             Long id = entrenador.getIdEntrenador();
 
             // Leer la respuesta como String (debug)
-            ResponseEntity<String> raw = restTemplate.getForEntity(
-                    "http://localhost:8081/api/entrenador/favorites/" + id,
-                    String.class
-            );
-            System.out.println("JSON recibido:\n" + raw.getBody());
-
+//            ResponseEntity<String> raw = restTemplate.getForEntity(
+//                    "http://localhost:8081/api/entrenador/favorites/" + id,
+//                    String.class
+//            );
+//            System.out.println("JSON recibido:\n" + raw.getBody());
             // Ahora sí leer como Map genérico (raíz es objeto, NO lista)
             ResponseEntity<List<Map<String, Object>>> response
                     = restTemplate.exchange(
@@ -201,15 +212,21 @@ public class PokeController {
                             .map(item -> (Map<String, Object>) item.get("pokemon"))
                             .filter(Objects::nonNull)
                             .toList();
-
-            System.out.println("Pokemones mapeados:");
-            System.out.println(pokemons);
+            List<Pokemon> poke = pokeService.getFavTypes();
+            List<Integer> idsJson = pokemons.stream()
+                    .map(p -> (Integer) p.get("idJson"))
+                    .toList();
+            poke = poke.stream().filter(p -> idsJson.contains(p.getId())).toList();
+//            poke.stream().filter
+//        (p -> pokemons.forEach
+//        (pokemons.get(0)
+//                .get("idJson"))
+//                .contains(p.getId())).toList();
             model.addAttribute("pokedex", pokedex);
-            model.addAttribute("pokemones", pokemons);
+            model.addAttribute("pokemones", poke);
             model.addAttribute("entrenador", entrenador);
         }
         return "usuario";
     }
-    
-    
+
 }

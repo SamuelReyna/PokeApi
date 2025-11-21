@@ -47,9 +47,7 @@ public class PokeService {
                 List<Integer> idsJson = pokefavs.stream()
                         .map(p -> (Integer) p.get("idJson"))
                         .toList();
-//                pokefavs.forEach(p -> {
-//                    System.out.println(p.get("idJson"));
-//                });
+//          
 
                 List<Pokemon> pokefavs2 = pokemonList.stream()
                         .filter(pokemon -> idsJson.contains(pokemon.getId()))
@@ -59,7 +57,7 @@ public class PokeService {
 
             }
 
-        } catch (IOException e) {
+        } catch (IOException e) {   
             e.printStackTrace();
 
             return null;

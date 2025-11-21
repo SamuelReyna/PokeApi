@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,7 +27,7 @@ import org.springframework.web.client.RestTemplate;
 import risosu.it.PokeApiClient.DTO.FavoritoDTO;
 import risosu.it.PokeApiClient.DTO.FavoritosDTO;
 import risosu.it.PokeApiClient.DTO.PokeFavoritoDTO;
-import risosu.it.PokeApiClient.DTO.PokemonDTO;
+import risosu.it.PokeApiClient.Service.PokeService;
 
 @Controller
 @RequestMapping("/pokeControl/standar")
@@ -34,79 +35,80 @@ public class EntrenadorControllerStandar {
 
     private final String url = "http://localhost:8081/api/entrenador";
 
+    @Autowired
+    private PokeService pokeService;
     @PostMapping("/favoritos")
-@ResponseBody
-public ResponseEntity<?> actualizarFavorito(@RequestBody PokeFavoritoDTO pokemon,
-                                            HttpSession session) {
+    @ResponseBody
+    public ResponseEntity<?> actualizarFavorito(@RequestBody PokeFavoritoDTO pokemon,
+            HttpSession session) {
 
-    String user = (String) session.getAttribute("username");
+        String user = (String) session.getAttribute("username");
 
-    //Si el usuario elejio añadirlo como favorito:
-    if (pokemon.getFavorito()) {
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+        //Si el usuario elejio añadirlo como favorito:
+        if (pokemon.getFavorito()) {
+            try {
+                RestTemplate restTemplate = new RestTemplate();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
 
-            HttpEntity<?> entity = new HttpEntity<>(pokemon, headers);
+                HttpEntity<?> entity = new HttpEntity<>(pokemon, headers);
 
-            ResponseEntity<Boolean> responseEntity = restTemplate.exchange(
-                url + "/" + user,
-                HttpMethod.POST,
-                entity,
-                new ParameterizedTypeReference<Boolean>() {}
-            );
-            
+                ResponseEntity<Boolean> responseEntity = restTemplate.exchange(
+                        url + "/" + user,
+                        HttpMethod.POST,
+                        entity,
+                        new ParameterizedTypeReference<Boolean>() {
+                }
+                );
 
-            return ResponseEntity.ok(responseEntity.getBody());
+                return ResponseEntity.ok(responseEntity.getBody());
 
-        } catch (Exception e) {
-            System.out.println("Error al actualizar favorito: " + e.getLocalizedMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar favorito");
+            } catch (Exception e) {
+                System.out.println("Error al actualizar favorito: " + e.getLocalizedMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar favorito");
+            }
+        } else {
+            try {
+                RestTemplate restTemplate = new RestTemplate();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+
+                HttpEntity<?> entity = new HttpEntity<>(pokemon, headers);
+
+                ResponseEntity<Boolean> responseEntity = restTemplate.exchange(
+                        url + "/delete/" + user,
+                        HttpMethod.POST,
+                        entity,
+                        new ParameterizedTypeReference<Boolean>() {
+                }
+                );
+
+                return ResponseEntity.ok(responseEntity.getBody());
+
+            } catch (Exception e) {
+                System.out.println("Error al eliminar favorito: " + e.getLocalizedMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar favorito");
+            }
+
         }
-    }else{
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
 
-            HttpEntity<?> entity = new HttpEntity<>(pokemon, headers);
-
-            ResponseEntity<Boolean> responseEntity = restTemplate.exchange(
-                url + "/delete/" + user,
-                HttpMethod.POST,
-                entity,
-                new ParameterizedTypeReference<Boolean>() {}
-            );
-            
-
-            return ResponseEntity.ok(responseEntity.getBody());
-
-        } catch (Exception e) {
-            System.out.println("Error al eliminar favorito: " + e.getLocalizedMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar favorito");
-        }
-    
     }
 
-    
-}
-   
-@GetMapping("/getFavoritos")
-public ResponseEntity<?> GetFavorito(HttpSession session){
-    String user = (String) session.getAttribute("username");
-    try {
+    @GetMapping("/getFavoritos")
+    public ResponseEntity<?> GetFavorito(HttpSession session) {
+        String user = (String) session.getAttribute("username");
+        try {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
             ResponseEntity<List<FavoritoDTO>> responseEntity = restTemplate.exchange(
-                url + "/getFavorites/" + user,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<FavoritoDTO>>() {}
+                    url + "/getFavorites/" + user,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<FavoritoDTO>>() {
+            }
             );
-            
 
             return ResponseEntity.ok(responseEntity.getBody());
 
@@ -114,6 +116,6 @@ public ResponseEntity<?> GetFavorito(HttpSession session){
             System.out.println("Error al actualizar favorito: " + e.getLocalizedMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar favorito");
         }
-}
+    }
 
 }

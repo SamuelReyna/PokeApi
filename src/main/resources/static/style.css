@@ -4,16 +4,16 @@ body {
     background-size: cover;      /* cubre toda la pantalla */
     background-position: center; /* centra la imagen */
     background-repeat: no-repeat;/* no se repite */
-/*    background-color: rgba(41, 50, 74, 0.5); /* negro con 50% de opacidad */
-/*    background-blend-mode: overlay;        /* mezcla el color con la imagen */
- }
-
- .row {
-  align-items: flex-start; 
+    /*    background-color: rgba(41, 50, 74, 0.5); /* negro con 50% de opacidad */
+    /*    background-blend-mode: overlay;        /* mezcla el color con la imagen */
 }
 
- .navcontenido{
-margin: 10px;
+.row {
+    align-items: flex-start;
+}
+
+.navcontenido{
+    margin: 10px;
 }
 
 /*Nadvar*/
@@ -40,17 +40,17 @@ margin: 10px;
 /*Opciones---------------------------------------------------------------------------*/
 
 .card-opciones{
-     background-color: rgba(4, 11, 24, 0.436);
-     border-radius: 25px;
-     padding: 30px;
-     display: flex;
+    background-color: rgba(4, 11, 24, 0.436);
+    border-radius: 25px;
+    padding: 30px;
+    display: flex;
     justify-content: center;
     min-height: 400px;
-  height: auto;
+    height: auto;
 
     box-shadow: #222;
     perspective: 1000px; /* necesario en el contenedor para que gire */
-    
+
 }
 
 
@@ -64,20 +64,20 @@ margin: 10px;
     box-shadow: rgba(9, 20, 48, 0.295) 0px 5px 1px;
     display: inline;
     text-align: center;
-    
+
 }
 
 .poke-vista{
-       
-        max-width:  190px;
-        min-width: 130px;/* tamaño fijo para evitar problemas de cálculo de 100% */
-        height: 150px;
-        padding: 10px;
-        position: relative;
-        transform-style: preserve-3d;
-        -webkit-transform-style: preserve-3d;
-        transition: transform 0.8s ease;
-        transform-origin: center center;
+
+    max-width:  190px;
+    min-width: 130px;/* tamaño fijo para evitar problemas de cálculo de 100% */
+    height: 150px;
+    padding: 10px;
+    position: relative;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    transition: transform 0.8s ease;
+    transform-origin: center center;
 }
 
 .card-opciones:hover .poke-vista,
@@ -85,6 +85,78 @@ margin: 10px;
     transform: rotateY(180deg);
     -webkit-transform: rotateY(180deg);
 }
+
+.card-opciones-pokedex {
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0px 4px 14px rgba(0,0,0,0.15);
+    height: 100%;
+}
+
+.pokedex-card {
+    width: 100%;
+}
+
+.profile-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.profile-avatar {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+}
+
+.profile-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.profile-info {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.profile-item span {
+    max-width: 180px;      /* ajusta este valor si quieres más o menos espacio */
+    white-space: nowrap;   /* evita que se haga varias líneas */
+    overflow: hidden;      /* oculta el exceso */
+    text-overflow: ellipsis; /* pone "..." al final */
+    display: inline-block;
+    text-align: left;
+}
+
+
+.profile-item i {
+    color: #d62828;
+}
+
+.pokeAdornos,
+.pokeAdornos-1,
+.pokeAdornos-2,
+.pokeAdornos-3 {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #d62828;
+}
+
+.pokeAdornos-1 {
+    background: #f77f00;
+}
+.pokeAdornos-2 {
+    background: #fcbf49;
+}
+.pokeAdornos-3 {
+    background: #eae2b7;
+}
+
 
 .poke-front, .poke-back {
     position: absolute;
@@ -149,17 +221,17 @@ margin: 10px;
     height: 40px;
 }
 .poke-buttons button:hover {
-   background: linear-gradient(180deg, #ffcb05, #f6a800);
-   backdrop-filter: blur(10px);
-   box-shadow: 0 0 10px #c79e45, 0 0 40px
-#c79945, 0 0 80px #c79945;  /* efecto de resplandor wiccs!*/
+    background: linear-gradient(180deg, #ffcb05, #f6a800);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 10px #c79e45, 0 0 40px
+        #c79945, 0 0 80px #c79945;  /* efecto de resplandor wiccs!*/
 
 }
 
 .pokeImage-detail{
-  max-width: none;
-  max-height: none;
-  width: 100%;
+    max-width: none;
+    max-height: none;
+    width: 100%;
 }
 
 /*-----------------------------------------------------------------------------*/
@@ -176,27 +248,27 @@ margin: 10px;
 }
 
 .card-opciones-pokedex{
-     background-color: rgb(218, 20, 14);
-     border-radius: 25px;
-     padding: 3px;
-     display: flex;
-   
+    background-color: rgb(218, 20, 14);
+    border-radius: 25px;
+    padding: 3px;
+    display: flex;
+
     height: 400px;
     box-shadow: #222;
     perspective: 1000px; /* necesario en el contenedor para que gire */
-    
+
 }
 
 .poke-vista-pokedex{
-       
-        width: 260px;            
-        height: 210px;
-        padding: 10px;
-        position: relative;
-        transform-style: preserve-3d;
-        -webkit-transform-style: preserve-3d;
-        transition: transform 0.8s ease;
-        transform-origin: center center;
+
+    width: 260px;
+    height: 210px;
+    padding: 10px;
+    position: relative;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    transition: transform 0.8s ease;
+    transform-origin: center center;
 }
 
 .poke-front-pokedex{
@@ -212,7 +284,7 @@ margin: 10px;
     -webkit-backface-visibility: hidden;
     background: linear-gradient(180deg, #a3ffd7);
     display: flex;
-   
+
     align-items: center;
     justify-content: center;
     color: #333;
@@ -230,7 +302,7 @@ margin: 10px;
     border-style: solid;
     border-color: #ffffff;
     margin: 5px;
-    box-shadow: 1px 10px 30px #8eaaff, 0 0 20px #ff3eab, 0 0 10px #52ffa9; 
+    box-shadow: 1px 10px 30px #8eaaff, 0 0 20px #ff3eab, 0 0 10px #52ffa9;
 
 }
 .pokeAdornos-1{
@@ -242,7 +314,7 @@ margin: 10px;
     border-color: #ffa0a0;
     border-width: 1px;
     margin: 5px;
-    box-shadow: 1px 10px 30px #ff8e8e, 0 0 20px #ff3eab, 0 0 10px #ff5252; 
+    box-shadow: 1px 10px 30px #ff8e8e, 0 0 20px #ff3eab, 0 0 10px #ff5252;
 
 }
 .pokeAdornos-2{
@@ -254,7 +326,7 @@ margin: 10px;
     border-color: #fff5a0;
     border-width: 1px;
     margin: 5px;
-    box-shadow: 1px 10px 30px #fffb8e, 0 0 20px #ff8b3e, 0 0 10px #f3ff52; 
+    box-shadow: 1px 10px 30px #fffb8e, 0 0 20px #ff8b3e, 0 0 10px #f3ff52;
 
 }
 .pokeAdornos-3{
@@ -266,7 +338,7 @@ margin: 10px;
     border-color: #e9ffd6;
     border-width: 1px;
     margin: 5px;
-    box-shadow: 1px 10px 30px #9fff8e, 0 0 20px #75ff3e, 0 0 10px #52ff72; 
+    box-shadow: 1px 10px 30px #9fff8e, 0 0 20px #75ff3e, 0 0 10px #52ff72;
 
 }
 
@@ -280,17 +352,17 @@ margin: 10px;
     margin-left: auto;
     margin-right: auto;
     box-shadow: rgba(9, 20, 48, 0.467) 0px 4px 8px;
-    
+
     max-height: 600px;   /* altura máxima */
     overflow-y: auto;    /* si excede el tamaño, se activa el scroll */
 }
 
 .poke-fila:hover {
-  background-color: rgba(181, 255, 8, 0.047);
-   backdrop-filter: blur(10px);
-   box-shadow: 0 0 10px #55a67b, 0 0 40px
-#4575c7, 0 0 80px #45b1c7;  /* efecto de resplandor wiccs!*/
-border-radius: 30px;
+    background-color: rgba(181, 255, 8, 0.047);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 10px #55a67b, 0 0 40px
+        #4575c7, 0 0 80px #45b1c7;  /* efecto de resplandor wiccs!*/
+    border-radius: 30px;
 
 }
 
@@ -298,18 +370,18 @@ border-radius: 30px;
 
 
 /* Ocultar scrollbar en Webkit (Chrome, Safari, Edge) */
-    &::-webkit-scrollbar {
-        display: none;
-    }
+&::-webkit-scrollbar {
+    display: none;
+}
 
 
 
 .table-container {
-        height: 360px;
-    
+    height: 360px;
+
     max-height: 600px;             /* altura máxima del área scrollable */
     overflow-y: auto;              /*Si excede el tamaño se activa el scroll*/
-/* Ocultar scrollbar en Webkit (Chrome, Safari, Edge) */
+    /* Ocultar scrollbar en Webkit (Chrome, Safari, Edge) */
     scrollbar-width: thin;       /* para Firefox: opcional, "none" para ocultar */
     -ms-overflow-style: none;    /* IE 10+ */
 }
@@ -323,7 +395,7 @@ border-radius: 30px;
     background-color: rgba(177, 188, 216, 0.205);
     backdrop-filter: blur(5px);
 }
- 
+
 .container-data{
     margin: 5px;
     background-color: #f0fbec;
@@ -333,7 +405,7 @@ border-radius: 30px;
     height: 100px ;
     width: 250px;
     border-radius: 15px;
-    
+
 }
 
 /*---------------------------------------------------------------------------*/
@@ -397,7 +469,7 @@ input:checked + .slider {
 }
 
 .mensajeVacio{
-        background-color: rgba(2, 14, 26, 0.585);
+    background-color: rgba(2, 14, 26, 0.585);
     align-items: center;
     display: flex;
     justify-content: center;
@@ -414,12 +486,12 @@ input:checked + .slider {
 }
 
 .container-Modal{
-      display: none;
+    display: none;
 }
 
 .modal{
-  
-   background: linear-gradient(to bottom, rgba(46, 58, 106, 0.864), rgba(39, 16, 39, 0.821));
+
+    background: linear-gradient(to bottom, rgba(46, 58, 106, 0.864), rgba(39, 16, 39, 0.821));
     align-items: center;
     display: flex;
     justify-content: center;
@@ -437,7 +509,7 @@ input:checked + .slider {
 .form-Modal {
     padding: 20px;
     width: 100%;
-    
+
 }
 
 
@@ -472,7 +544,7 @@ input:checked + .slider {
     -webkit-transition: all 500ms ease-in;
     -moz-transition: all 500ms ease-in;
     transition: all 500ms ease-in;
-     
+
 }
 
 /*Movimientos*/
@@ -488,16 +560,16 @@ input:checked + .slider {
     margin: 10% auto;
     width:0;
     height:0;
- 
+
 }
-.modalmask:target .movedown{       
+.modalmask:target .movedown{
     margin:10% auto;
 }
-.modalmask:target .rotate{     
+.modalmask:target .rotate{
     transform: rotate(360deg) scale(1,1);
-        -webkit-transform: rotate(360deg) scale(1,1);
+    -webkit-transform: rotate(360deg) scale(1,1);
 }
- 
+
 .modalmask:target .resize{
     width:400px;
     height:200px;
@@ -516,65 +588,66 @@ input:checked + .slider {
     text-decoration: none;
     font-weight: bold;
     border-radius:3px;
- 
+
 }
- 
+
 .close:hover {
     background: #FAAC58;
     color:#222;
 }
 
-/*Estilos de checkbox*/
+/* Ocultar checkbox original */
 .checkbox-container input[type="checkbox"] {
-    display: none; /* Oculta el input real */
-
-
+    display: none;
 }
 
-
+/* Caja con forma de corazón */
 .checkmark {
-    /* Estilo del checkbox personalizado (la caja) */
-   display: inline-block;
-  width: 25px;
-  height: 25px;
-  background-color: #13053324;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  cursor: pointer;
-  /*giro*/
-    transform: rotate(0deg);
-  
-    /* Transición suave para el efecto de brillo */
-    transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+    position: relative;
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    display: inline-block;
+    transform: scale(1);
+    transition: transform 0.2s ease-in-out;
 }
 
-/* Cuando el input esté :checked, aplica el estilo al elemento .checkmark adyacente */
-
-/* Cuando el input esté :checked, aplica el estilo al elemento .checkmark adyacente */
-/* Cuando el input esté :checked, aplica el estilo al elemento .checkmark adyacente */
-.checkbox-container input[type="checkbox"]:checked + .checkmark {
-    background-color: #ff88c0; /* Color de fondo cuando está marcado */
-    border-color: #ffd8ea;
-    /* El efecto de brillo: box-shadow (desplazamiento x, desplazamiento y, radio de desenfoque, radio de expansión, color) */
-    box-shadow: 0 0 10px #ff00a6, 0 0 20px #ffb59e, 0 0 30px #ff00ea; /* Múltiples sombras para un brillo intenso */
-}
-/* Opcional: Estilo para la marca de verificación dentro de la caja */
+/* Dibujo del corazón usando 2 pseudo-elementos */
+.checkmark::before,
 .checkmark::after {
     content: "";
     position: absolute;
-    display: none;
-    left: 9px;
-    top: 5px;
-    width: 5px;
-    height: 10px;
-    border: solid rgb(255, 206, 229);
-    border-width: 0 3px 3px 0;
+    width: 15px;
+    height: 22px;
+    background-color: #13053324;
+    border-radius: 15px 15px 0 0;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+/* Mitades del corazón */
+.checkmark::before {
+    left: 5px;
+    transform: rotate(-45deg);
+}
+.checkmark::after {
+    left: 10px;
     transform: rotate(45deg);
 }
-/* Muestra la marca de verificación cuando está checked */
+
+/* ---- ESTADO CHECKED ---- */
+.checkbox-container input[type="checkbox"]:checked + .checkmark::before,
 .checkbox-container input[type="checkbox"]:checked + .checkmark::after {
-    display: block;
+    background-color: #ff4f9a;        /* rosa encendido */
+    box-shadow: 0 0 10px #ff2fa7,
+        0 0 20px #ff9ecf,
+        0 0 30px #ff00ea;     /* brillo */
 }
+
+/* Animación de "latido" al marcar */
+.checkbox-container input[type="checkbox"]:checked + .checkmark {
+    transform: scale(1.2);
+}
+
 
 .btn-change{
     background: linear-gradient(180deg, #9542d544, #0b17ba44);
@@ -592,290 +665,289 @@ input:checked + .slider {
 .img-detail{
     width: 260px;
     height: auto;
-  display: block;
-  margin-bottom: 8px;
+    display: block;
+    margin-bottom: 8px;
 }
 
 /*Estilos de login-------------------------------------------------------------*/
 
-            body.login {
-                background-image: url('pokePaisaje.png');
-                background-size: cover;
-                background-position: center;
-                height: 100vh;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-family: 'Press Start 2P', monospace;
-                color: #1a2e1a;
-                text-transform: uppercase;
-            }
+body.login {
+    background-image: url('pokePaisaje.png');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Press Start 2P', monospace;
+    color: #1a2e1a;
+    text-transform: uppercase;
+}
 
-            
-            .gameboy-frame {
-                background: #cfcab3;
-                /*borde transparente*/
-                border: 10px solid rgba(255, 255, 255, 0.3);
-                border-radius: 20px;
-                padding: 25px;
-                width: 380px;
-                box-shadow: inset 0 0 10px rgba(9, 5, 46, 0.5), 0 10px 20px rgba(0,0,0,0.7);
-            }
 
-            .screen {
-                background: #ebff91;
-                
-                box-shadow: 0 0 1px #afec08, 0 0 40px
-#b8f851, 0 0 50px #ccff15;  /* efecto de resplandor wiccs!*/
-                border-radius: 10px;
-                padding: 25px;
-                
-                text-align: center;
-            }
+.gameboy-frame {
+    background: #cfcab3;
+    /*borde transparente*/
+    border: 10px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 25px;
+    width: 380px;
+    box-shadow: inset 0 0 10px rgba(9, 5, 46, 0.5), 0 10px 20px rgba(0,0,0,0.7);
+}
 
-            .screen h2 {
-                font-size: 10px;
-                margin-bottom: 20px;
-            }
+.screen {
+    background: #ebff91;
 
-            .form-control {
-                background: #c2d16d;
-                border: 2px solid #1a2e1a;
-                border-radius: 5px;
-                color: #1a2e1a;
-                font-size: 10px;
-            }
+    box-shadow: 0 0 1px #afec08, 0 0 40px
+        #b8f851, 0 0 50px #ccff15;  /* efecto de resplandor wiccs!*/
+    border-radius: 10px;
+    padding: 25px;
 
-            .form-control::placeholder {
-                color: #2d4a2d;
-            }
+    text-align: center;
+}
 
-            .form-control:focus {
-                box-shadow: none;
-                background: #b9cc6a;
-                border-color: #1a2e1a;
-            }
+.screen h2 {
+    font-size: 10px;
+    margin-bottom: 20px;
+}
 
-            .btn-start {
-                background: #1a2e1a;
-                color: #9bbc0f;
-                border: 3px solid #3a3a3a;
-                font-size: 10px;
-                padding: 10px 20px;
-                border-radius: 50px;
-                transition: 0.2s;
-            }
+.form-control {
+    background: #c2d16d;
+    border: 2px solid #1a2e1a;
+    border-radius: 5px;
+    color: #1a2e1a;
+    font-size: 10px;
+}
 
-            .btn-start:hover {
-                background: #3a3a3a;
-                transform: scale(1.05);
-            }
+.form-control::placeholder {
+    color: #2d4a2d;
+}
 
-            .link {
-                color: #1a2e1a;
-                font-size: 9px;
-                display: inline-block;
-                margin-top: 15px;
-            }
+.form-control:focus {
+    box-shadow: none;
+    background: #b9cc6a;
+    border-color: #1a2e1a;
+}
 
-            .link a {
-                color: #1a2e1a;
-                text-decoration: underline;
-            }
+.btn-start {
+    background: #1a2e1a;
+    color: #9bbc0f;
+    border: 3px solid #3a3a3a;
+    font-size: 10px;
+    padding: 10px 20px;
+    border-radius: 50px;
+    transition: 0.2s;
+}
 
-            .link a:hover {
-                color: #000;
-            }
+.btn-start:hover {
+    background: #3a3a3a;
+    transform: scale(1.05);
+}
 
-            /* Botones decorativos (como la consola Game Boy) */
-            .gb-buttons {
-                display: flex;
-                justify-content: center;
-                margin-top: 25px;
-                gap: 15px;
-            }
+.link {
+    color: #1a2e1a;
+    font-size: 9px;
+    display: inline-block;
+    margin-top: 15px;
+}
 
-            .btn-a, .btn-b {
-                width: 40px;
-                height: 40px;
-                background: #c4d1fe;
-                border-radius: 50%;
-                border: 3px solid #e1eafc;
-                box-shadow: 0 0 1px #afdffb, 0 0 40px
-#5151f8, 0 0 10px #93c2e4;  /* efecto de resplandor wiccs!*/
-              
-            }
+.link a {
+    color: #1a2e1a;
+    text-decoration: underline;
+}
 
-            .btn-b {
-                background: #963030;
-            }
+.link a:hover {
+    color: #000;
+}
+
+/* Botones decorativos (como la consola Game Boy) */
+.gb-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+    gap: 15px;
+}
+
+.btn-a, .btn-b {
+    width: 40px;
+    height: 40px;
+    background: #c4d1fe;
+    border-radius: 50%;
+    border: 3px solid #e1eafc;
+    box-shadow: 0 0 1px #afdffb, 0 0 40px
+        #5151f8, 0 0 10px #93c2e4;  /* efecto de resplandor wiccs!*/
+
+}
+
+.btn-b {
+    background: #963030;
+}
 
 
 /*Estilos de tipos*/
-  
-            .pokeBuscador {
-                position: relative;
-            }
-            body{
-                font-family: 'Press Start 2P', monospace;
-                color: #1a2e1a;
-                text-transform: uppercase;
-            }
 
-            .pokeInput {
-                background-color: rgba(255, 255, 255, 0.9);
-                border: 2px solid #ffcb05; /* color Pikachu */
-                border-radius: 20px;
-                padding-left: 10px;
-                font-family: 'Press Start 2P', cursive;
-                font-size: 10px;
-                color: #2a75bb; /* azul Pokémon */
-                transition: all 0.3s ease;
-                width: 180px;
-            }
+.pokeBuscador {
+    position: relative;
+}
+body{
+    font-family: 'Press Start 2P', monospace;
+    color: #1a2e1a;
+    text-transform: uppercase;
+}
 
-            .pokeInput::placeholder {
-                color: #3b4cca;
-                opacity: 0.7;
-            }
+.pokeInput {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 2px solid #ffcb05; /* color Pikachu */
+    border-radius: 20px;
+    padding-left: 10px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    color: #2a75bb; /* azul Pokémon */
+    transition: all 0.3s ease;
+    width: 180px;
+}
 
-            .pokeInput:focus {
-                outline: none;
-                box-shadow: 0 0 5px 2px #ffcb05;
-                background-color: #fff;
-            }
+.pokeInput::placeholder {
+    color: #3b4cca;
+    opacity: 0.7;
+}
 
-            .pokeBuscador button {
-                border-radius: 20px;
-                font-family: 'Press Start 2P', cursive;
-                font-size: 10px;
-                border: 2px solid #ffcb05;
-                color: #fff;
-                background-color: #3b4cca;
-                transition: 0.3s;
-            }
+.pokeInput:focus {
+    outline: none;
+    box-shadow: 0 0 5px 2px #ffcb05;
+    background-color: #fff;
+}
 
-            .pokeBuscador button:hover {
-                background-color: #2a75bb;
-            }
-            /* Igual que el estilo de tu input de buscador */
-            .pokeSelect {
-                background-color: #2c2f3f;
-                border: 1px solid #b3ffbc;
-                color: white;
-                padding: 8px 12px;
-                border-radius: 8px;
-                cursor: pointer;
-                
-            }
+.pokeBuscador button {
+    border-radius: 20px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    border: 2px solid #ffcb05;
+    color: #fff;
+    background-color: #3b4cca;
+    transition: 0.3s;
+}
 
-            .pokeSelect:hover {
-                background-color: #3a3d52;
-            }
+.pokeBuscador button:hover {
+    background-color: #2a75bb;
+}
+/* Igual que el estilo de tu input de buscador */
+.pokeSelect {
+    background-color: #2c2f3f;
+    border: 1px solid #b3ffbc;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
 
-            .checkbox-list {
-                border: 1px solid #444;
-                background: #2c2f3f;
-                color: white;
-                width: 200px;
-                border-radius: 8px;
-                padding: 10px;
-                margin-top: 4px;
-                display: none;
-                position: absolute;
-                z-index: 1000;
-                max-height: 250px;
-                overflow-y: auto;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            }
+}
 
-            .checkbox-list label {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                padding: 6px;
-                border-radius: 6px;
-                cursor: pointer;
-            }
+.pokeSelect:hover {
+    background-color: #3a3d52;
+}
 
-            .checkbox-list label:hover {
-                background: #3a3d52;
-            }
+.checkbox-list {
+    border: 1px solid #444;
+    background: #2c2f3f;
+    color: white;
+    width: 200px;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 4px;
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    max-height: 250px;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
 
-            .checkbox-list input[type="checkbox"] {
-                accent-color: #ffcb05; /* Color amarillo Pokémon */
-                width: 16px;
-                height: 16px;
-                cursor: pointer;
-            }
-            /* CONTENEDOR PRINCIPAL (simula el input) */
-            .pokeSelect {
-             
-                background-color: rgba(65, 211, 138, 0.795);
-                  backdrop-filter: blur(5px);
-                border-radius: 15px;
-                padding: 8px 10px;
-                width: 80px;
-                cursor: pointer;
+.checkbox-list label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px;
+    border-radius: 6px;
+    cursor: pointer;
+}
 
-                font-family: 'Press Start 2P', cursive;
-                font-size: 10px;
-                
-                transition: all 0.3s ease;
-                text-align: left;
-            }
+.checkbox-list label:hover {
+    background: #3a3d52;
+}
 
-            .pokeSelect:hover {
-                background-color: #d4ffae;
-                   box-shadow: 0 0 10px #c8ffc7, 0 0 40px
-#aaffca, 0 0 80px #b6ff6d;  /* efecto de resplandor wiccs!*/
-            }
+.checkbox-list input[type="checkbox"] {
+    accent-color: #ffcb05; /* Color amarillo Pokémon */
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+/* CONTENEDOR PRINCIPAL (simula el input) */
+.pokeSelect {
 
-            /* LISTA DESPLEGABLE */
-            .checkbox-list {
-                position: absolute;
-                background-color: rgba(255, 255, 255, 0.97);
-                border: 2px solid #cbffea;
-                border-radius: 20px;
-                padding: 12px;
-                margin-top: 6px;
-                width: 180px;
+    background-color: rgba(65, 211, 138, 0.795);
+    backdrop-filter: blur(5px);
+    border-radius: 15px;
+    padding: 8px 10px;
+    width: 80px;
+    cursor: pointer;
 
-                display: none;
-                max-height: 100px;
-                overflow-y: auto;
-                z-index: 100000;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
 
-                font-family: 'Press Start 2P', cursive;
-                font-size: 10px;
-                color: #2a75bb;
-                box-shadow: 0 0 10px #9adaff, 0 0 40px
-#63ffce, 0 0 80px #89b5ff;  /* efecto de resplandor wiccs!*/
-            }
+    transition: all 0.3s ease;
+    text-align: left;
+}
 
-            /* ELEMENTOS INTERNOS */
-            .checkbox-list label {
-                display: flex;
-                align-items: center;
-                gap: 8px;
+.pokeSelect:hover {
+    background-color: #d4ffae;
+    box-shadow: 0 0 10px #c8ffc7, 0 0 40px
+        #aaffca, 0 0 80px #b6ff6d;  /* efecto de resplandor wiccs!*/
+}
 
-                padding: 6px 4px;
-                border-radius: 10px;
-                cursor: pointer;
-            }
+/* LISTA DESPLEGABLE */
+.checkbox-list {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.97);
+    border: 2px solid #cbffea;
+    border-radius: 20px;
+    padding: 12px;
+    margin-top: 6px;
+    width: 180px;
 
-            .checkbox-list label:hover {
-                background-color: #dbeafe; /* azul claro */
-            }
+    display: none;
+    max-height: 100px;
+    overflow-y: auto;
+    z-index: 100000;
 
-            /* CHECKBOX POKEMON STYLE (amarillo) */
-            .checkbox-list input[type="checkbox"] {
-                width: 14px;
-                height: 14px;
-                accent-color: #ffcb05;
-                cursor: pointer;
-                border-radius: 4px;
-            }
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    color: #2a75bb;
+    box-shadow: 0 0 10px #9adaff, 0 0 40px
+        #63ffce, 0 0 80px #89b5ff;  /* efecto de resplandor wiccs!*/
+}
+
+/* ELEMENTOS INTERNOS */
+.checkbox-list label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 6px 4px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.checkbox-list label:hover {
+    background-color: #dbeafe; /* azul claro */
+}
+
+/* CHECKBOX POKEMON STYLE (amarillo) */
+.checkbox-list input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    accent-color: #ffcb05;
+    cursor: pointer;
+    border-radius: 4px;
+}
 
 
-        
