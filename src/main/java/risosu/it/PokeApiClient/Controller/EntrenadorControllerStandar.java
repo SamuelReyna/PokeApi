@@ -5,8 +5,7 @@
 package risosu.it.PokeApiClient.Controller;
 
 import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;

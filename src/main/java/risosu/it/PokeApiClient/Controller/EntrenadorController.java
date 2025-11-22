@@ -1,9 +1,6 @@
 package risosu.it.PokeApiClient.Controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,7 +28,6 @@ import risosu.it.PokeApiClient.Service.PokeService;
 import risosu.it.PokeApiClient.ML.Entrenador;
 import risosu.it.PokeApiClient.ML.Pokemon;
 import risosu.it.PokeApiClient.ML.Type;
-import risosu.it.PokeApiClient.DTO.TypeDTO;
 
 @Controller
 @RequestMapping("/pokeControl/admin")
