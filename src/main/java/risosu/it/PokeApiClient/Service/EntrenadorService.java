@@ -119,9 +119,9 @@ public class EntrenadorService {
         if (cambios.getSexo() != null && !cambios.getSexo().isEmpty()) {
             entrenador.setSexo(cambios.getSexo());
         }
-        if (cambios.getCorreo() != null && !cambios.getCorreo().isEmpty()) {
-            entrenador.setCorreo(cambios.getCorreo());
-        }
+//        if (cambios.getCorreo() != null && !cambios.getCorreo().isEmpty()) {
+//            entrenador.setCorreo(cambios.getCorreo());
+//        }
         if (cambios.getPassword() != null && !cambios.getPassword().isEmpty()) {
             entrenador.setPassword(passwordEnconder.encode(cambios.getPassword()));
         }

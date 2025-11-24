@@ -83,10 +83,9 @@ public class EntrenadorController {
         rol.setIdrol(entrenador.rol.getIdRol());
         entrenadorBD.setRol(rol);
         Optional<Entrenador> entrenadorOld = entrenadorService.GetById(idEntrenador);
-        Entrenador entrenadorModifed = entrenadorService.patchEntrenador(idEntrenador, entrenadorBD);
         if (entrenadorOld.isPresent()) {
             Entrenador entrenadorOld2 = entrenadorOld.get();
-                if (!Objects.equals(entrenadorModifed.getUsername(), entrenadorOld2.getUsername())) {
+            if (!Objects.equals(entrenador.getUsername(), entrenadorOld2.getUsername())) {
                 String html = """
                                           <!DOCTYPE html>
                                           <html lang="es">
@@ -178,7 +177,7 @@ public class EntrenadorController {
                                                   </div>
                                                   <div class="content">
                                                       <div class="pokeball"></div>
-                                                      <h2>\u00a1Hola """ + entrenadorModifed.getUsername() + "!</h2>\n"
+                                                      <h2>\u00a1Hola """ + entrenadorBD.getUsername() + "!</h2>\n"
                         + "            <p>Queremos informarte que tu usuario ha sido cambiado exitosamente.</p>\n"
                         + "            <p>Si tú realizaste este cambio, no necesitas hacer nada más.</p>\n"
                         + "            <p>Si <strong>no fuiste tú</strong>, te recomendamos  contactar con el soporte técnico.</p>\n"
@@ -190,11 +189,14 @@ public class EntrenadorController {
                         + "    </div>\n"
                         + "</body>\n"
                         + "</html>";
-                emailService.sendEmail(entrenadorModifed.getCorreo(), "Actualizacion de nombre de usuario", html);
+
+                emailService.sendEmail(entrenadorBD.getCorreo(), "Actualizacion de nombre de usuario", html);
 
             }
 
         }
+        Entrenador entrenadorModifed = entrenadorService.patchEntrenador(idEntrenador, entrenadorBD);
+
         return ResponseEntity.ok(entrenadorModifed);
     }
 
