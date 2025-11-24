@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import risosu.it.PokeApiClient.Service.PokemonService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -24,6 +25,11 @@ public class PokemonController {
     @GetMapping()
     public ResponseEntity GetAll() {
         return ResponseEntity.ok(pokemonService.GetTypes());
+    }
+    
+    @GetMapping("/{idPokemon}/count")
+    public ResponseEntity SaveTimes(@PathVariable("idPokemon") int idPokemon){
+        return ResponseEntity.ok(pokemonService.CountPokemon(idPokemon));
     }
 
 }
