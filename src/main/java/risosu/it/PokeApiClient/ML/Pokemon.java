@@ -13,6 +13,7 @@ public class Pokemon {
         this.is_default = is_default;
         this.sprites = sprites;
         this.cries = cries;
+        
     }
 
     private int id;
@@ -26,6 +27,16 @@ public class Pokemon {
     private Integer weight; //Peso de pokemon expresado en hectogramos 1hectogramo = 100 gramos
 
     private boolean is_default; //Si el pokemon se encuentra en su forma base (No evolucionado )
+    
+    private int favorites;
+
+    public int getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(int favorites) {
+        this.favorites = favorites;
+    }
 
     public List<Sprite> sprites; //Imagenes del pokemon 
 

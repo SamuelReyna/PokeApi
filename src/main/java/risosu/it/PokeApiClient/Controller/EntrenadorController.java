@@ -189,29 +189,46 @@ public class EntrenadorController {
         return "redirect:/pokeControl/admin/usuarios";
     }
 
-    @GetMapping("/pokemones")
-    public String GetAllPokemons(Model model) {
+//    @GetMapping("/pokemones")
+//    public String GetAllPokemons(Model model) {
+//
+//        List<Pokemon> pokemones = pokeservice.getFavTypes()
+//                .stream()
+//                .collect(Collectors.toList());
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        for (Pokemon pokemon : pokemones) {
+//            ResponseEntity<Integer> responseEntity
+//                    = restTemplate.exchange("http://localhost:8081/api/pokemon/" + pokemon.getId() + "/count",
+//                            HttpMethod.GET,
+//                            HttpEntity.EMPTY,
+//                            Integer.class);
+//
+//            if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
+//
+//            }
+//        }
+//
+//        model.addAttribute("pokemons", pokemones);
+//
+//        return "pokemones";
+//    }
+    @GetMapping("/pokemones-save")
+    public String pokemonesSave(HttpSession session, Model model) {
+        String token = (String) session.getAttribute("token");
 
-        List<Pokemon> pokemones = pokeservice.getFavTypes()
-                .stream()
-                .collect(Collectors.toList());
-        RestTemplate restTemplate = new RestTemplate();
+        if (token == null) {
+            return "redirect:/pokemon";
 
-        for (Pokemon pokemon : pokemones) {
-            ResponseEntity<Integer> responseEntity
-                    = restTemplate.exchange("http://localhost:8081/api/pokemon/" + pokemon.getId() + "/count",
-                            HttpMethod.GET,
-                            HttpEntity.EMPTY,
-                            Integer.class);
+        } else if (token != null) {
 
-           if(responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)){
-               
-           }
+            List<Pokemon> pokemones = pokeservice.getFavTypes();
+
+            model.addAttribute("pokemones", pokemones);
+            model.addAttribute("username", session.getAttribute("username"));
+            model.addAttribute("role", session.getAttribute("role"));
         }
-
-        model.addAttribute("pokemons", pokemones);
-
-        return "pokemones";
+        return "pokefavs";
     }
 
 }

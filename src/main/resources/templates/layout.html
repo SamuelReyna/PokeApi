@@ -330,6 +330,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         data: Object.values(stats),
                         backgroundColor: 'rgba(250, 105, 65, 0.786)',
                         borderColor: '#afe2ff',
+
                         borderWidth: 1,
                         pointBackgroundColor: 'rgba(255, 99, 132, .5)'
                     }]
@@ -338,8 +339,30 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 type: 'radar',
                 data: data,
                 options: {
-                    scales: {r: {min: 0, max: 120, ticks: {stepSize: 20, display: false}, grid: {color: 'rgba(200,200,200,1)'}, pointLabels: {font: {size: 14, color: 'white'}}}},
-                    plugins: {legend: {display: false}}
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 120,
+                            ticks: {
+                                stepSize: 20,
+                                display: false
+                            },
+                            grid: {
+                                color: 'rgba(200,200,200,1)'
+                            },
+                            pointLabels: {
+                                color: 'white', 
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
                 }
             };
             radarChart = new Chart(document.getElementById('radarChart'), config);
@@ -422,9 +445,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             // Después de re-crear la tabla, sincronizamos el estado de favoritos en la UI
             sincronizarFavoritosUI();
         }
-    //                document.addEventListener('DOMContentLoaded', () => {
-    //
-    //                });
+        //                document.addEventListener('DOMContentLoaded', () => {
+        //
+        //                });
         /* ---------- FAVORITOS: delegación + fetch ---------- */
         function bindCheckboxDelegation() {
             const tbody = document.getElementById("tabla-pokemones");
