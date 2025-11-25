@@ -26,10 +26,15 @@ public class PokemonController {
     public ResponseEntity GetAll() {
         return ResponseEntity.ok(pokemonService.GetTypes());
     }
-    
+
     @GetMapping("/{idPokemon}/count")
-    public ResponseEntity SaveTimes(@PathVariable("idPokemon") int idPokemon){
+    public ResponseEntity SaveTimes(@PathVariable("idPokemon") int idPokemon) {
         return ResponseEntity.ok(pokemonService.CountPokemon(idPokemon));
+    }
+
+    @GetMapping("/pokedex")
+    public ResponseEntity pokedex() {
+        return ResponseEntity.ok(pokemonService.GetFavs());
     }
 
 }

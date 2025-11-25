@@ -7,7 +7,6 @@ package risosu.it.PokeApiClient.DAO;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import risosu.it.PokeApiClient.JPA.Entrenador;
 import risosu.it.PokeApiClient.JPA.PokedexPokemon;
 import risosu.it.PokeApiClient.JPA.PokedexPokemonId;
 

@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import risosu.it.PokeApiClient.JPA.Entrenador;
 import risosu.it.PokeApiClient.JPA.PokedexEntrenador;
 
 @Repository
@@ -25,6 +24,6 @@ public interface IPokedexEntrenadorRepository extends JpaRepository<PokedexEntre
         WHERE pe.idEntrenador = :idEntrenador
     """)
     List<PokedexEntrenador> cargaPokedexCompleta(@Param("idEntrenador") int idEntrenaador);
-    
+
     List<PokedexEntrenador> findByIdEntrenador(int idEntrenador);
 }
