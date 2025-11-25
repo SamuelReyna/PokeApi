@@ -187,7 +187,44 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
             </nav>
         </div>
-
+        <div class="modal fade"  id="favoritos" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Agregar a favoritos</h5>
+                        <button type="button" class="close cerrarModal" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Seguro que deseas agregar a favoritos?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="confirmFav" class="btn btn-primary">Agregar</button>
+                        <button type="button" class="btn btn-secondary cerrarModal" data-dismiss="modal" >Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade"  id="deleteFav" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Eliminar de favoritos</h5>
+                        <button type="button" class="close cerrarModalDelete" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Seguro que deseas eliminar de favoritos?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btDeleteFav" class="btn btn-danger">Eliminar</button>
+                        <button type="button" class="btn btn-secondary cerrarModalDelete" data-dismiss="modal" >Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <main layout:fragment="content" class="container">
 
@@ -196,7 +233,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     </body>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
-
     <script>
         let radarChart = null;
         let favoritosSet = new Set(); // ids de favoritos (idJson)
@@ -354,31 +390,31 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 const checkboxId = `checkbox-${pokemon.id}`;
 
                 fila.innerHTML = `
-      <td><img src="${imgFront}" class="pokemon-picture" /></td>
-      <td><div><span>${pokemon.order || ""}</span> <span>${pokemon.name}</span></div></td>
-      <td><div><span>${typeNames}</span></div></td>
-      <td><div><i class="bi bi-arrows-vertical"></i> ${pokemon.height}</div><div><i class="bi bi-arrows"></i> ${pokemon.weight}</div></td>
-      <td>
-        <div class="checkbox-container">
-          <input type="checkbox" class="poke-checkbox" id="${checkboxId}"
-                 data-id="${pokemon.id}"
-                 data-name="${pokemon.name}"
-                 data-type="${(pokemon.types && pokemon.types[0]) ? pokemon.types[0].name : ''}"
-                 data-height="${pokemon.height}"
-                 data-weight="${pokemon.weight}"
-                 data-img="${fila.dataset.img}"
-                 data-img-back="${fila.dataset.imgBack}"
-                 data-crie="${fila.dataset.crie}"
-                 data-hp="${fila.dataset.hp}"
-                 data-atk="${fila.dataset.atk}"
-                 data-def="${fila.dataset.def}"
-                 data-spa="${fila.dataset.spa}"
-                 data-spd="${fila.dataset.spd}"
-                 data-speed="${fila.dataset.speed}" />
-          <label for="${checkboxId}" class="checkmark"></label>
-        </div>
-      </td>
-    `;
+                  <td><img src="${imgFront}" class="pokemon-picture" /></td>
+                  <td><div><span>${pokemon.order || ""}</span> <span>${pokemon.name}</span></div></td>
+                  <td><div><span>${typeNames}</span></div></td>
+                  <td><div><i class="bi bi-arrows-vertical"></i> ${pokemon.height}</div><div><i class="bi bi-arrows"></i> ${pokemon.weight}</div></td>
+                  <td>
+                    <div class="checkbox-container">
+                      <input type="checkbox" class="poke-checkbox" id="${checkboxId}"
+                             data-id="${pokemon.id}"
+                             data-name="${pokemon.name}"
+                             data-type="${(pokemon.types && pokemon.types[0]) ? pokemon.types[0].name : ''}"
+                             data-height="${pokemon.height}"
+                             data-weight="${pokemon.weight}"
+                             data-img="${fila.dataset.img}"
+                             data-img-back="${fila.dataset.imgBack}"
+                             data-crie="${fila.dataset.crie}"
+                             data-hp="${fila.dataset.hp}"
+                             data-atk="${fila.dataset.atk}"
+                             data-def="${fila.dataset.def}"
+                             data-spa="${fila.dataset.spa}"
+                             data-spd="${fila.dataset.spd}"
+                             data-speed="${fila.dataset.speed}" />
+                      <label for="${checkboxId}" class="checkmark"></label>
+                    </div>
+                  </td>
+                `;
 
                 cuerpo.appendChild(fila);
             });
@@ -386,16 +422,54 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             // Después de re-crear la tabla, sincronizamos el estado de favoritos en la UI
             sincronizarFavoritosUI();
         }
-
+    //                document.addEventListener('DOMContentLoaded', () => {
+    //
+    //                });
         /* ---------- FAVORITOS: delegación + fetch ---------- */
         function bindCheckboxDelegation() {
             const tbody = document.getElementById("tabla-pokemones");
+
             // delegación: cuando un input.poke-checkbox cambia, manejamos la petición
             tbody.addEventListener("change", function (e) {
                 const target = e.target;
+                const botonesClose = document.getElementsByClassName('cerrarModal');
+                const botonesCloseDelete = document.getElementsByClassName('cerrarModalDelete');
+
+                // Convertir a array y hacer forEach
+                Array.from(botonesClose).forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('favoritos'));
+
+                        if (modal) {
+                            target.checked = false;
+                            console.log('cancelar agregacion');
+                            modal.hide();
+                        }
+
+                        console.log('Modal cerrado agregar');
+                    });
+                });
+                Array.from(botonesCloseDelete).forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('deleteFav'));
+
+                        if (modal) {
+                            target.checked = true;
+                            console.log('cancelar agregacion');
+                            modal.hide();
+                        }
+                        console.log('Modal cerrado delete');
+                    });
+                });
                 if (target && target.classList && target.classList.contains("poke-checkbox")) {
-                    // evitar que el click active el onclick de la fila (si el navegador lo intenta)
+                    // evitar que el click active el onclick de la fila
                     e.stopPropagation();
+                    if (target.checked) {
+                        new bootstrap.Modal(document.getElementById('favoritos')).show();
+                    } else {
+                        new bootstrap.Modal(document.getElementById('deleteFav')).show();
+
+                    }
 
                     const estado = target.checked;
                     const pokemon = {
@@ -416,33 +490,71 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         speed: target.dataset.speed
                     };
 
-                    fetch('/pokeControl/standar/favoritos', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify(pokemon)
-                    })
-                            .then(res => {
-                                if (!res.ok)
-                                    return res.text().then(t => Promise.reject(t));
-                                return res.json();
-                            })
-                            .then(data => {
-                                console.log('Actualización exitosa:', data);
-                                // actualizar set local para mantener UI consistente
-                                if (pokemon.favorito)
-                                    favoritosSet.add(pokemon.idPokemon);
-                                else
-                                    favoritosSet.delete(pokemon.idPokemon);
-                            })
-                            .catch(err => {
-                                console.error('Error al actualizar favorito:', err);
-                                // opcional: revertir checkbox si falla
-                                target.checked = !target.checked;
-                            });
+                    const confirmBtn = document.getElementById("confirmFav");
+                    const deleteBtn = document.getElementById("btDeleteFav");
+                    confirmBtn.addEventListener("click", function () { // Quitado '=>' después de 'function'
+                        fetch('/pokeControl/standar/favoritos', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify(pokemon)
+                        })
+                                .then(res => {
+                                    if (!res.ok)
+                                        return res.text().then(t => Promise.reject(t));
+                                    return res.json();
+                                })
+                                .then(data => {
+                                    console.log('Actualización exitosa:', data);
+                                    // actualizar set local para mantener UI consistente
+                                    const modal = bootstrap.Modal.getInstance(document.getElementById('favoritos'));
+                                    if (modal) {
+                                        modal.hide();
+                                    }
+                                    if (pokemon.favorito)
+                                        favoritosSet.add(pokemon.idPokemon);
+                                    else
+                                        favoritosSet.delete(pokemon.idPokemon);
+                                })
+                                .catch(err => {
+                                    console.error('Error al actualizar favorito:', err);
+                                    // opcional: revertir checkbox si falla
+                                    target.checked = !target.checked;
+                                });
+                    });
+                    deleteBtn.addEventListener("click", function () { // Quitado '=>' después de 'function'
+                        fetch('/pokeControl/standar/favoritos', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify(pokemon)
+                        })
+                                .then(res => {
+                                    if (!res.ok)
+                                        return res.text().then(t => Promise.reject(t));
+                                    return res.json();
+                                })
+                                .then(data => {
+                                    console.log('Actualización exitosa:', data);
+                                    // actualizar set local para mantener UI consistente
+                                    const modal = bootstrap.Modal.getInstance(document.getElementById('deleteFav'));
+                                    if (modal) {
+                                        modal.hide();
+                                    }
+                                    if (pokemon.favorito)
+                                        favoritosSet.add(pokemon.idPokemon);
+                                    else
+                                        favoritosSet.delete(pokemon.idPokemon);
+                                })
+                                .catch(err => {
+                                    console.error('Error al actualizar favorito:', err);
+                                    // opcional: revertir checkbox si falla
+                                    target.checked = !target.checked;
+                                });
+                    });
+
                 }
             });
 
-            // Evitar que clic en checkbox dispare el onclick de la fila (al hacer click en label/input)
+            // Evitar que clic en checkbox dispare el onclick de la fila
             tbody.addEventListener("click", function (e) {
                 const target = e.target;
                 if (target && (target.classList && target.classList.contains("poke-checkbox") || target.tagName === 'LABEL')) {
@@ -492,5 +604,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         });
 
     </script>
+
 </html> 
 

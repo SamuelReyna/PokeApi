@@ -39,39 +39,39 @@
 
                             <!-- Contenido de la tarjeta -->
 
-                                <div class="profile-inner">
+                            <div class="profile-inner">
 
-                                    <!-- Foto -->
-                                    <img class="profile-avatar"
-                                         src="https://i.pravatar.cc/150"
-                                         alt="avatar">
+                                <!-- Foto -->
+                                <img class="profile-avatar"
+                                     src="https://i.pravatar.cc/150"
+                                     alt="avatar">
 
-                                    <!-- Nombre -->
-                                    <div class="profile-name mt-2">
-                                        <span th:text="|${entrenador.nombre} ${entrenador.apellidoPaterno} ${entrenador.apellidoMaterno}|"></span>
+                                <!-- Nombre -->
+                                <div class="profile-name mt-2">
+                                    <span th:text="|${entrenador.nombre} ${entrenador.apellidoPaterno} ${entrenador.apellidoMaterno}|"></span>
+                                </div>
+
+                                <!-- Datos con iconos -->
+                                <div class="profile-info mt-3">
+
+                                    <div class="profile-item">
+                                        <i class="fa-solid fa-user"></i>
+                                        <span th:text="${entrenador.username}"></span>
                                     </div>
 
-                                    <!-- Datos con iconos -->
-                                    <div class="profile-info mt-3">
+                                    <div class="profile-item">
+                                        <i class="fa-solid fa-envelope"></i>
+                                        <span th:text="${entrenador.correo}"></span>
+                                    </div>
 
-                                        <div class="profile-item">
-                                            <i class="fa-solid fa-user"></i>
-                                            <span th:text="${entrenador.username}"></span>
-                                        </div>
-
-                                        <div class="profile-item">
-                                            <i class="fa-solid fa-envelope"></i>
-                                            <span th:text="${entrenador.correo}"></span>
-                                        </div>
-
-                                        <div class="profile-item">
-                                            <i class="fa-solid fa-book"></i>
-                                            <span th:text="${pokedex.nombre}"></span>
-                                        </div>
-
+                                    <div class="profile-item">
+                                        <i class="fa-solid fa-book"></i>
+                                        <span th:text="${pokedex.nombre}"></span>
                                     </div>
 
                                 </div>
+
+                            </div>
 
 
                         </div>
@@ -169,107 +169,6 @@
             </div>
 
         </div>
-        <script>
-            /* ---------- FAVORITOS: delegación + fetch ---------- */
-            function bindCheckboxDelegation() {
-                const tbody = document.getElementById("tabla-pokemones");
-                // delegación: cuando un input.poke-checkbox cambia, manejamos la petición
-                tbody.addEventListener("change", function (e) {
-                    const target = e.target;
-                    if (target && target.classList && target.classList.contains("poke-checkbox")) {
-                        // evitar que el click active el onclick de la fila (si el navegador lo intenta)
-                        e.stopPropagation();
-
-                        const estado = target.checked;
-                        const pokemon = {
-                            idPokemon: parseInt(target.dataset.id),
-                            favorito: estado,
-                            nombre: target.dataset.name,
-                            tipo: target.dataset.type,
-                            altura: target.dataset.height,
-                            peso: target.dataset.weight,
-                            img: target.dataset.img,
-                            imgBack: target.dataset.imgBack,
-                            crie: target.dataset.crie,
-                            hp: target.dataset.hp,
-                            atk: target.dataset.atk,
-                            def: target.dataset.def,
-                            spa: target.dataset.spa,
-                            spd: target.dataset.spd,
-                            speed: target.dataset.speed
-                        };
-
-                        fetch('/pokeControl/standar/favoritos', {
-                            method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify(pokemon)
-                        })
-                                .then(res => {
-                                    if (!res.ok)
-                                        return res.text().then(t => Promise.reject(t));
-                                    return res.json();
-                                })
-                                .then(data => {
-                                    console.log('Actualización exitosa:', data);
-                                    // actualizar set local para mantener UI consistente
-                                    if (pokemon.favorito)
-                                        favoritosSet.add(pokemon.idPokemon);
-                                    else
-                                        favoritosSet.delete(pokemon.idPokemon);
-                                })
-                                .catch(err => {
-                                    console.error('Error al actualizar favorito:', err);
-                                    // opcional: revertir checkbox si falla
-                                    target.checked = !target.checked;
-                                });
-                    }
-                });
-
-                // Evitar que clic en checkbox dispare el onclick de la fila (al hacer click en label/input)
-                tbody.addEventListener("click", function (e) {
-                    const target = e.target;
-                    if (target && (target.classList && target.classList.contains("poke-checkbox") || target.tagName === 'LABEL')) {
-                        e.stopPropagation();
-                    }
-                }, true);
-            }
-
-            async function obtenerFavoritos() {
-                try {
-                    const res = await fetch(`/pokeControl/standar/getFavoritos`);
-                    if (!res.ok) {
-                        console.error("Error al obtener favoritos");
-                        return;
-                    }
-                    const favoritos = await res.json();
-                    // asumes que la respuesta es un array con campo idJson (según tu código anterior)
-                    favoritosSet = new Set((favoritos || []).map(f => parseInt(f.idJson)));
-                    console.log(favoritosSet);
-
-                    return favoritosSet;
-                } catch (err) {
-                    console.error("Error al obtener favoritos:", err);
-                }
-            }
-
-            function sincronizarFavoritosUI() {
-                // marca/desmarca checkboxes según favoritosSet
-                document.querySelectorAll('.poke-checkbox').forEach(cb => {
-                    const idJson = parseInt(cb.dataset.id);
-                    cb.checked = favoritosSet.has(idJson);
-                });
-            }
-
-            /* ---------- Si necesitas exponer una función para recargar favoritos desde fuera ---------- */
-            async function recargarFavoritosYUI() {
-                await obtenerFavoritos();
-                sincronizarFavoritosUI();
-            }
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
-
-
 
 
     </body>

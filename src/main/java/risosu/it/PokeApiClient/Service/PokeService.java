@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package risosu.it.PokeApiClient.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,12 +6,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -47,8 +41,7 @@ public class PokeService {
                 List<Integer> idsJson = pokefavs.stream()
                         .map(p -> (Integer) p.get("idJson"))
                         .toList();
-//          
-
+                
                 List<Pokemon> pokefavs2 = pokemonList.stream()
                         .filter(pokemon -> idsJson.contains(pokemon.getId()))
                         .toList();
@@ -57,7 +50,7 @@ public class PokeService {
 
             }
 
-        } catch (IOException e) {   
+        } catch (IOException e) {
             e.printStackTrace();
 
             return null;

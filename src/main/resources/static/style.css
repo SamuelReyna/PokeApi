@@ -489,7 +489,7 @@ input:checked + .slider {
     display: none;
 }
 
-.modal{
+/*.modal{
 
     background: linear-gradient(to bottom, rgba(46, 58, 106, 0.864), rgba(39, 16, 39, 0.821));
     align-items: center;
@@ -504,7 +504,7 @@ input:checked + .slider {
     padding: 10px;
     margin: 10px auto;
     box-shadow: rgba(9, 20, 48, 0.467) 0px 4px 8px;
-}
+}*/
 
 .form-Modal {
     padding: 20px;

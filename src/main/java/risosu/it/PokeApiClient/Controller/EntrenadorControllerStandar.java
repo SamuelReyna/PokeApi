@@ -7,7 +7,6 @@ package risosu.it.PokeApiClient.Controller;
 import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import risosu.it.PokeApiClient.DTO.FavoritoDTO;
-import risosu.it.PokeApiClient.DTO.FavoritosDTO;
 import risosu.it.PokeApiClient.DTO.PokeFavoritoDTO;
 import risosu.it.PokeApiClient.Service.PokeService;
 
@@ -34,8 +32,9 @@ public class EntrenadorControllerStandar {
 
     private final String url = "http://localhost:8081/api/entrenador";
 
-    @Autowired
-    private PokeService pokeService;
+//    @Autowired
+//    private PokeService pokeService;
+    
     @PostMapping("/favoritos")
     @ResponseBody
     public ResponseEntity<?> actualizarFavorito(@RequestBody PokeFavoritoDTO pokemon,
