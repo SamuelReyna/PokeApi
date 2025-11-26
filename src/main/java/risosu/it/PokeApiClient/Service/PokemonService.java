@@ -18,7 +18,7 @@ public class PokemonService {
     private IPokemonPokedex pokemonPokedex;
 
     public int Count() {
-        return (int) iPokemonRepository.count();
+        return (int) pokemonPokedex.count();
     }
 
     public List<Pokemon> GetTypes() {
