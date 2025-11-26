@@ -189,30 +189,6 @@ public class EntrenadorController {
         return "redirect:/pokeControl/admin/usuarios";
     }
 
-//    @GetMapping("/pokemones")
-//    public String GetAllPokemons(Model model) {
-//
-//        List<Pokemon> pokemones = pokeservice.getFavTypes()
-//                .stream()
-//                .collect(Collectors.toList());
-//        RestTemplate restTemplate = new RestTemplate();
-//
-//        for (Pokemon pokemon : pokemones) {
-//            ResponseEntity<Integer> responseEntity
-//                    = restTemplate.exchange("http://localhost:8081/api/pokemon/" + pokemon.getId() + "/count",
-//                            HttpMethod.GET,
-//                            HttpEntity.EMPTY,
-//                            Integer.class);
-//
-//            if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
-//
-//            }
-//        }
-//
-//        model.addAttribute("pokemons", pokemones);
-//
-//        return "pokemones";
-//    }
     @GetMapping("/pokemones-save")
     public String pokemonesSave(HttpSession session, Model model) {
         String token = (String) session.getAttribute("token");

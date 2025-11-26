@@ -91,7 +91,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/ajustes/{username}")
-    public String ajustes(@PathVariable("username") String username, Model model, @ModelAttribute("password") Password password) {
+    public String ajustes(@PathVariable("username") String username, Model model, @ModelAttribute("password") Password password, HttpSession session) {
         RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity<Entrenador> responseEntity
@@ -99,6 +99,7 @@ public class UsuarioController {
                 });
         if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
             Entrenador entrenador = responseEntity.getBody();
+            model.addAttribute("role", session.getAttribute("role"));
             model.addAttribute("entrenador", entrenador);
         }
 

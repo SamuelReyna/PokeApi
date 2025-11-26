@@ -272,7 +272,7 @@
             <!-- Dashboard header -->
             <div class="d-flex align-items-center justify-content-between mb-3">
                 <h2 class="m-0">Panel de control</h2>
-                <div>
+                <div th:if="${role} == '[ROLE_Admin]'">
                     <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#createModal"><i class="fa-solid fa-plus me-1"></i> Crear</button>
                 </div>
             </div>
