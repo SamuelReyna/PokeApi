@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -43,6 +44,7 @@ public class PokeController {
     private PokeService pokeService;
 //    private final String url = "http://localhost:8081//";
 //Este controlador es accedido desde vista "loading" para validar si existe ya el archivo JSON y redirigir:
+    private Map<String, Boolean> sortOrder = new HashMap<>();
 
     @GetMapping("/status")
     @ResponseBody
@@ -155,25 +157,51 @@ public class PokeController {
             if (campo == null) {
                 return pokemones;
             }
+
+// En tu método:
             resultados = pokemones.stream()
                     .sorted((p1, p2) -> {
-                        switch (campo.toLowerCase()) {
+                        int comparison;
+                        String campoLower = campo.toLowerCase();
+
+                        // Obtener el estado actual del toggle para este campo (default true = ASC)
+                        boolean isAsc = sortOrder.getOrDefault(campoLower, true);
+
+                        switch (campoLower) {
                             case "name":
-                                return p1.getName().compareToIgnoreCase(p2.getName());
+                                comparison = p1.getName().compareToIgnoreCase(p2.getName());
+                                return isAsc ? comparison : -comparison;
 
                             case "type":
                                 String tipo1 = p1.getTypes().get(0).getName();
                                 String tipo2 = p2.getTypes().get(0).getName();
-                                return tipo1.compareToIgnoreCase(tipo2);
+                                comparison = tipo1.compareToIgnoreCase(tipo2);
+                                return isAsc ? comparison : -comparison;
 
                             case "medidas":
-                                return Integer.compare(p1.getHeight(), p2.getHeight());
+                                comparison = Integer.compare(p1.getHeight(), p2.getHeight());
+                                return isAsc ? comparison : -comparison;
+
+                            case "order":
+                                if (p1.getOrder() <= 0 && p2.getOrder() <= 0) {
+                                    comparison = Integer.compare(p1.getOrder(), p2.getOrder());
+                                } else if (p1.getOrder() <= 0) {
+                                    comparison = 1;
+                                } else if (p2.getOrder() <= 0) {
+                                    comparison = -1;
+                                } else {
+                                    comparison = Integer.compare(p1.getOrder(), p2.getOrder());
+                                }
+                                return isAsc ? comparison : -comparison;
 
                             default:
                                 return 0;
                         }
                     })
                     .collect(Collectors.toList());
+
+// Toggle independiente para este campo específico
+            sortOrder.put(campo.toLowerCase(), !sortOrder.getOrDefault(campo.toLowerCase(), true));
         } catch (IOException e) {
             e.printStackTrace();
 

@@ -33,40 +33,50 @@
             </div>
 
             <div class="content">
-                <div class="row">
-                    <div class="col-2">
-                        <!-- PokeBuscador integrado -->
-                        <input 
-                            id="pokeBuscador" 
-                            type="text" 
-                            class="form-control pokeBuscadorInput" 
-                            placeholder="Buscar Pokémon..."
-                            aria-label="Buscar Pokémon"
-                            oninput="buscarPokemon(this.value)" >
-                        <i class="bi bi-search text-white ms-2"></i>
+                <div class="row g-3 align-items-center">
 
-
+                    <!-- BUSCADOR -->
+                    <div class="col-auto">
+                        <div class="input-group shadow-sm buscador-style">
+                            <span class="input-group-text bg-success text-white">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input 
+                                id="pokeBuscador" 
+                                type="text" 
+                                class="form-control pokeBuscadorInput"
+                                placeholder="Buscar Pokémon..."
+                                aria-label="Buscar Pokémon"
+                                oninput="buscarPokemon(this.value)"
+                                style="height: 42px"
+                                >
+                            
+                        </div>
                     </div>
 
-                    <div class="col-2">
-                        <div class="d-flex align-items-center ">
-                            <!-- Botón de limpiar -->
-                            <button id="btnLimpiar" class="btn btn-danger" onclick="limpiarTipos()">
+                    <!-- LIMPIAR + SELECT -->
+                    <div class="col-auto">
+                        <div class="d-flex align-items-center gap-2">
+
+                            <!-- Botón limpiar -->
+                            <button id="btnLimpiar" class="btn btn-danger shadow-sm">
                                 <i class="bi bi-trash-fill"></i>
                             </button>
 
-                            <!-- Selector de tipos -->
+                            <!-- Select de tipos -->
                             <div class="position-relative">
-                                <div class="pokeSelect" onclick="toggleCheckboxList()" style="cursor: pointer;">
+                                <div class="pokeSelect shadow-sm" onclick="toggleCheckboxList()" style="cursor: pointer;">
                                     <i class="bi bi-caret-down-fill"></i> Tipos
                                 </div>
                                 <div id="checkboxList" class="checkbox-list" style="display: none;"></div>
                             </div>
+
                         </div>
                     </div>
 
                 </div>
             </div>
+
 
 
             <div class="row">
@@ -75,7 +85,10 @@
                         <table class="table-hover text-white align-middle">
                             <thead class="">
                                 <tr>
-                                    <th class="col-1"></th>
+                                    <th class="col-1 text-center"> Imagen</th>
+                                    <th onclick="ordenarPokemon('order')" class="col-1" style="cursor: pointer;"> 
+                                        ORDER
+                                    </th>
                                     <th onclick="ordenarPokemon('name')" class="col-1" style="cursor: pointer;">
                                         NAME
                                     </th>
@@ -114,10 +127,14 @@
                                     <td>
                                         <img th:src="${pokemon.sprites[0].front_default}" class="pokemon-picture" alt="Imagen del Pokémon" />
                                     </td>
-
                                     <td>
                                         <div>
-                                            <span th:text="${pokemon.order}"></span> <span th:text="${pokemon.name}" class="m-0"></span>
+                                            <span th:text="${pokemon.order}" class="m-0"></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <span th:text="${pokemon.name}" class="m-0"></span>
                                         </div>
                                     </td>
                                     <td>
@@ -384,7 +401,8 @@
                         if (token !== null) {
                             fila.innerHTML = `
                             <td><img src="${imgFront}" class="pokemon-picture" /></td>
-                            <td><div><span>${pokemon.order || ""}</span> <span>${pokemon.name}</span></div></td>
+                            <td><div><span>${pokemon.order}</span></div></td>
+                                <td><div><span>${pokemon.name}</span></div></td>
                             <td><div><span>${typeNames}</span></div></td>
                             <td><div><i class="bi bi-arrows-vertical"></i> ${pokemon.height}</div><div><i class="bi bi-arrows"></i> ${pokemon.weight}</div></td>
                             <td> <div class="checkbox-container">
@@ -410,7 +428,8 @@
                         } else {
                             fila.innerHTML = `
                             <td><img src="${imgFront}" class="pokemon-picture" /></td>
-                            <td><div><span>${pokemon.order || ""}</span> <span>${pokemon.name}</span></div></td>
+                            <td><div><span>${pokemon.order}</span></div></td>
+                            <td><div> <span>${pokemon.name}</span></div></td>
                             <td><div><span>${typeNames}</span></div></td>
                             <td><div><i class="bi bi-arrows-vertical"></i> ${pokemon.height}</div><div><i class="bi bi-arrows"></i> ${pokemon.weight}</div></td> `;
                         }

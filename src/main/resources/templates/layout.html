@@ -81,111 +81,75 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
             <nav layout:fragment="navCrystal" class="navbar navbar-expand-lg navbar-light navStyle mb-4 navTamaño">
                 <div class="container navcontenido">
-                    <a class="dropdown-item text-white" th:href="@{/pokeControl/admin/dashboard}"><i class="bi bi-grid-fill me-2"></i></a>
-
-                    <!-- Dropdown Dashboard -->
-                    <div th:if="${token} != null" class="dropdown d-flex gap-3 align-items-center me-4 text-white">
-
-                        <a class="dropdown-item" th:href="@{/pokeControl/profile/{username}(username=${username})}"><i class="bi bi-person-circle me-2"></i></a>
-                        <a class="dropdown-item" th:href="@{/pokemon}"><i class="bi bi-file-earmark-text-fill me-2"></i></a>
-
+                    <!-- Quick Actions agrupados -->
+                    <div th:if="${token} != null" class="d-flex gap-2 align-items-center">
+                        <a class="nav-icon-btn" th:href="@{/pokeControl/admin/dashboard}" data-bs-toggle="tooltip" title="Dashboard">
+                            <i class="bi bi-grid-fill text-white"></i>
+                            <span class="d-lg-none ms-2">Dashboard</span>
+                        </a>
+                        <a class="nav-icon-btn" th:href="@{/pokeControl/profile/{username}(username=${username})}" data-bs-toggle="tooltip" title="Mi Perfil">
+                            <i class="bi bi-person-circle text-white"></i>
+                            <span class="d-lg-none ms-2">Mi Perfil</span>
+                        </a>
+                        <a class="nav-icon-btn" th:href="@{/pokeControl/listar}" data-bs-toggle="tooltip" title="Pokédex">
+                            <i class="bi bi-file-earmark-text-fill text-white"></i>
+                            <span class="d-lg-none ms-2">Pokédex</span>
+                        </a>
                     </div>
 
-                    <!-- Botón para colapsar en móviles -->
+                    <!-- Logo/Brand para usuarios no logueados -->
+                    <div th:if="${token} == null" class="navbar-brand text-white">
+                        <i class="bi bi-circle-fill text-warning me-2" style="font-size: 0.6rem;"></i>
+                        PokéControl
+                    </div>
+
+                    <!-- Botón toggler -->
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
                             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
 
-                    <!-- Contenido del navbar -->
+                    <!-- Contenido colapsable -->
                     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-
-                        <div th:if="${token} == null" class="navbar-nav ms-auto align-items-center">
-
-                            <!-- Registrar -->
-                            <a th:href="@{/usuario/register}" class="nav-item nav-link text-white d-flex align-items-center me-3">
-                                <i class="bi bi-person-plus-fill me-1"></i> Registrar
+                        <!-- Usuario NO logueado -->
+                        <div th:if="${token} == null" class="navbar-nav ms-auto align-items-center gap-2">
+                            <a th:href="@{/usuario/register}" class="nav-item nav-link text-white d-flex align-items-center">
+                                <i class="bi bi-person-plus-fill me-2"></i> 
+                                Registrarse
                             </a>
-
-                            <!-- Iniciar sesión -->
-                            <a th:href="@{/usuario/login}" class="nav-item nav-link text-white d-flex align-items-center">
-                                <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar sesión
+                            <a th:href="@{/usuario/login}" class="nav-item nav-link text-white d-flex align-items-center btn-primary px-3 py-2 rounded">
+                                <i class="bi bi-box-arrow-in-right me-2"></i> 
+                                Iniciar sesión
                             </a>
                         </div>
 
-                        <div th:if="${token} != null" class="navbar-nav ms-auto align-items-center">
+                        <!-- Usuario logueado -->
+                        <div th:if="${token} != null" class="navbar-nav ms-auto align-items-center gap-2">
+                            <div class="nav-divider d-none d-lg-block mx-2" style="width: 2px; height: 30px; background: rgba(255,255,255,0.2);"></div>
 
-
-
-
-
-                            <!-- PokeBuscador integrado -->
-
-
-                            <!--                            <input 
-                            
-                            
-                                                            id="pokeBuscador" 
-                            
-                            
-                                                            type="text" 
-                            
-                            
-                                                            class="form-control pokeBuscadorInput" 
-                            
-                            
-                                                            placeholder="Buscar Pokémon..."
-                            
-                            
-                                                            aria-label="Buscar Pokémon"
-                            
-                            
-                                                            oninput="buscarPokemon(this.value)">
-                            
-                            
-                                                        <i class="bi bi-search text-white ms-2"></i>-->
-
-
-
-
-
-                            <!-- Usuario -->
-
-
-                            <a th:href="@{/usuario/profile/{username}(username=${username})}" class="nav-item nav-link text-white d-flex align-items-center me-3">
-
-
-                                <i class="bi bi-person-fill me-1"></i>
-
-
+                            <a th:href="@{/usuario/profile/{username}(username=${username})}" class="nav-item nav-link text-white d-flex align-items-center bg-white bg-opacity-10 px-3 py-2 rounded">
+                                <i class="bi bi-person-fill me-2"></i>
                                 <span th:text="${username}">Entrenador</span>
-
-
                             </a>
 
-
-
-
-
-                            <!-- Logout -->
-
-
-                            <a th:href="@{/usuario/logout}" class="nav-item nav-link text-white d-flex align-items-center">
-
-
-                                <i class="bi bi-box-arrow-right me-1"></i> Cerrar sesión
-
-
+                            <a th:href="@{/usuario/logout}" class="nav-item nav-link text-white d-flex align-items-center btn-outline-light px-3 py-2 rounded">
+                                <i class="bi bi-box-arrow-right me-2"></i> 
+                                Cerrar sesión
                             </a>
-
-
                         </div>
-
                     </div>
-
-
-
+                </div>
             </nav>
+
+            <!-- Inicializar tooltips de Bootstrap -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                        return new bootstrap.Tooltip(tooltipTriggerEl);
+                    });
+                });
+            </script>
         </div>
         <div class="modal fade"  id="favoritos" role="dialog">
             <div class="modal-dialog" role="document">
@@ -233,7 +197,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     </body>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
-  
+
 
 </html> 
 

@@ -1,4 +1,4 @@
-    
+
 body {
     background-image: url('/pokeLandScape.jpg');
     background-size: cover;      /* cubre toda la pantalla */
@@ -53,6 +53,27 @@ body {
 
 }
 
+.buscador-style input {
+    border: none;
+    border-radius: 0 8px 8px 0;
+}
+
+.buscador-style .input-group-text {
+    border: none;
+    border-radius: 8px 0 0 8px;
+}
+
+.pokeSelect {
+    background: #4CAF50;
+    padding: 7px 15px;
+    color: white;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.pokeSelect:hover {
+    background: #43a047;
+}
 
 .box {
     background-color: rgba(177, 188, 216, 0.305);

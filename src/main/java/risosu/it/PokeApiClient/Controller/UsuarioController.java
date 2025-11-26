@@ -234,7 +234,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/enviarEmailRecuperacion")
-    public String sendEmail(@RequestParam("correo") String correo) {
+    public String sendEmail(@RequestParam("correo") String correo, RedirectAttributes redirectAttributes) {
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -247,7 +247,11 @@ public class UsuarioController {
                 }
                 );
         if (response.getStatusCode() == HttpStatusCode.valueOf(200)) {
+            redirectAttributes.addFlashAttribute("message", "Porfavor revisa tu correo electronico");
             return "redirect:/usuario/login";
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Algo salió mal, intenta nuevamente");
+
         }
 
         return "redirect:/usuario/verify";
