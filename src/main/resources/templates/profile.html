@@ -302,7 +302,7 @@
 
                             <div class="mb-3">
                                 <label class="form-label fw-bold text-primary">Rol</label>
-                                <select class="form-select border-2 border-dark" th:field="*{Rol.IdRol}" id="editRol" required>
+                                <select th:disabled="${role} != '[ROLE_Admin]'" class="form-select border-2 border-dark" th:field="*{Rol.IdRol}" id="editRol" required>
                                     <option value="1">Admin</option>
                                     <option value="2">Usuario</option>
                                 </select>

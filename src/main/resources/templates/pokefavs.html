@@ -144,7 +144,8 @@
             <hr class="text-white-50">
             <ul class="nav nav-pills flex-column mb-auto">
                 <li><a  th:href="@{/pokeControl/admin/dashboard}" class="nav-link text-white"><i class="fa-solid fa-chart-pie me-2"></i> Dashboard</a></li>
-                <li><a th:href="@{/pokeControl/admin/usuarios}" class="nav-link text-white"><i class="fa-solid fa-users me-2"></i> Usuarios</a></li>
+                <li th:if="${role} == '[ROLE_Admin]'">
+                    <a th:href="@{/pokeControl/admin/usuarios}" class="nav-link text-white"><i class="fa-solid fa-users me-2"></i> Usuarios</a></li>
                 <li><a th:href="@{/pokeControl/admin/pokemones-save}" class="nav-link active"><i class="fa-solid fa-list me-2"></i> Pokemones</a></li>
 
                 <li><a th:href="@{/pokemon}" class="nav-link text-white"><i class="fa-solid fa-home me-2"></i> Inicio</a></li>

@@ -11,7 +11,11 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Fuente pixel retro -->
         <link href="https://fonts.cdnfonts.com/css/press-start-2p" rel="stylesheet" />
-
+        <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"
+        ></script>
         <style>
             body {
                 background: radial-gradient(circle at center, #7da27e 0%, #4d684d 100%);
@@ -156,12 +160,21 @@
 
                     <div class="mb-2 text-start">
                         <label class="form-label"><i class="bi bi-person-badge-fill"></i> Username</label>
-                        <input type="text" class="form-control" th:field="*{username}" name="username" placeholder="ash_ketchum" required />
+                        <input type="text" class="form-control" th:field="*{username}" id="username" name="username" placeholder="ash_ketchum" required />
+                        <span class="err-msg text-danger small"></span>
                     </div>
 
                     <div class="mb-2 text-start">
                         <label class="form-label"><i class="bi bi-lock-fill"></i> Password</label>
-                        <input type="password" th:field="*{password}" class="form-control" name="password" placeholder="••••••••" required />
+                        <input type="password" th:field="*{password}" id="password" class="form-control" name="password" placeholder="••••••••" required />
+                        <small class="err-msg text-danger small" id="password-msg"></small>
+
+                    </div>
+                    <div class="mb-2 text-start">
+                        <label class="form-label"><i class="bi bi-lock-fill"></i> Password</label>
+                        <input type="password" id="confirmPassword" class="form-control" name="password" placeholder="••••••••" required />
+                        <small class="err-msg text-danger small" id="confirmPassword-msg"></small>
+
                     </div>
 
                     <button type="submit" class="btn btn-start w-100 mt-2">
@@ -179,6 +192,75 @@
                 <div class="btn-b"></div>
             </div>
         </div>
+        <script>
+            $(document).ready(function () {
+                function validatePasswords() {
+                    let regex = new RegExp(
+                            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+                            );
+                    let password = $("#password").val();
+                    let confirmPassword = $("#confirmPassword").val();
+                    if (password.length > 0) {
+                        if (regex.test(password)) {
+                            $("#password-msg")
+                                    .text("Contraseña válida")
+                                    .removeClass("text-danger")
+                                    .addClass("text-success");
+                            console.log("La contraseña es válida");
+                        } else {
+                            $("#password-msg")
+                                    .text(
+                                            "Debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo"
+                                            )
+                                    .removeClass("text-success")
+                                    .addClass("text-danger");
+                            console.log("La contraseña no es válida");
+                        }
+                    }
+                    if (confirmPassword.length > 0) {
+                        if (password === confirmPassword) {
+                            $("#confirmPassword-msg")
+                                    .text("Las contraseñas coinciden")
+                                    .removeClass("text-danger")
+                                    .addClass("text-success");
+                            console.log("La contraseña coincide.");
+                        } else {
+                            $("#confirmPassword-msg")
+                                    .text("Las contraseñas no coinciden")
+                                    .removeClass("text-success")
+                                    .addClass("text-danger");
+                            console.log("La contraseña no coinciden");
+                        }
+                    }
+                }
+                $("#password, #confirmPassword").on("input", validatePasswords);
+            });
+            $(document).ready(function () {
+                function validateUsername() {
+                    let regex = new RegExp(
+                            /^(?=.{3,16}$)(?![_0-9])[a-zA-Z0-9_]+(?<!_)$/
+                            );
+                    let username = $("#username").val();
+                    if (username.length > 0) {
+                        if (regex.test(username)) {
+                            $("#username")
+                                    .removeClass("border-danger")
+                                    .addClass("border-success");
+                            $("#username").parent("div").siblings(".err-msg").text("");
+                        } else {
+                            $("#username")
+                                    .removeClass("border-success")
+                                    .addClass("border-danger");
+                            $("#username")
+                                    .parent("div")
+                                    .siblings(".err-msg")
+                                    .text("Formato no válido");
+                        }
+                    }
+                }
+                $("#username").on("input", validateUsername);
+            });
+        </script>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
