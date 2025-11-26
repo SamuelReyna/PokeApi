@@ -64,9 +64,13 @@
                                         <span th:text="${entrenador.correo}"></span>
                                     </div>
 
-                                    <div class="profile-item">
+                                    <div th:if="${pokedex} != null" class="profile-item">
                                         <i class="fa-solid fa-book"></i>
                                         <span th:text="${pokedex.nombre}"></span>
+                                    </div>
+                                    <div th:if="${pokedex} == null" class="profile-item">
+                                        <i class="fa-solid fa-book"></i>
+                                        <span >Sin pokedex</span>
                                     </div>
 
                                 </div>
@@ -92,26 +96,27 @@
                                 </thead>
 
                                 <tbody id="tabla-pokemones">
-                                    <tr th:each="pokemon : ${pokemones}" class="poke-fila p-2 mb-2 align-items-center"
-                                        th:attr="
-                                        data-id=${pokemon.id},
-                                        data-name=${pokemon.name},
-                                        data-height=${pokemon.height},
-                                        data-weight=${pokemon.weight},
-                                        data-types=${#strings.listJoin(pokemon.types.?[name != null].![name], ' ')},
-                                        data-img=${pokemon.sprites[0].front_default},
-                                        data-img-back=${pokemon.sprites[0].back_default},
-                                        data-crie=${pokemon.cries[0].latest},
-                                        data-hp=${pokemon.stats[0].base_stat},
-                                        data-atk=${pokemon.stats[1].base_stat},
-                                        data-def=${pokemon.stats[2].base_stat},
-                                        data-spa=${pokemon.stats[3].base_stat},
-                                        data-spd=${pokemon.stats[4].base_stat},
-                                        data-speed=${pokemon.stats[5].base_stat}"
+                                <th:block th:if="${!pokemones.empty}">
+                                    <tr  th:each="pokemon : ${pokemones}" class="poke-fila p-2 mb-2 align-items-center"
+                                         th:attr="
+                                         data-id=${pokemon.id},
+                                         data-name=${pokemon.name},
+                                         data-height=${pokemon.height},
+                                         data-weight=${pokemon.weight},
+                                         data-types=${#strings.listJoin(pokemon.types.?[name != null].![name], ' ')},
+                                         data-img=${pokemon.sprites[0].front_default},
+                                         data-img-back=${pokemon.sprites[0].back_default},
+                                         data-crie=${pokemon.cries[0].latest},
+                                         data-hp=${pokemon.stats[0].base_stat},
+                                         data-atk=${pokemon.stats[1].base_stat},
+                                         data-def=${pokemon.stats[2].base_stat},
+                                         data-spa=${pokemon.stats[3].base_stat},
+                                         data-spd=${pokemon.stats[4].base_stat},
+                                         data-speed=${pokemon.stats[5].base_stat}"
 
 
 
-                                        onclick="cargarPokemon(this)">
+                                         onclick="cargarPokemon(this)">
 
                                         <td>
                                             <img th:src="${pokemon.sprites[0].front_default}" class="pokemon-picture" alt="Imagen del Pokémon" />
@@ -161,6 +166,12 @@
 
 
                                     </tr>
+                                </th:block>
+                                <tr th:if="${pokemones == null || pokemones.empty}">                                    <td colspan="5" class="text-center text-white py-5">
+                                        <i class="fas fa-heart-broken fa-3x mb-3 d-block"></i>
+                                        <p class="fs-5">No tienes pokémones favoritos</p>
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>

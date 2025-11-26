@@ -121,12 +121,15 @@ public class EntrenadorController {
                 });
         if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
             redirectAttributes.addFlashAttribute("message", "Éxito al guardar usuario");
+        } else {
+            redirectAttributes.addFlashAttribute("errmessage", "Error al guardar usuario");
+
         }
         return "redirect:/pokeControl/admin/usuarios";
     }
 
     @PostMapping("/usuarios/update")
-    public String Update(RedirectAttributes redirectAttributes, @ModelAttribute("entrenador") Entrenador entrenador) {
+    public String Update(RedirectAttributes redirectAttributes, @ModelAttribute("entrenador") Entrenador entrenador, @RequestParam("view") String view) {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
@@ -140,9 +143,21 @@ public class EntrenadorController {
                         new ParameterizedTypeReference<Entrenador>() {
                 });
         if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
-            redirectAttributes.addFlashAttribute("message", "Éxito al guardar usuario");
+            redirectAttributes.addFlashAttribute("message", "Éxito al editar usuario");
+        } else {
+            redirectAttributes.addFlashAttribute("errmessage", "Error al editar usuario");
+
         }
-        return "redirect:/pokeControl/admin/usuarios";
+        switch (view) {
+            case "dashboard":
+                return "redirect:/pokeControl/admin/usuarios";
+            case "profile":
+                return "redirect:/usuario/profile/" + entrenador.getUsername();
+            case "ajustes":
+                return "redirect:/usuario/ajustes/" + entrenador.getUsername();
+            default:
+                return "redirect:/pokeControl/admin/usuarios";
+        }
     }
 
     @PostMapping("/usuarios/password")
@@ -151,7 +166,7 @@ public class EntrenadorController {
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
         if (!password.getPassword().equals(password.getConfirmPassword())) {
-            redirectAttributes.addAttribute("message", "Las contraseñas no coinciden");
+            redirectAttributes.addFlashAttribute("errmessage", "Las contraseñas no coinciden");
             return "redirect:/usuario/ajustes/" + username;
             // manejar error
         }
@@ -162,11 +177,16 @@ public class EntrenadorController {
                         entity, new ParameterizedTypeReference<Entrenador>() {
                 });
         if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
+            redirectAttributes.addFlashAttribute("message", "Éxito al cambiar contraseña");
+
+            return "redirect:/usuario/ajustes/" + username;
+
+        } else {
+            redirectAttributes.addFlashAttribute("errmessage", "Error al cambiar contraseña");
             return "redirect:/usuario/ajustes/" + username;
 
         }
 
-        return "redirect:/password/" + username;
     }
 
     @GetMapping("/usuarios/delete/{idEntrenador}")
@@ -183,7 +203,10 @@ public class EntrenadorController {
                 }
                 );
         if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(200)) {
-            redirectAttributes.addFlashAttribute("message", "Éxito al guardar usuario");
+            redirectAttributes.addFlashAttribute("message", "Éxito al eliminar usuario");
+        } else {
+            redirectAttributes.addFlashAttribute("errmessage", "Error al eliminar usuario");
+
         }
 
         return "redirect:/pokeControl/admin/usuarios";

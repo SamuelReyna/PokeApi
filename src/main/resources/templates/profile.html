@@ -165,7 +165,23 @@
                 </ul>
             </div>
         </aside>
+        <div th:if="${message}" 
+             class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" 
+             role="alert"
+             style="z-index: 9999; min-width: 300px;">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:text="${message}">Éxito al guardar usuario</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
+        <div th:if="${errmessage}" 
+             class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" 
+             role="alert"
+             style="z-index: 9999; min-width: 300px;">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span th:text="${err-message}">Error al guardar usuario</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <main class="content-area">
             <!--            <nav class="navbar navbar-expand-lg mb-4">
                             <div class="container-fluid">
@@ -262,7 +278,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
-                    <form id="editUserForm" method="POST" th:action="@{/pokeControl/admin/usuarios/update}" th:object="${entrenador}">
+                    <form id="editUserForm" method="POST" th:action="@{/pokeControl/admin/usuarios/update?view=profile}" th:object="${entrenador}">
                         <div class="modal-body" style="background-color: #fff9db;">
                             <input type="hidden" th:field="*{IdEntrenador}" id="editIdEntrenador">
 
@@ -321,6 +337,19 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            // Auto-cerrar alertas después de 5 segundos
+            document.addEventListener('DOMContentLoaded', function () {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    setTimeout(() => {
+                        const bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    }, 5000); // 5 segundos
+                });
+            });
+        </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
         <!--        <script>

@@ -76,9 +76,15 @@
                             <thead class="">
                                 <tr>
                                     <th class="col-1"></th>
-                                    <th class="col-1">Name</th>
-                                    <th class="col-1">Tipos</th>
-                                    <th class="col-1">Medidas</th>
+                                    <th onclick="ordenarPokemon('name')" class="col-1" style="cursor: pointer;">
+                                        NAME
+                                    </th>
+                                    <th onclick="ordenarPokemon('type')" class="col-1" style="cursor: pointer;">
+                                        TIPOS
+                                    </th>
+                                    <th onclick="ordenarPokemon('medidas')" class="col-1" style="cursor: pointer;">
+                                        MEDIDAS
+                                    </th>
                                     <th class="col-1" th:if="${token} != null">Favorito</th>
                                 </tr>
                             </thead>
@@ -187,7 +193,8 @@
                     </div>
                 </div>
             </div>
-            <script>
+            <script th:inline="javascript">
+                var token = /*[[${token}]]*/ [];
                 let radarChart = null;
                 let favoritosSet = new Set(); // ids de favoritos (idJson)
                 document.addEventListener("DOMContentLoaded", () => {
@@ -243,6 +250,12 @@
                 /* ---------- BUSCAR POR NOMBRE ---------- */
                 function buscarPokemon(nombre) {
                     fetch(`/pokeControl/searchByName?pokeBusqueda=${encodeURIComponent(nombre)}`)
+                            .then(res => res.json())
+                            .then(data => actualizarTabla(data))
+                            .catch(err => console.error("Error:", err));
+                }
+                function ordenarPokemon(campo) {
+                    fetch(`/pokeControl/orderBy?campo=${campo}`)
                             .then(res => res.json())
                             .then(data => actualizarTabla(data))
                             .catch(err => console.error("Error:", err));
@@ -366,13 +379,15 @@
                         const imgFront = fila.dataset.img || "/pokeBall.png";
                         const checkboxId = `checkbox-${pokemon.id}`;
 
-                        fila.innerHTML = `
+
+
+                        if (token !== null) {
+                            fila.innerHTML = `
                             <td><img src="${imgFront}" class="pokemon-picture" /></td>
                             <td><div><span>${pokemon.order || ""}</span> <span>${pokemon.name}</span></div></td>
                             <td><div><span>${typeNames}</span></div></td>
                             <td><div><i class="bi bi-arrows-vertical"></i> ${pokemon.height}</div><div><i class="bi bi-arrows"></i> ${pokemon.weight}</div></td>
-                            <td>
-                              <div class="checkbox-container">
+                            <td> <div class="checkbox-container">
                                 <input type="checkbox" class="poke-checkbox" id="${checkboxId}"
                                        data-id="${pokemon.id}"
                                        data-name="${pokemon.name}"
@@ -392,6 +407,13 @@
                               </div>
                             </td>
                           `;
+                        } else {
+                            fila.innerHTML = `
+                            <td><img src="${imgFront}" class="pokemon-picture" /></td>
+                            <td><div><span>${pokemon.order || ""}</span> <span>${pokemon.name}</span></div></td>
+                            <td><div><span>${typeNames}</span></div></td>
+                            <td><div><i class="bi bi-arrows-vertical"></i> ${pokemon.height}</div><div><i class="bi bi-arrows"></i> ${pokemon.weight}</div></td> `;
+                        }
 
                         cuerpo.appendChild(fila);
                     });

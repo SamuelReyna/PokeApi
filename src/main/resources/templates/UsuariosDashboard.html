@@ -164,6 +164,23 @@
             </div>
         </aside>
 
+        <div th:if="${message}" 
+             class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" 
+             role="alert"
+             style="z-index: 9999; min-width: 300px;">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:text="${message}">Éxito al guardar usuario</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div th:if="${errmessage}" 
+             class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" 
+             role="alert"
+             style="z-index: 9999; min-width: 300px;">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span th:text="${err-message}">Error al guardar usuario</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <!-- Main -->
         <main class="content-area">
             <!-- Navbar superior -->
@@ -382,7 +399,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
-                    <form id="editUserForm" method="POST" th:action="@{/pokeControl/admin/usuarios/update}" th:object="${entrenador}">
+                    <form id="editUserForm" method="POST" th:action="@{/pokeControl/admin/usuarios/update?view=dashboard}" th:object="${entrenador}">
                         <div class="modal-body" style="background-color: #fff9db;">
                             <input type="hidden" th:field="*{IdEntrenador}" id="editIdEntrenador">
 
@@ -458,6 +475,19 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            // Auto-cerrar alertas después de 5 segundos
+            document.addEventListener('DOMContentLoaded', function () {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    setTimeout(() => {
+                        const bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    }, 5000); // 5 segundos
+                });
+            });
+        </script>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const deleteModal = document.getElementById('confirmDeleteModal');

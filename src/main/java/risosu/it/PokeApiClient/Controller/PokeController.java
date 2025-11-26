@@ -141,6 +141,47 @@ public class PokeController {
         return resultados;
     }
 
+    @GetMapping("/orderBy")
+    @ResponseBody
+    public List<Pokemon> OrderBy(@RequestParam(required = false) String campo) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<Pokemon> resultados = new ArrayList<>();
+
+        try {
+
+            List<Pokemon> pokemones = Arrays.asList(
+                    mapper.readValue(new File("pokemons.json"), Pokemon[].class));
+            if (campo == null) {
+                return pokemones;
+            }
+            resultados = pokemones.stream()
+                    .sorted((p1, p2) -> {
+                        switch (campo.toLowerCase()) {
+                            case "name":
+                                return p1.getName().compareToIgnoreCase(p2.getName());
+
+                            case "type":
+                                String tipo1 = p1.getTypes().get(0).getName();
+                                String tipo2 = p2.getTypes().get(0).getName();
+                                return tipo1.compareToIgnoreCase(tipo2);
+
+                            case "medidas":
+                                return Integer.compare(p1.getHeight(), p2.getHeight());
+
+                            default:
+                                return 0;
+                        }
+                    })
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            System.out.println(e.getLocalizedMessage());
+        }
+        return resultados;
+    }
+
     @GetMapping("/profile/{username}")
     public String profile(@PathVariable("username") String username, Model model, HttpSession session) {
 
@@ -176,46 +217,48 @@ public class PokeController {
                     );
 
             List<Map<String, Object>> root = (List<Map<String, Object>>) response.getBody();
-            if (root == null) {
-                throw new RuntimeException("JSON raíz viene null");
-            }
+            if (root.isEmpty()) {
+                model.addAttribute("pokedex", null);
+                model.addAttribute("entrenador", entrenador);
+                model.addAttribute("pokemones", new ArrayList<>());
+            } else {
+                Map<String, Object> obj = root.get(0);
+                Map<String, Object> pokedex = (Map<String, Object>) obj.get("pokedex");
+                if (pokedex == null) {
+                    throw new RuntimeException("El campo 'pokedex' viene null.");
+                }
 
-            Map<String, Object> obj = root.get(0);
-            // Obtener pokedex
-            Map<String, Object> pokedex = (Map<String, Object>) obj.get("pokedex");
-            if (pokedex == null) {
-                throw new RuntimeException("El campo 'pokedex' viene null.");
-            }
+                // Obtener pokedexPokemons
+                List<Map<String, Object>> pokedexPokemons
+                        = (List<Map<String, Object>>) pokedex.get("pokedexPokemons");
 
-            // Obtener pokedexPokemons
-            List<Map<String, Object>> pokedexPokemons
-                    = (List<Map<String, Object>>) pokedex.get("pokedexPokemons");
+                if (pokedexPokemons == null) {
+                    throw new RuntimeException("El campo 'pokedexPokemons' viene null.");
+                }
 
-            if (pokedexPokemons == null) {
-                throw new RuntimeException("El campo 'pokedexPokemons' viene null.");
-            }
-
-            // Sacar solo los pokemones
-            List<Map<String, Object>> pokemons
-                    = pokedexPokemons.stream()
-                            .map(item -> (Map<String, Object>) item.get("pokemon"))
-                            .filter(Objects::nonNull)
-                            .toList();
-            List<Pokemon> poke = pokeService.getFavTypes();
-            List<Integer> idsJson = pokemons.stream()
-                    .map(p -> (Integer) p.get("idJson"))
-                    .toList();
-            poke = poke.stream().filter(p -> idsJson.contains(p.getId())).toList();
+                // Sacar solo los pokemones
+                List<Map<String, Object>> pokemons
+                        = pokedexPokemons.stream()
+                                .map(item -> (Map<String, Object>) item.get("pokemon"))
+                                .filter(Objects::nonNull)
+                                .toList();
+                List<Pokemon> poke = pokeService.getFavTypes();
+                List<Integer> idsJson = pokemons.stream()
+                        .map(p -> (Integer) p.get("idJson"))
+                        .toList();
+                poke = poke.stream().filter(p -> idsJson.contains(p.getId())).toList();
 //            poke.stream().filter
 //        (p -> pokemons.forEach
 //        (pokemons.get(0)
 //                .get("idJson"))
 //                .contains(p.getId())).toList();
-            model.addAttribute("pokedex", pokedex);
-            model.addAttribute("pokemones", poke);
-            model.addAttribute("entrenador", entrenador);
+                model.addAttribute("pokedex", pokedex);
+                model.addAttribute("pokemones", poke);
+                model.addAttribute("entrenador", entrenador);
+            }
         }
         return "usuario";
+
     }
-    
+
 }
