@@ -3,9 +3,11 @@ package risosu.it.PokeApiClient.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -82,4 +84,13 @@ public class PokeService {
         return null;
     }
 
+    private List<Pokemon> FavsByEntrenador;
+
+    public List<Pokemon> getFavsByEntrenador() {
+        return FavsByEntrenador;
+    }
+
+    public void setFavsByEntrenador(List<Pokemon> FavsByEntrenador) {
+        this.FavsByEntrenador = FavsByEntrenador;
+    }
 }

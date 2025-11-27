@@ -210,6 +210,130 @@ public class PokeController {
         return resultados;
     }
 
+    @GetMapping("/searchByNameFavs")
+    @ResponseBody
+    public List<Pokemon> SearchByNameFavs(@RequestParam String pokeBusqueda) {
+
+        List<Pokemon> resultados = new ArrayList<>();
+
+        try {
+            List<Pokemon> pokemones = pokeService.getFavsByEntrenador();
+
+            resultados = pokemones.stream()
+                    .filter(pokemon -> pokemon.getName()
+                    .toLowerCase(Locale.ITALY)
+                    .contains(pokeBusqueda.toLowerCase()))
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            System.out.println(e.getLocalizedMessage());
+        }
+        return resultados;
+
+    }
+
+    @GetMapping("/searchByTypesFavs")
+    @ResponseBody
+    public List<Pokemon> FilterByTypesFavs(@RequestParam(required = false) List<String> types) {
+
+        List<Pokemon> resultados = new ArrayList<>();
+
+        try {
+
+            List<Pokemon> pokemones = pokeService.getFavsByEntrenador();
+
+            if (types == null) {
+                return pokemones;
+            }
+//            List<Pokemon> filtrados = pokemones.stream()
+//                    .filter(p -> p.getTypes().stream().anyMatch(t -> types.contains(t.getName())))
+//                    .collect(Collectors.toList());
+            resultados = pokemones.stream()
+                    .filter(p -> {
+                        List<String> pokeTypes = p.getTypes().stream()
+                                .map(Type::getName).sorted().collect(Collectors.toList());
+                        List<String> searchTypes = types.stream()
+                                .sorted()
+                                .collect(Collectors.toList());
+                        return pokeTypes.equals(searchTypes);
+                    })
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            System.out.println(e.getLocalizedMessage());
+        }
+        return resultados;
+    }
+
+    @GetMapping("/orderByFavs")
+    @ResponseBody
+    public List<Pokemon> OrderByFavs(@RequestParam(required = false) String campo) {
+
+        List<Pokemon> resultados = new ArrayList<>();
+
+        try {
+
+            List<Pokemon> pokemones = pokeService.getFavsByEntrenador();
+
+            if (campo == null) {
+                return pokemones;
+            }
+
+// En tu método:
+            resultados = pokemones.stream()
+                    .sorted((p1, p2) -> {
+                        int comparison;
+                        String campoLower = campo.toLowerCase();
+
+                        // Obtener el estado actual del toggle para este campo (default true = ASC)
+                        boolean isAsc = sortOrder.getOrDefault(campoLower, true);
+
+                        switch (campoLower) {
+                            case "name":
+                                comparison = p1.getName().compareToIgnoreCase(p2.getName());
+                                return isAsc ? comparison : -comparison;
+
+                            case "type":
+                                String tipo1 = p1.getTypes().get(0).getName();
+                                String tipo2 = p2.getTypes().get(0).getName();
+                                comparison = tipo1.compareToIgnoreCase(tipo2);
+                                return isAsc ? comparison : -comparison;
+
+                            case "medidas":
+                                comparison = Integer.compare(p1.getHeight(), p2.getHeight());
+                                return isAsc ? comparison : -comparison;
+
+                            case "order":
+                                if (p1.getOrder() <= 0 && p2.getOrder() <= 0) {
+                                    comparison = Integer.compare(p1.getOrder(), p2.getOrder());
+                                } else if (p1.getOrder() <= 0) {
+                                    comparison = 1;
+                                } else if (p2.getOrder() <= 0) {
+                                    comparison = -1;
+                                } else {
+                                    comparison = Integer.compare(p1.getOrder(), p2.getOrder());
+                                }
+                                return isAsc ? comparison : -comparison;
+
+                            default:
+                                return 0;
+                        }
+                    })
+                    .collect(Collectors.toList());
+
+// Toggle independiente para este campo específico
+            sortOrder.put(campo.toLowerCase(), !sortOrder.getOrDefault(campo.toLowerCase(), true));
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            System.out.println(e.getLocalizedMessage());
+        }
+        return resultados;
+    }
+
     @GetMapping("/profile/{username}")
     public String profile(@PathVariable("username") String username, Model model, HttpSession session) {
 
@@ -217,6 +341,8 @@ public class PokeController {
         if (session.getAttribute("token") != null) {
             model.addAttribute("username", session.getAttribute("username"));
             model.addAttribute("role", session.getAttribute("role"));
+        } else {
+            return "redirect:/pokemon";
         }
         RestTemplate restTemplate = new RestTemplate();
 
@@ -249,7 +375,7 @@ public class PokeController {
                 model.addAttribute("pokedex", null);
                 model.addAttribute("entrenador", entrenador);
                 model.addAttribute("pokemones", new ArrayList<>());
-                 model.addAttribute("countType", 0);
+                model.addAttribute("countType", 0);
                 model.addAttribute("types", null);
                 model.addAttribute("count", 0);
             } else {
@@ -278,7 +404,7 @@ public class PokeController {
                         .map(p -> (Integer) p.get("idJson"))
                         .toList();
                 poke = poke.stream().filter(p -> idsJson.contains(p.getId())).toList();
-
+                pokeService.setFavsByEntrenador(poke);
                 Map<String, Long> typeCount = poke.stream()
                         .flatMap((p -> p.getTypes().stream()))
                         .collect(Collectors.groupingBy(Type::getName, Collectors.counting()));

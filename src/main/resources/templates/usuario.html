@@ -25,6 +25,47 @@
                     <p class="fs-2">Pokemones favoritos</p>
                 </div>
 
+                <div class="row g-3 mb-1 justify-content-end">
+                    <!-- BUSCADOR -->
+                    <div class="col-auto">
+                        <div class="input-group shadow-sm buscador-style">
+                            <span class="input-group-text bg-success text-white">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input 
+                                id="pokeBuscador" 
+                                type="text" 
+                                class="form-control pokeBuscadorInput"
+                                placeholder="Buscar Pokémon..."
+                                aria-label="Buscar Pokémon"
+                                oninput="buscarPokemon(this.value)"
+                                style="height: 42px"
+                                >
+
+                        </div>
+                    </div>
+
+                    <!-- LIMPIAR + SELECT -->
+                    <div class="col-auto">
+                        <div class="d-flex align-items-center gap-2">
+
+                            <!-- Botón limpiar -->
+                            <button id="btnLimpiar" class="btn btn-danger shadow-sm">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+
+                            <!-- Select de tipos -->
+                            <div class="position-relative">
+                                <div class="pokeSelect shadow-sm" onclick="toggleCheckboxList()" style="cursor: pointer;">
+                                    <i class="bi bi-caret-down-fill"></i> Tipos
+                                </div>
+                                <div id="checkboxList" class="checkbox-list" style="display: none;"></div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
 
                 <div class="row">
                     <div class="col-12 col-sm-6 col-md-4 col-lg-3">
@@ -89,9 +130,18 @@
                                 <thead class="">
                                     <tr>
                                         <th class="col-1"></th>
-                                        <th class="col-1">Name</th>
-                                        <th class="col-1">Tipos</th>
-                                        <th class="col-1">Medidas</th>
+                                        <th onclick="ordenarPokemon('order')" class="col-1" style="cursor: pointer;"> 
+                                            ORDER
+                                        </th>
+                                        <th onclick="ordenarPokemon('name')" class="col-1" style="cursor: pointer;">
+                                            NAME
+                                        </th>
+                                        <th onclick="ordenarPokemon('type')" class="col-1" style="cursor: pointer;">
+                                            TIPOS
+                                        </th>
+                                        <th onclick="ordenarPokemon('medidas')" class="col-1" style="cursor: pointer;">
+                                            MEDIDAS
+                                        </th>
                                         <th class="col-1" th:if="${token} != null">Favorito</th>
                                     </tr>
                                 </thead>
@@ -125,7 +175,12 @@
 
                                         <td>
                                             <div>
-                                                <span th:text="${pokemon.order}"></span> <span th:text="${pokemon.name}" class="m-0"></span>
+                                                <span th:text="${pokemon.order}" class="m-0"></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <span th:text="${pokemon.name}" class="m-0"></span>
                                             </div>
                                         </td>
                                         <td>
@@ -190,7 +245,7 @@
                         <div class="p-3 w-100 d-flex flex-column">
                             <h6 class="text-center text-uppercase mb-2" style="font-size: 0.85rem; letter-spacing: 1px; opacity: 0.8;">Tipos de pokemones</h6>
                             <div class="flex-grow-1 d-flex align-items-center justify-content-center">
-                                <canvas id="activityChart" width="100" height="100" class="mx-auto"></canvas>
+                                <canvas id="activityChart" width="200" height="200" class="mx-auto"></canvas>
                             </div>
                         </div>
                     </div>
@@ -203,7 +258,8 @@
                     </div>
                 </div>
             </div>
-            <script>
+            <script th:inline="javascript">
+                var token = /*[[${token}]]*/ [];
                 let radarChart = null;
                 let favoritosSet = new Set(); // ids de favoritos (idJson)
                 document.addEventListener("DOMContentLoaded", () => {
@@ -249,7 +305,7 @@
                     const tipos = getSelectedTypes();
                     const params = new URLSearchParams();
                     tipos.forEach(t => params.append("types", t));
-                    const url = tipos.length === 0 ? `/pokeControl/searchByTypes` : `/pokeControl/searchByTypes?${params.toString()}`;
+                    const url = tipos.length === 0 ? `/pokeControl/searchByTypesFavs` : `/pokeControl/searchByTypesFavs?${params.toString()}`;
                     fetch(url)
                             .then(res => res.json())
                             .then(data => actualizarTabla(data))
@@ -258,12 +314,17 @@
 
                 /* ---------- BUSCAR POR NOMBRE ---------- */
                 function buscarPokemon(nombre) {
-                    fetch(`/pokeControl/searchByName?pokeBusqueda=${encodeURIComponent(nombre)}`)
+                    fetch(`/pokeControl/searchByNameFavs?pokeBusqueda=${encodeURIComponent(nombre)}`)
                             .then(res => res.json())
                             .then(data => actualizarTabla(data))
                             .catch(err => console.error("Error:", err));
                 }
-
+                function ordenarPokemon(campo) {
+                    fetch(`/pokeControl/orderByFavs?campo=${campo}`)
+                            .then(res => res.json())
+                            .then(data => actualizarTabla(data))
+                            .catch(err => console.error("Error:", err));
+                }
                 /* ---------- CARGAR POKEMON EN PANEL ---------- */
                 function cargarPokemon(row) {
                     if (radarChart)
@@ -382,13 +443,14 @@
                         const imgFront = fila.dataset.img || "/pokeBall.png";
                         const checkboxId = `checkbox-${pokemon.id}`;
 
-                        fila.innerHTML = `
+                        if (token !== null) {
+                            fila.innerHTML = `
                             <td><img src="${imgFront}" class="pokemon-picture" /></td>
-                            <td><div><span>${pokemon.order || ""}</span> <span>${pokemon.name}</span></div></td>
+                            <td><div><span>${pokemon.order}</span></div></td>
+                                <td><div><span>${pokemon.name}</span></div></td>
                             <td><div><span>${typeNames}</span></div></td>
                             <td><div><i class="bi bi-arrows-vertical"></i> ${pokemon.height}</div><div><i class="bi bi-arrows"></i> ${pokemon.weight}</div></td>
-                            <td>
-                              <div class="checkbox-container">
+                            <td> <div class="checkbox-container">
                                 <input type="checkbox" class="poke-checkbox" id="${checkboxId}"
                                        data-id="${pokemon.id}"
                                        data-name="${pokemon.name}"
@@ -408,6 +470,14 @@
                               </div>
                             </td>
                           `;
+                        } else {
+                            fila.innerHTML = `
+                            <td><img src="${imgFront}" class="pokemon-picture" /></td>
+                            <td><div><span>${pokemon.order}</span></div></td>
+                            <td><div> <span>${pokemon.name}</span></div></td>
+                            <td><div><span>${typeNames}</span></div></td>
+                            <td><div><i class="bi bi-arrows-vertical"></i> ${pokemon.height}</div><div><i class="bi bi-arrows"></i> ${pokemon.weight}</div></td> `;
+                        }
 
                         cuerpo.appendChild(fila);
                     });
