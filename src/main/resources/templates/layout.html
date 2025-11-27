@@ -87,12 +87,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             <i class="bi bi-grid-fill text-white"></i>
                             <span class="d-lg-none ms-2">Dashboard</span>
                         </a>
-                        <a class="nav-icon-btn" th:href="@{/pokeControl/profile/{username}(username=${username})}" data-bs-toggle="tooltip" title="Mi Perfil">
-                            <i class="bi bi-person-circle text-white"></i>
-                            <span class="d-lg-none ms-2">Mi Perfil</span>
+                        <a class="nav-icon-btn" th:href="@{/usuario/profile/{username}(username=${username})}" data-bs-toggle="tooltip" title="Mi Perfil">
+                            <i class="bi bi-gear-fill text-white"></i>
+                            <span class="d-lg-none ms-2">Configuración</span>
                         </a>
                         <a class="nav-icon-btn" th:href="@{/pokeControl/listar}" data-bs-toggle="tooltip" title="Pokédex">
-                            <i class="bi bi-file-earmark-text-fill text-white"></i>
+                            <i class="bi bi-house-door-fill text-white"></i>
                             <span class="d-lg-none ms-2">Pokédex</span>
                         </a>
                     </div>
@@ -128,7 +128,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <div th:if="${token} != null" class="navbar-nav ms-auto align-items-center gap-2">
                             <div class="nav-divider d-none d-lg-block mx-2" style="width: 2px; height: 30px; background: rgba(255,255,255,0.2);"></div>
 
-                            <a th:href="@{/usuario/profile/{username}(username=${username})}" class="nav-item nav-link text-white d-flex align-items-center bg-white bg-opacity-10 px-3 py-2 rounded">
+                            <a th:href="@{/pokeControl/profile/{username}(username=${username})}" class="nav-item nav-link text-white d-flex align-items-center bg-white bg-opacity-10 px-3 py-2 rounded">
                                 <i class="bi bi-person-fill me-2"></i>
                                 <span th:text="${username}">Entrenador</span>
                             </a>
