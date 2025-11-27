@@ -65,7 +65,6 @@ public class EntrenadorController {
                             .flatMap(p -> p.getTypes().stream())
                             .collect(Collectors.groupingBy(Type::getName, Collectors.counting()));
             model.addAttribute("size", typeCount.size());
-
             model.addAttribute("types", typeCount);
             model.addAttribute("username", session.getAttribute("username"));
             model.addAttribute("role", session.getAttribute("role"));

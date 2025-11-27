@@ -1,4 +1,4 @@
-     ///*
+///*
 // * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
 // * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
 // */
@@ -249,6 +249,9 @@ public class PokeController {
                 model.addAttribute("pokedex", null);
                 model.addAttribute("entrenador", entrenador);
                 model.addAttribute("pokemones", new ArrayList<>());
+                 model.addAttribute("countType", 0);
+                model.addAttribute("types", null);
+                model.addAttribute("count", 0);
             } else {
                 Map<String, Object> obj = root.get(0);
                 Map<String, Object> pokedex = (Map<String, Object>) obj.get("pokedex");
@@ -275,11 +278,13 @@ public class PokeController {
                         .map(p -> (Integer) p.get("idJson"))
                         .toList();
                 poke = poke.stream().filter(p -> idsJson.contains(p.getId())).toList();
-//            poke.stream().filter
-//        (p -> pokemons.forEach
-//        (pokemons.get(0)
-//                .get("idJson"))
-//                .contains(p.getId())).toList();
+
+                Map<String, Long> typeCount = poke.stream()
+                        .flatMap((p -> p.getTypes().stream()))
+                        .collect(Collectors.groupingBy(Type::getName, Collectors.counting()));
+                model.addAttribute("countType", typeCount.size());
+                model.addAttribute("types", typeCount);
+                model.addAttribute("count", poke.size());
                 model.addAttribute("pokedex", pokedex);
                 model.addAttribute("pokemones", poke);
                 model.addAttribute("entrenador", entrenador);

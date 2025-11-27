@@ -99,8 +99,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                     <!-- Logo/Brand para usuarios no logueados -->
                     <div th:if="${token} == null" class="navbar-brand text-white">
+                        <a th:href="@{/pokeControl/listar}" style="text-decoration: none; color: white">
                         <i class="bi bi-circle-fill text-warning me-2" style="font-size: 0.6rem;"></i>
-                        PokéControl
+                        PokéControl </a>
                     </div>
 
                     <!-- Botón toggler -->
