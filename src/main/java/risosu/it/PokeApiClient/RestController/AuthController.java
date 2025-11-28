@@ -91,7 +91,7 @@ public class AuthController {
 
             String token = passwordResetTokenService.GenerateToken(entrenador.getIdEntrenador());
 
-            String linkRestablecer = "http://192.167.0.175:8080/usuario/changePassword?token=" + token;
+            String linkRestablecer = "http://192.167.1.226:8080/usuario/changePassword?token=" + token;
 
             String html = """
                           <!DOCTYPE html>
@@ -343,7 +343,7 @@ public class AuthController {
             String token = verifyTokenService.GenerateToken(entrenador.getIdEntrenador());
 
             // 🔗 Enlace de verificación
-            String linkVerificar = "http://192.167.0.175:8080/auth/verifyAccount?token=" + token;
+            String linkVerificar = "http://192.167.1.226:8080/auth/verifyAccount?token=" + token;
 
             String html = """
                           <!DOCTYPE html>
@@ -572,7 +572,7 @@ public class AuthController {
         String token = verifyTokenService.GenerateToken(entrenadorJPA.getIdEntrenador());
 
         // 🔗 Enlace de verificación
-        String linkVerificar = "http://192.167.0.175:8080/usuario/verifyAccount?token=" + token;
+        String linkVerificar = "http://192.167.1.226:8080/usuario/verifyAccount?token=" + token;
 
         String html = """
                           <!DOCTYPE html>
