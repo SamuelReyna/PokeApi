@@ -185,12 +185,6 @@
                                 a <span th:text="${currentPage * pageSize + pokemones.size()}">10</span> 
                                 de <span th:text="${totalElements}">100</span> pokémones
                             </div>
-
-                            <!-- Info de registros -->
-                            <span class="text-muted small text-nowrap">
-                                <span th:text="${currentPage * pageSize + 1}">1</span>-<span th:text="${(currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize}">20</span>
-                                de <span th:text="${totalElements}">150</span>
-                            </span>
                         </div>
                     </div>
                 </div>
