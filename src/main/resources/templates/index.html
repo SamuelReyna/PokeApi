@@ -34,46 +34,165 @@
 
             <div class="content">
                 <div class="row g-3 align-items-center">
+                    <!-- BUSCADOR Y FILTROS (Izquierda) -->
+                    <div class="col-md-3">
+                        <div class="d-flex gap-2 align-items-center">
+                            <!-- BUSCADOR -->
+                            <div class="input-group shadow-sm buscador-style">
+                                <span class="input-group-text bg-success text-white">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input 
+                                    id="pokeBuscador" 
+                                    type="text" 
+                                    class="form-control pokeBuscadorInput"
+                                    placeholder="Buscar Pokémon..."
+                                    aria-label="Buscar Pokémon"
+                                    oninput="buscarPokemon(this.value)"
+                                    style="height: 42px">
+                            </div>
 
-                    <!-- BUSCADOR -->
-                    <div class="col-auto">
-                        <div class="input-group shadow-sm buscador-style">
-                            <span class="input-group-text bg-success text-white">
-                                <i class="bi bi-search"></i>
-                            </span>
-                            <input 
-                                id="pokeBuscador" 
-                                type="text" 
-                                class="form-control pokeBuscadorInput"
-                                placeholder="Buscar Pokémon..."
-                                aria-label="Buscar Pokémon"
-                                oninput="buscarPokemon(this.value)"
-                                style="height: 42px"
-                                >
-                            
-                        </div>
-                    </div>
-
-                    <!-- LIMPIAR + SELECT -->
-                    <div class="col-auto">
-                        <div class="d-flex align-items-center gap-2">
-
-                            <!-- Botón limpiar -->
-                            <button id="btnLimpiar" class="btn btn-danger shadow-sm">
+                            <!-- LIMPIAR -->
+                            <button id="btnLimpiar" class="btn btn-danger shadow-sm" style="height: 42px;">
                                 <i class="bi bi-trash-fill"></i>
                             </button>
 
-                            <!-- Select de tipos -->
+                            <!-- SELECT DE TIPOS -->
                             <div class="position-relative">
-                                <div class="pokeSelect shadow-sm" onclick="toggleCheckboxList()" style="cursor: pointer;">
+                                <div class="pokeSelect shadow-sm" onclick="toggleCheckboxList()" style="cursor: pointer; height: 42px; display: flex; align-items: center;">
                                     <i class="bi bi-caret-down-fill"></i> Tipos
                                 </div>
                                 <div id="checkboxList" class="checkbox-list" style="display: none;"></div>
                             </div>
-
                         </div>
                     </div>
 
+                    <!-- PAGINADO (Derecha) -->
+                    <div class="col-md-9">
+                        <div class="d-flex gap-2 align-items-center justify-content-end">
+                            <!-- SELECT DE CANTIDAD POR PÁGINA -->
+                            <div class="d-flex align-items-center gap-2">
+                                <label for="pageSize" class="text-nowrap mb-0 small">Mostrar:</label>
+                                <select 
+                                    id="pageSize" 
+                                    class="form-select form-select-sm shadow-sm" 
+                                    style="width: auto;"
+                                    onchange="window.location.href = this.value">
+                                    <option th:value="@{''(page=0, cant=10)}" th:selected="${pageSize == 10}">10</option>
+                                    <option th:value="@{''(page=0, cant=20)}" th:selected="${pageSize == 20}">20</option>
+                                    <option th:value="@{''(page=0, cant=50)}" th:selected="${pageSize == 50}">50</option>
+                                    <option th:value="@{''(page=0, cant=100)}" th:selected="${pageSize == 100}">100</option>
+                                    <option th:value="@{''(page=0, cant=0)}" th:selected="${pageSize == 0}">Todos</option>
+                                </select>
+                            </div>
+
+                            <!-- CONTROLES DE PAGINACIÓN -->
+                            <nav aria-label="Navegación de páginas">
+                                <ul class="pagination pagination-sm mb-0 shadow-sm">
+                                    <!-- Botón Primera Página -->
+                                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                        <a class="page-link" 
+                                           th:href="@{''(page=0, size=${pageSize})}" 
+                                           aria-label="Primera">
+                                            <i class="bi bi-chevron-bar-left"></i>
+                                        </a>
+                                    </li>
+
+                                    <!-- Botón Anterior -->
+                                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                        <a class="page-link" 
+                                           th:href="@{''(page=${currentPage - 1}, cant=${pageSize})}" 
+                                           aria-label="Anterior">
+                                            <i class="bi bi-chevron-left"></i>
+                                        </a>
+                                    </li>
+
+                                    <!-- Números de Página (7 o menos) -->
+                                    <th:block th:if="${totalPages <= 7}">
+                                        <li class="page-item" 
+                                            th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                            th:classappend="${i == currentPage} ? 'active'">
+                                            <a class="page-link" 
+                                               th:href="@{''(page=${i}, size=${pageSize})}" 
+                                               th:text="${i + 1}">1</a>
+                                        </li>
+                                    </th:block>
+
+                                    <!-- Números de Página (más de 7) -->
+                                    <th:block th:if="${totalPages > 7}">
+                                        <!-- Primera página -->
+                                        <li class="page-item" 
+                                            th:if="${currentPage > 2}"
+                                            th:classappend="${0 == currentPage} ? 'active'">
+                                            <a class="page-link" th:href="@{''(page=0, cant=${pageSize})}">1</a>
+                                        </li>
+
+                                        <!-- Puntos suspensivos inicio -->
+                                        <li class="page-item disabled" th:if="${currentPage > 3}">
+                                            <span class="page-link">...</span>
+                                        </li>
+
+                                        <!-- Páginas alrededor de la actual -->
+                                        <li class="page-item" 
+                                            th:each="i : ${#numbers.sequence(
+                                            currentPage - 2 < 0 ? 0 : currentPage - 2, 
+                                            currentPage + 2 >= totalPages ? totalPages - 1 : currentPage + 2
+                                            )}"
+                                            th:classappend="${i == currentPage} ? 'active'">
+                                            <a class="page-link" 
+                                               th:href="@{''(page=${i}, cant=${pageSize})}" 
+                                               th:text="${i + 1}">1</a>
+                                        </li>
+
+                                        <!-- Puntos suspensivos final -->
+                                        <li class="page-item disabled" th:if="${currentPage < totalPages - 4}">
+                                            <span class="page-link">...</span>
+                                        </li>
+
+                                        <!-- Última página -->
+                                        <li class="page-item" 
+                                            th:if="${currentPage < totalPages - 3}"
+                                            th:classappend="${totalPages - 1 == currentPage} ? 'active'">
+                                            <a class="page-link" 
+                                               th:href="@{''(page=${totalPages - 1}, cant=${pageSize})}" 
+                                               th:text="${totalPages}">100</a>
+                                        </li>
+                                    </th:block>
+
+                                    <!-- Botón Siguiente -->
+                                    <li class="page-item" th:classappend="${currentPage >= totalPages - 1} ? 'disabled'">
+                                        <a class="page-link" 
+                                           th:href="@{''(page=${currentPage + 1}, cant=${pageSize})}" 
+                                           aria-label="Siguiente">
+                                            <i class="bi bi-chevron-right"></i>
+                                        </a>
+                                    </li>
+
+                                    <!-- Botón Última Página -->
+                                    <li class="page-item" th:classappend="${currentPage >= totalPages - 1} ? 'disabled'">
+                                        <a class="page-link" 
+                                           th:href="@{''(page=${totalPages - 1}, cant=${pageSize})}" 
+                                           aria-label="Última">
+                                            <i class="bi bi-chevron-bar-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+
+                            <!-- Info adicional (opcional) -->
+                            <div class="text-muted small mt-2">
+                                Mostrando <span th:text="${currentPage * pageSize + 1}">1</span> 
+                                a <span th:text="${currentPage * pageSize + pokemones.size()}">10</span> 
+                                de <span th:text="${totalElements}">100</span> pokémones
+                            </div>
+
+                            <!-- Info de registros -->
+                            <span class="text-muted small text-nowrap">
+                                <span th:text="${currentPage * pageSize + 1}">1</span>-<span th:text="${(currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize}">20</span>
+                                de <span th:text="${totalElements}">150</span>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
 

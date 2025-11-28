@@ -93,4 +93,14 @@ public class PokeService {
     public void setFavsByEntrenador(List<Pokemon> FavsByEntrenador) {
         this.FavsByEntrenador = FavsByEntrenador;
     }
+
+    private List<Pokemon> getByPageAndQuantity;
+
+    public List<Pokemon> getGetByPageAndQuantity() {
+        return getByPageAndQuantity;
+    }
+
+    public void setGetByPageAndQuantity(List<Pokemon> getByPageAndQuantity) {
+        this.getByPageAndQuantity = getByPageAndQuantity;
+    }
 }

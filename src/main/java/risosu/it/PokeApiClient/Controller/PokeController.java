@@ -42,7 +42,6 @@ public class PokeController {
 
     @Autowired
     private PokeService pokeService;
-//    private final String url = "http://localhost:8081//";
 //Este controlador es accedido desde vista "loading" para validar si existe ya el archivo JSON y redirigir:
     private Map<String, Boolean> sortOrder = new HashMap<>();
 
@@ -57,18 +56,62 @@ public class PokeController {
 
     //Este controlador se encarga de mostrar la lista de pokemons:
     @GetMapping("/listar")
-    public String mostrarVistaFinal(Model model, HttpSession session) {
+    public String mostrarVistaFinal(Model model,
+            HttpSession session,
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "cant", defaultValue = "20", required = false) int cant) {
         // Leer el archivo JSON
         ObjectMapper mapper = new ObjectMapper();
 
         try {
+
             List<Pokemon> pokemones = Arrays.asList(
                     mapper.readValue(new File("pokemons.json"), Pokemon[].class)
             );
+            int totalPokemones = pokemones.size();
+            int totalPages;
+            if (cant == 0) {
+                totalPages = 1;
+            } else {
+                totalPages = (int) Math.ceil((double) totalPokemones / cant);
 
+            }
+
+            if (page > 0 || cant > 0) {
+                pokemones = pokemones.stream().sorted((p1, p2) -> {
+                    int comparison;
+                    if (p1.getOrder() <= 0 && p2.getOrder() <= 0) {
+                        comparison = Integer.compare(p1.getOrder(), p2.getOrder());
+                    } else if (p1.getOrder() <= 0) {
+                        comparison = 1;
+                    } else if (p2.getOrder() <= 0) {
+                        comparison = -1;
+                    } else {
+                        comparison = Integer.compare(p1.getOrder(), p2.getOrder());
+                    }
+                    return comparison;
+                }).collect(Collectors.toList());
+                // Calcular totales
+                totalPokemones = pokemones.size();
+                totalPages = (int) Math.ceil((double) totalPokemones / cant);
+                if (page < 0) {
+                    page = 0;
+                }
+                if (page >= totalPages) {
+                    page = totalPages - 1;
+                }
+                int from = page * cant;
+                int to = Math.min(from + cant, totalPokemones);
+                pokemones = pokemones.subList(from, to);
+            }
+            pokeService.setGetByPageAndQuantity(pokemones);
+
+            model.addAttribute("currentPage", page);          // Página actual (0-indexed)
+            model.addAttribute("pageSize", cant);             // Cantidad por página
+            model.addAttribute("totalPages", totalPages);     // Total de páginas   
             model.addAttribute("pokemones", pokemones);
             model.addAttribute("token", session.getAttribute("token"));
-
+            model.addAttribute("totalElements", totalPokemones); // Total de elementos
             if (session.getAttribute("token") != null) {
                 model.addAttribute("username", session.getAttribute("username"));
                 model.addAttribute("role", session.getAttribute("role"));
@@ -86,12 +129,10 @@ public class PokeController {
     @ResponseBody
     public List<Pokemon> SearchByName(@RequestParam String pokeBusqueda) {
 
-        ObjectMapper mapper = new ObjectMapper();
         List<Pokemon> resultados = new ArrayList<>();
 
         try {
-            List<Pokemon> pokemones = Arrays.asList(
-                    mapper.readValue(new File("pokemons.json"), Pokemon[].class));
+            List<Pokemon> pokemones = pokeService.getGetByPageAndQuantity();
 
             resultados = pokemones.stream()
                     .filter(pokemon -> pokemon.getName()
@@ -112,13 +153,12 @@ public class PokeController {
     @ResponseBody
     public List<Pokemon> FilterByTypes(@RequestParam(required = false) List<String> types) {
 
-        ObjectMapper mapper = new ObjectMapper();
         List<Pokemon> resultados = new ArrayList<>();
 
         try {
 
-            List<Pokemon> pokemones = Arrays.asList(
-                    mapper.readValue(new File("pokemons.json"), Pokemon[].class));
+            List<Pokemon> pokemones = pokeService.getGetByPageAndQuantity();
+
             if (types == null) {
                 return pokemones;
             }
@@ -135,7 +175,7 @@ public class PokeController {
                         return pokeTypes.equals(searchTypes);
                     })
                     .collect(Collectors.toList());
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
 
             System.out.println(e.getLocalizedMessage());
@@ -147,13 +187,12 @@ public class PokeController {
     @ResponseBody
     public List<Pokemon> OrderBy(@RequestParam(required = false) String campo) {
 
-        ObjectMapper mapper = new ObjectMapper();
         List<Pokemon> resultados = new ArrayList<>();
 
         try {
 
-            List<Pokemon> pokemones = Arrays.asList(
-                    mapper.readValue(new File("pokemons.json"), Pokemon[].class));
+            List<Pokemon> pokemones = pokeService.getGetByPageAndQuantity();
+
             if (campo == null) {
                 return pokemones;
             }
@@ -202,7 +241,7 @@ public class PokeController {
 
 // Toggle independiente para este campo específico
             sortOrder.put(campo.toLowerCase(), !sortOrder.getOrDefault(campo.toLowerCase(), true));
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
 
             System.out.println(e.getLocalizedMessage());

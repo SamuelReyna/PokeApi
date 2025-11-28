@@ -615,7 +615,7 @@
 
                                                 setTimeout(() => {
                                                     fila.remove();
-
+                                                    window.location.reload();
                                                     // Verificar si quedan pokemones en la tabla
                                                     const tbody = document.getElementById('tabla-pokemones');
                                                     if (tbody.querySelectorAll('tr').length === 0) {
